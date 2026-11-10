@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Portfolio & Achievements – SkillForge</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- Dark Navy Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a class="brand-logo text-white" href="dashboard.html">
+          <div class="brand-icon">
+            <i class="bi bi-hammer"></i>
+          </div>
+          <span class="text-white">SkillForge</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main Navigation</div>
+        <a href="dashboard.html" class="sidebar-link">
+          <i class="bi bi-speedometer2"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="sidebar-link">
+          <i class="bi bi-person"></i>
+          <span>My Profile</span>
+        </a>
+        <a href="profile.html#skills" class="sidebar-link">
+          <i class="bi bi-cpu"></i>
+          <span>My Skills</span>
+        </a>
+        <a href="careers.html" class="sidebar-link">
+          <i class="bi bi-compass"></i>
+          <span>Career Explorer</span>
+        </a>
+        <a href="gap-analysis.html" class="sidebar-link">
+          <i class="bi bi-bar-chart-steps"></i>
+          <span>Skill Gap Analysis</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-link">
+          <i class="bi bi-map"></i>
+          <span>Learning Roadmap</span>
+        </a>
+        <a href="assessments.html" class="sidebar-link">
+          <i class="bi bi-clipboard2-check"></i>
+          <span>Assessments</span>
+        </a>
+        <a href="portfolio.html" class="sidebar-link active">
+          <i class="bi bi-folder2"></i>
+          <span>My Projects</span>
+        </a>
+        <a href="portfolio.html#certifications" class="sidebar-link">
+          <i class="bi bi-award"></i>
+          <span>Certifications</span>
+        </a>
+        <a href="portfolio.html#achievements" class="sidebar-link">
+          <i class="bi bi-trophy"></i>
+          <span>Achievements</span>
+        </a>
+        <a href="internships.html" class="sidebar-link">
+          <i class="bi bi-briefcase"></i>
+          <span>Internship Tracker</span>
+        </a>
+        <a href="resume-builder.html" class="sidebar-link">
+          <i class="bi bi-file-earmark-person"></i>
+          <span>Resume Builder</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="javascript:void(0)" onclick="logout()" class="sidebar-link logout-link">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="main-content">
+
+      <!-- Top Header Navbar -->
+      <header class="app-header">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-sm btn-light d-lg-none" id="sidebar-toggle">
+            <i class="bi bi-list fs-5"></i>
+          </button>
+          <div class="app-header-nav d-none d-md-flex">
+            <a href="dashboard.html" class="header-nav-link">Dashboard</a>
+            <a href="careers.html" class="header-nav-link">Careers</a>
+            <a href="assessments.html" class="header-nav-link">Assessments</a>
+            <a href="portfolio.html" class="header-nav-link active">Portfolio</a>
+            <a href="internships.html" class="header-nav-link">Internships</a>
+            <a href="resume-builder.html" class="header-nav-link">Resume</a>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <div class="user-badge-dropdown" data-bs-toggle="dropdown">
+            <div class="user-avatar" id="header-user-avatar">ST</div>
+            <div class="d-none d-sm-block text-start">
+              <div class="fw-semibold small" id="header-user-name">Student</div>
+              <div class="text-muted" style="font-size: 0.75rem;" id="header-user-role">Student</div>
+            </div>
+            <i class="bi bi-chevron-down text-muted small ms-1"></i>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+            <li><a class="dropdown-item small" href="profile.html"><i class="bi bi-person me-2"></i>My Profile</a></li>
+            <li><a class="dropdown-item small" href="resume-builder.html"><i class="bi bi-file-earmark me-2"></i>My Resume</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item small text-danger" href="javascript:void(0)" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <!-- Main Projects & Certifications Canvas -->
+      <main class="portal-container">
+        
+        <div class="portal-title-block d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+          <div>
+            <h2 class="portal-title mb-1">My Projects, Certifications & Achievements</h2>
+            <p class="portal-subtitle mb-0">Manage verified technical credentials, academic honors, and hackathon accomplishments.</p>
+          </div>
+          <div class="dropdown">
+            <button class="btn btn-forge-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+              <i class="bi bi-plus-lg me-1"></i>
+              <span>Add Record</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+              <li><a class="dropdown-item small" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#addProjectModal"><i class="bi bi-folder-plus me-2 text-primary"></i>Add Project</a></li>
+              <li><a class="dropdown-item small" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#addCertModal"><i class="bi bi-award me-2 text-success"></i>Add Certification</a></li>
+              <li><a class="dropdown-item small" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#addAchievementModal"><i class="bi bi-trophy me-2 text-warning"></i>Add Achievement</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Section 1: Projects Showcase Table / Cards -->
+        <div class="portal-card mb-4" id="projects">
+          <div class="portal-card-header">
+            <div>
+              <h5 class="portal-card-title mb-0"><i class="bi bi-folder2 text-primary me-2"></i>Featured Projects</h5>
+              <span class="text-muted small">Showcase real code repositories and live web applications</span>
+            </div>
+            <button class="btn btn-sm btn-forge-outline-dark" data-bs-toggle="modal" data-bs-target="#addProjectModal">
+              <i class="bi bi-plus-lg"></i> Add Project
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-forge align-middle">
+              <thead>
+                <tr>
+                  <th style="min-width: 220px;">Project Title & Details</th>
+                  <th>Tech Stack</th>
+                  <th>Status</th>
+                  <th>Links</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="projectsTableBody">
+                <tr><td colspan="5" class="text-center py-4 text-muted">Loading projects...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 2: Certifications Showcase Table -->
+        <div class="portal-card mb-4" id="certifications">
+          <div class="portal-card-header">
+            <div>
+              <h5 class="portal-card-title mb-0"><i class="bi bi-award text-success me-2"></i>Verified Certifications</h5>
+              <span class="text-muted small">Official course completions and exam credentials</span>
+            </div>
+            <button class="btn btn-sm btn-forge-outline-dark" data-bs-toggle="modal" data-bs-target="#addCertModal">
+              <i class="bi bi-plus-lg"></i> Add Certification
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-forge align-middle">
+              <thead>
+                <tr>
+                  <th style="min-width: 200px;">Certification Title</th>
+                  <th>Issuing Organization</th>
+                  <th>Issue Date</th>
+                  <th>Verification</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="certsTableBody">
+                <tr><td colspan="5" class="text-center py-4 text-muted">Loading certifications...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 3: Achievements & Honors Section (Section 6G & 7) -->
+        <div class="portal-card mb-4" id="achievements">
+          <div class="portal-card-header">
+            <div>
+              <h5 class="portal-card-title mb-0"><i class="bi bi-trophy text-warning me-2"></i>Achievements & Honors</h5>
+              <span class="text-muted small">Hackathon wins, academic honors, coding competitions, and leadership recognitions</span>
+            </div>
+            <button class="btn btn-sm btn-forge-outline-dark" data-bs-toggle="modal" data-bs-target="#addAchievementModal">
+              <i class="bi bi-plus-lg"></i> Add Achievement
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-forge align-middle">
+              <thead>
+                <tr>
+                  <th style="min-width: 220px;">Achievement Title & Description</th>
+                  <th>Issuing Organization / Event</th>
+                  <th>Year / Date</th>
+                  <th>Credential Link</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="achievementsTableBody">
+                <tr><td colspan="5" class="text-center py-4 text-muted">Loading achievements...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Add Project Modal -->
+  <div class="modal fade" id="addProjectModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom border-light">
+          <h5 class="modal-title fw-bold text-navy">Add New Project</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="addProjectForm">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Project Title</label>
+              <input type="text" class="form-control" id="projectTitle" placeholder="e.g. Responsive Portfolio Website" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Tech Stack (comma separated)</label>
+              <input type="text" class="form-control" id="projectTech" placeholder="e.g. HTML, CSS, JavaScript, Node.js" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Status</label>
+              <select class="form-select" id="projectStatus">
+                <option value="Completed" selected>Completed</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Planned">Planned</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">GitHub Repository URL (Optional)</label>
+              <input type="url" class="form-control" id="projectGithub" placeholder="https://github.com/username/project">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Live Demo URL (Optional)</label>
+              <input type="url" class="form-control" id="projectLive" placeholder="https://myproject.com">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Brief Description</label>
+              <textarea class="form-control" id="projectDesc" rows="3" placeholder="Summary of what the project does and skills demonstrated..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-top border-light">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-3">Save Project</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Project Modal -->
+  <div class="modal fade" id="editProjectModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom border-light">
+          <h5 class="modal-title fw-bold text-navy">Edit Project</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="editProjectForm">
+          <input type="hidden" id="editProjectId">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Project Title</label>
+              <input type="text" class="form-control" id="editProjectTitle" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Tech Stack (comma separated)</label>
+              <input type="text" class="form-control" id="editProjectTech" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Status</label>
+              <select class="form-select" id="editProjectStatus">
+                <option value="Completed">Completed</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Planned">Planned</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">GitHub Repository URL (Optional)</label>
+              <input type="url" class="form-control" id="editProjectGithub">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Live Demo URL (Optional)</label>
+              <input type="url" class="form-control" id="editProjectLive">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Brief Description</label>
+              <textarea class="form-control" id="editProjectDesc" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-top border-light">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-3">Update Project</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Certification Modal -->
+  <div class="modal fade" id="addCertModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom border-light">
+          <h5 class="modal-title fw-bold text-navy">Add Certification</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="addCertForm">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Certification Title</label>
+              <input type="text" class="form-control" id="certTitle" placeholder="e.g. JavaScript Algorithms & Data Structures" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Issuing Organization</label>
+              <input type="text" class="form-control" id="certIssuer" placeholder="e.g. HackerRank, freeCodeCamp, Coursera" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Issue Date</label>
+              <input type="text" class="form-control" id="certDate" placeholder="e.g. May 2025">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Credential URL (Optional)</label>
+              <input type="url" class="form-control" id="certUrl" placeholder="https://verify.cert.com/...">
+            </div>
+          </div>
+          <div class="modal-footer border-top border-light">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-3">Save Certification</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Certification Modal -->
+  <div class="modal fade" id="editCertModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom border-light">
+          <h5 class="modal-title fw-bold text-navy">Edit Certification</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="editCertForm">
+          <input type="hidden" id="editCertId">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Certification Title</label>
+              <input type="text" class="form-control" id="editCertTitle" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Issuing Organization</label>
+              <input type="text" class="form-control" id="editCertIssuer" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Issue Date</label>
+              <input type="text" class="form-control" id="editCertDate">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Credential URL (Optional)</label>
+              <input type="url" class="form-control" id="editCertUrl">
+            </div>
+          </div>
+          <div class="modal-footer border-top border-light">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-3">Update Certification</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Achievement Modal (Section 6G) -->
+  <div class="modal fade" id="addAchievementModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom border-light">
+          <h5 class="modal-title fw-bold text-navy"><i class="bi bi-trophy text-warning me-2"></i>Add Achievement / Award</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="addAchievementForm">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Achievement Title</label>
+              <input type="text" class="form-control" id="achievementTitle" placeholder="e.g. 1st Place - Smart City Hackathon 2025" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Issuing Organization or Institution</label>
+              <input type="text" class="form-control" id="achievementIssuer" placeholder="e.g. IEEE Student Branch, College Dept">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Date or Year</label>
+              <input type="text" class="form-control" id="achievementDate" placeholder="e.g. Oct 2025">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Supporting URL (Optional)</label>
+              <input type="url" class="form-control" id="achievementUrl" placeholder="https://certificate-or-event-link...">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Short Description</label>
+              <textarea class="form-control" id="achievementDesc" rows="3" placeholder="Brief summary of what was accomplished..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-top border-light">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-3">Save Achievement</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Achievement Modal -->
+  <div class="modal fade" id="editAchievementModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom border-light">
+          <h5 class="modal-title fw-bold text-navy"><i class="bi bi-trophy text-warning me-2"></i>Edit Achievement</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="editAchievementForm">
+          <input type="hidden" id="editAchievementId">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Achievement Title</label>
+              <input type="text" class="form-control" id="editAchievementTitle" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Issuing Organization or Institution</label>
+              <input type="text" class="form-control" id="editAchievementIssuer">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Date or Year</label>
+              <input type="text" class="form-control" id="editAchievementDate">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Supporting URL (Optional)</label>
+              <input type="url" class="form-control" id="editAchievementUrl">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Short Description</label>
+              <textarea class="form-control" id="editAchievementDesc" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-top border-light">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-3">Update Achievement</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle & API helper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    const user = requireAuth();
+
+    let projectsCache = [];
+    let certsCache = [];
+    let achievementsCache = [];
+
+    async function loadPortfolio() {
+      loadProjects();
+      loadCertifications();
+      loadAchievements();
+    }
+
+    // 1. Projects Loader
+    async function loadProjects() {
+      try {
+        const data = await apiFetch('/portfolio/projects');
+        projectsCache = data.projects || [];
+        const tbody = document.getElementById('projectsTableBody');
+        
+        if (!projectsCache || projectsCache.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted small">No projects recorded yet. Showcase your work by clicking "+ Add Project"!</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = projectsCache.map(p => {
+          const techList = p.techStack || p.technologies || [];
+          const badges = (Array.isArray(techList) ? techList : String(techList).split(','))
+            .map(t => `<span class="badge bg-light text-navy border fw-semibold small me-1 mb-1">${t.trim()}</span>`).join('');
+          
+          const statusBadge = p.status === 'Completed'
+            ? '<span class="badge bg-success-subtle text-success">Completed</span>'
+            : '<span class="badge bg-primary-subtle text-primary">In Progress</span>';
+
+          const links = [];
+          if (p.githubUrl) links.push(`<a href="${p.githubUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-light border text-dark p-1 me-1" title="GitHub Repository"><i class="bi bi-github"></i></a>`);
+          if (p.liveUrl || p.projectUrl) links.push(`<a href="${p.liveUrl || p.projectUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-light border text-primary p-1" title="Live Demo"><i class="bi bi-box-arrow-up-right"></i></a>`);
+
+          return `
+            <tr>
+              <td>
+                <div class="fw-bold text-navy">${p.title}</div>
+                <div class="text-muted small text-truncate" style="max-width: 320px;">${p.description || 'No description provided.'}</div>
+              </td>
+              <td>${badges || '<span class="text-muted small">-</span>'}</td>
+              <td>${statusBadge}</td>
+              <td>${links.length > 0 ? links.join('') : '<span class="text-muted small">-</span>'}</td>
+              <td class="text-end">
+                <button class="btn btn-sm btn-light text-primary me-1" onclick="openEditProjectModal('${p._id}')" title="Edit Project">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-light text-danger" onclick="deleteProject('${p._id}')" title="Delete Project">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        showToast('Failed to load projects.', 'danger');
+      }
+    }
+
+    // 2. Certifications Loader
+    async function loadCertifications() {
+      try {
+        const data = await apiFetch('/portfolio/certifications');
+        certsCache = data.certifications || [];
+        const tbody = document.getElementById('certsTableBody');
+
+        if (!certsCache || certsCache.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted small">No certifications recorded yet. Add credentials using "+ Add Certification"!</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = certsCache.map(c => `
+          <tr>
+            <td>
+              <div class="fw-bold text-navy">${c.title || c.name}</div>
+            </td>
+            <td><span class="badge bg-light text-navy border fw-semibold">${c.issuer}</span></td>
+            <td class="text-muted small">${c.issueDate || 'Verified'}</td>
+            <td>
+              ${c.credentialUrl
+                ? `<a href="${c.credentialUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-light border text-primary py-1 px-2 small">
+                     <i class="bi bi-box-arrow-up-right me-1"></i>Verify
+                   </a>`
+                : '<span class="text-muted small">On File</span>'}
+            </td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-light text-primary me-1" onclick="openEditCertModal('${c._id}')" title="Edit Certification">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-light text-danger" onclick="deleteCert('${c._id}')" title="Delete Certification">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        showToast('Failed to load certifications.', 'danger');
+      }
+    }
+
+    // 3. Achievements Loader (Section 6G)
+    async function loadAchievements() {
+      try {
+        const data = await apiFetch('/portfolio/achievements');
+        achievementsCache = data.achievements || [];
+        const tbody = document.getElementById('achievementsTableBody');
+
+        if (!achievementsCache || achievementsCache.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted small">No achievements or honors recorded yet. Add hackathon awards, academic honors, or recognitions!</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = achievementsCache.map(a => `
+          <tr>
+            <td>
+              <div class="fw-bold text-navy">${a.title}</div>
+              <div class="text-muted small text-truncate" style="max-width: 320px;">${a.description || ''}</div>
+            </td>
+            <td><span class="badge bg-warning-subtle text-warning-emphasis fw-semibold">${a.issuer || 'Award'}</span></td>
+            <td class="text-muted small">${a.date || 'Accomplished'}</td>
+            <td>
+              ${a.url
+                ? `<a href="${a.url}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-light border text-primary py-1 px-2 small">
+                     <i class="bi bi-box-arrow-up-right me-1"></i>View Link
+                   </a>`
+                : '<span class="text-muted small">-</span>'}
+            </td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-light text-primary me-1" onclick="openEditAchievementModal('${a._id}')" title="Edit Achievement">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-light text-danger" onclick="deleteAchievement('${a._id}')" title="Delete Achievement">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        showToast('Failed to load achievements.', 'danger');
+      }
+    }
+
+    // Add Project Submission
+    document.getElementById('addProjectForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        title: document.getElementById('projectTitle').value.trim(),
+        techStack: document.getElementById('projectTech').value.trim(),
+        status: document.getElementById('projectStatus').value,
+        githubUrl: document.getElementById('projectGithub').value.trim(),
+        liveUrl: document.getElementById('projectLive').value.trim(),
+        description: document.getElementById('projectDesc').value.trim()
+      };
+
+      try {
+        await apiFetch('/portfolio/projects', { method: 'POST', body: JSON.stringify(payload) });
+        showToast('Project added to portfolio!', 'success');
+        document.getElementById('addProjectForm').reset();
+        bootstrap.Modal.getInstance(document.getElementById('addProjectModal')).hide();
+        loadProjects();
+      } catch (err) {
+        showToast('Failed to add project.', 'danger');
+      }
+    });
+
+    // Add Certification Submission
+    document.getElementById('addCertForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        title: document.getElementById('certTitle').value.trim(),
+        issuer: document.getElementById('certIssuer').value.trim(),
+        issueDate: document.getElementById('certDate').value.trim(),
+        credentialUrl: document.getElementById('certUrl').value.trim()
+      };
+
+      try {
+        await apiFetch('/portfolio/certifications', { method: 'POST', body: JSON.stringify(payload) });
+        showToast('Certification added!', 'success');
+        document.getElementById('addCertForm').reset();
+        bootstrap.Modal.getInstance(document.getElementById('addCertModal')).hide();
+        loadCertifications();
+      } catch (err) {
+        showToast('Failed to add certification.', 'danger');
+      }
+    });
+
+    // Add Achievement Submission
+    document.getElementById('addAchievementForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        title: document.getElementById('achievementTitle').value.trim(),
+        issuer: document.getElementById('achievementIssuer').value.trim(),
+        date: document.getElementById('achievementDate').value.trim(),
+        url: document.getElementById('achievementUrl').value.trim(),
+        description: document.getElementById('achievementDesc').value.trim()
+      };
+
+      try {
+        await apiFetch('/portfolio/achievements', { method: 'POST', body: JSON.stringify(payload) });
+        showToast('Achievement recorded!', 'success');
+        document.getElementById('addAchievementForm').reset();
+        bootstrap.Modal.getInstance(document.getElementById('addAchievementModal')).hide();
+        loadAchievements();
+      } catch (err) {
+        showToast('Failed to add achievement.', 'danger');
+      }
+    });
+
+    // Edit Project
+    function openEditProjectModal(id) {
+      const p = projectsCache.find(x => x._id === id);
+      if (!p) return;
+      document.getElementById('editProjectId').value = p._id;
+      document.getElementById('editProjectTitle').value = p.title || '';
+      document.getElementById('editProjectTech').value = Array.isArray(p.techStack) ? p.techStack.join(', ') : (p.techStack || '');
+      document.getElementById('editProjectStatus').value = p.status || 'Completed';
+      document.getElementById('editProjectGithub').value = p.githubUrl || '';
+      document.getElementById('editProjectLive').value = p.liveUrl || p.projectUrl || '';
+      document.getElementById('editProjectDesc').value = p.description || '';
+      new bootstrap.Modal(document.getElementById('editProjectModal')).show();
+    }
+
+    document.getElementById('editProjectForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editProjectId').value;
+      const payload = {
+        title: document.getElementById('editProjectTitle').value.trim(),
+        techStack: document.getElementById('editProjectTech').value.trim(),
+        status: document.getElementById('editProjectStatus').value,
+        githubUrl: document.getElementById('editProjectGithub').value.trim(),
+        liveUrl: document.getElementById('editProjectLive').value.trim(),
+        description: document.getElementById('editProjectDesc').value.trim()
+      };
+
+      try {
+        await apiFetch(`/portfolio/projects/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+        showToast('Project updated successfully!', 'success');
+        bootstrap.Modal.getInstance(document.getElementById('editProjectModal')).hide();
+        loadProjects();
+      } catch (err) {
+        showToast('Failed to update project.', 'danger');
+      }
+    });
+
+    // Edit Certification
+    function openEditCertModal(id) {
+      const c = certsCache.find(x => x._id === id);
+      if (!c) return;
+      document.getElementById('editCertId').value = c._id;
+      document.getElementById('editCertTitle').value = c.title || c.name || '';
+      document.getElementById('editCertIssuer').value = c.issuer || '';
+      document.getElementById('editCertDate').value = c.issueDate || '';
+      document.getElementById('editCertUrl').value = c.credentialUrl || '';
+      new bootstrap.Modal(document.getElementById('editCertModal')).show();
+    }
+
+    document.getElementById('editCertForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editCertId').value;
+      const payload = {
+        title: document.getElementById('editCertTitle').value.trim(),
+        issuer: document.getElementById('editCertIssuer').value.trim(),
+        issueDate: document.getElementById('editCertDate').value.trim(),
+        credentialUrl: document.getElementById('editCertUrl').value.trim()
+      };
+
+      try {
+        await apiFetch(`/portfolio/certifications/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+        showToast('Certification updated!', 'success');
+        bootstrap.Modal.getInstance(document.getElementById('editCertModal')).hide();
+        loadCertifications();
+      } catch (err) {
+        showToast('Failed to update certification.', 'danger');
+      }
+    });
+
+    // Edit Achievement
+    function openEditAchievementModal(id) {
+      const a = achievementsCache.find(x => x._id === id);
+      if (!a) return;
+      document.getElementById('editAchievementId').value = a._id;
+      document.getElementById('editAchievementTitle').value = a.title || '';
+      document.getElementById('editAchievementIssuer').value = a.issuer || '';
+      document.getElementById('editAchievementDate').value = a.date || '';
+      document.getElementById('editAchievementUrl').value = a.url || '';
+      document.getElementById('editAchievementDesc').value = a.description || '';
+      new bootstrap.Modal(document.getElementById('editAchievementModal')).show();
+    }
+
+    document.getElementById('editAchievementForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editAchievementId').value;
+      const payload = {
+        title: document.getElementById('editAchievementTitle').value.trim(),
+        issuer: document.getElementById('editAchievementIssuer').value.trim(),
+        date: document.getElementById('editAchievementDate').value.trim(),
+        url: document.getElementById('editAchievementUrl').value.trim(),
+        description: document.getElementById('editAchievementDesc').value.trim()
+      };
+
+      try {
+        await apiFetch(`/portfolio/achievements/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+        showToast('Achievement updated!', 'success');
+        bootstrap.Modal.getInstance(document.getElementById('editAchievementModal')).hide();
+        loadAchievements();
+      } catch (err) {
+        showToast('Failed to update achievement.', 'danger');
+      }
+    });
+
+    // Delete Operations
+    async function deleteProject(id) {
+      if (!confirm('Are you sure you want to remove this project?')) return;
+      try {
+        await apiFetch(`/portfolio/projects/${id}`, { method: 'DELETE' });
+        showToast('Project deleted.', 'success');
+        loadProjects();
+      } catch (err) {
+        showToast('Failed to delete project.', 'danger');
+      }
+    }
+
+    async function deleteCert(id) {
+      if (!confirm('Are you sure you want to remove this certification?')) return;
+      try {
+        await apiFetch(`/portfolio/certifications/${id}`, { method: 'DELETE' });
+        showToast('Certification deleted.', 'success');
+        loadCertifications();
+      } catch (err) {
+        showToast('Failed to delete certification.', 'danger');
+      }
+    }
+
+    async function deleteAchievement(id) {
+      if (!confirm('Are you sure you want to remove this achievement?')) return;
+      try {
+        await apiFetch(`/portfolio/achievements/${id}`, { method: 'DELETE' });
+        showToast('Achievement deleted.', 'success');
+        loadAchievements();
+      } catch (err) {
+        showToast('Failed to delete achievement.', 'danger');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadPortfolio);
+  </script>
+</body>
+</html>

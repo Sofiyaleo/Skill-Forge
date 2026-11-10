@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Assessments – SkillForge</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- Dark Navy Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a class="brand-logo text-white" href="dashboard.html">
+          <div class="brand-icon">
+            <i class="bi bi-hammer"></i>
+          </div>
+          <span class="text-white">SkillForge</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main Navigation</div>
+        <a href="dashboard.html" class="sidebar-link">
+          <i class="bi bi-speedometer2"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="sidebar-link">
+          <i class="bi bi-person"></i>
+          <span>My Profile</span>
+        </a>
+        <a href="profile.html#skills" class="sidebar-link">
+          <i class="bi bi-cpu"></i>
+          <span>My Skills</span>
+        </a>
+        <a href="careers.html" class="sidebar-link">
+          <i class="bi bi-compass"></i>
+          <span>Career Explorer</span>
+        </a>
+        <a href="gap-analysis.html" class="sidebar-link">
+          <i class="bi bi-bar-chart-steps"></i>
+          <span>Skill Gap Analysis</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-link">
+          <i class="bi bi-map"></i>
+          <span>Learning Roadmap</span>
+        </a>
+        <a href="assessments.html" class="sidebar-link active">
+          <i class="bi bi-clipboard2-check"></i>
+          <span>Assessments</span>
+        </a>
+        <a href="portfolio.html" class="sidebar-link">
+          <i class="bi bi-folder2"></i>
+          <span>My Projects</span>
+        </a>
+        <a href="portfolio.html#certifications" class="sidebar-link">
+          <i class="bi bi-award"></i>
+          <span>Certifications</span>
+        </a>
+        <a href="internships.html" class="sidebar-link">
+          <i class="bi bi-briefcase"></i>
+          <span>Internships</span>
+        </a>
+        <a href="resume-builder.html" class="sidebar-link">
+          <i class="bi bi-file-earmark-person"></i>
+          <span>Resume Builder</span>
+        </a>
+        <a href="admin.html" class="sidebar-link admin-only-link d-none text-warning">
+          <i class="bi bi-shield-lock"></i>
+          <span>Admin Panel</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="javascript:void(0)" onclick="logout()" class="sidebar-link logout-link">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="main-content">
+
+      <!-- Top Header Navbar -->
+      <header class="app-header">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-sm btn-light d-lg-none" id="sidebar-toggle">
+            <i class="bi bi-list fs-5"></i>
+          </button>
+          <div class="app-header-nav d-none d-md-flex">
+            <a href="dashboard.html" class="header-nav-link">Dashboard</a>
+            <a href="careers.html" class="header-nav-link">Careers</a>
+            <a href="assessments.html" class="header-nav-link active">Assessments</a>
+            <a href="portfolio.html" class="header-nav-link">Projects</a>
+            <a href="internships.html" class="header-nav-link">Internships</a>
+            <a href="resume-builder.html" class="header-nav-link">Resume</a>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <div class="user-badge-dropdown" data-bs-toggle="dropdown">
+            <div class="user-avatar" id="header-user-avatar">ST</div>
+            <div class="d-none d-sm-block text-start">
+              <div class="fw-semibold small" id="header-user-name">Student</div>
+              <div class="text-muted" style="font-size: 0.75rem;">Student</div>
+            </div>
+            <i class="bi bi-chevron-down text-muted small ms-1"></i>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+            <li><a class="dropdown-item small" href="profile.html"><i class="bi bi-person me-2"></i>My Profile</a></li>
+            <li><a class="dropdown-item small" href="resume-builder.html"><i class="bi bi-file-earmark me-2"></i>My Resume</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item small text-danger" href="javascript:void(0)" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <!-- Main Assessments Canvas (Matches Panel 9 in reference) -->
+      <main class="portal-container">
+        
+        <div class="portal-title-block">
+          <h2 class="portal-title">Skill Assessments</h2>
+          <p class="portal-subtitle">Test your knowledge, verify your competencies, and earn verified skill badges.</p>
+        </div>
+
+        <!-- Navigation Tabs (Available Tests vs My Results) -->
+        <ul class="nav nav-pills mb-4" id="assessmentTabs" role="tablist">
+          <li class="nav-item">
+            <button class="nav-link active rounded-pill px-4" id="available-tests-tab" data-bs-toggle="pill" data-bs-target="#available-tests">
+              Available Tests
+            </button>
+          </li>
+          <li class="nav-item ms-2">
+            <button class="nav-link rounded-pill px-4" id="my-results-tab" data-bs-toggle="pill" data-bs-target="#my-results" onclick="loadMyResults()">
+              My Results
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="assessmentTabsContent">
+          
+          <!-- TAB 1: AVAILABLE TESTS GRID (Panel 9 in reference) -->
+          <div class="tab-pane fade show active" id="available-tests">
+            <div class="row g-4" id="testsGrid">
+              <div class="col-12 text-center py-5">
+                <div class="spinner-border text-primary"></div>
+                <div class="text-muted small mt-2">Loading assessments...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: MY RESULTS -->
+          <div class="tab-pane fade" id="my-results">
+            <div class="portal-card">
+              <h5 class="portal-card-title mb-3">Assessment History & Verification Badges</h5>
+              <div class="table-responsive">
+                <table class="table table-forge">
+                  <thead>
+                    <tr>
+                      <th>Assessment Title</th>
+                      <th>Score</th>
+                      <th>Percentage</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="resultsTableBody">
+                    <tr><td colspan="5" class="text-center py-4 text-muted">No test results yet. Take an assessment!</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Interactive Quiz Runner Modal -->
+  <div class="modal fade" id="quizModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        
+        <!-- Quiz Header with Timer -->
+        <div class="modal-header border-bottom border-light bg-light py-3">
+          <div>
+            <h5 class="modal-title fw-bold text-navy" id="quizModalTitle">Assessment</h5>
+            <span class="text-muted small" id="quizModalCategory">Frontend</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <div class="badge bg-danger-subtle text-danger px-3 py-2 fs-6 fw-bold" id="quizTimer">
+              <i class="bi bi-clock me-1"></i> <span id="timerCountdown">15:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz Questions Area -->
+        <div class="modal-body p-4" id="quizBody">
+          <div id="quizQuestionContainer">
+            <!-- Active question injected via JS -->
+          </div>
+        </div>
+
+        <!-- Quiz Controls Footer -->
+        <div class="modal-footer border-top border-light justify-content-between">
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="prevQuestionBtn" onclick="prevQuestion()" disabled>
+            <i class="bi bi-arrow-left me-1"></i> Previous
+          </button>
+          <span class="text-muted small fw-semibold" id="questionCounterText">Question 1 of 5</span>
+          <button type="button" class="btn btn-forge-primary btn-sm px-4" id="nextQuestionBtn" onclick="nextQuestion()">
+            <span>Next</span> <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Result Modal -->
+  <div class="modal fade" id="quizResultModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4 text-center p-4">
+        <div id="quizResultIconWrapper" class="my-3">
+          <!-- Success or Fail Icon -->
+        </div>
+        <h4 class="fw-bold text-navy" id="quizResultTitle">Assessment Completed</h4>
+        <p class="text-muted small" id="quizResultSubtitle"></p>
+
+        <div class="p-3 rounded-3 bg-light my-3">
+          <div class="row">
+            <div class="col-6 border-end">
+              <div class="text-muted small">Score</div>
+              <h3 class="fw-bold text-navy mb-0" id="resultScoreText">4 / 5</h3>
+            </div>
+            <div class="col-6">
+              <div class="text-muted small">Percentage</div>
+              <h3 class="fw-bold text-primary mb-0" id="resultPercentageText">80%</h3>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-forge-primary w-100 py-2 mt-2" data-bs-dismiss="modal" onclick="finishQuizReview()">
+          Return to Assessments
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle & API helper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    const user = requireAuth();
+
+    let assessmentsList = [];
+    let activeQuiz = null;
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let timerInterval = null;
+    let timeRemaining = 0;
+
+    async function loadAssessments() {
+      try {
+        const data = await apiFetch('/assessments');
+        assessmentsList = data.assessments || [];
+        renderAssessments(assessmentsList);
+      } catch (err) {
+        showToast('Failed to load assessments.', 'danger');
+      }
+    }
+
+    function renderAssessments(tests) {
+      const grid = document.getElementById('testsGrid');
+      if (!tests || tests.length === 0) {
+        grid.innerHTML = `<div class="col-12 text-center py-5 text-muted">No assessments available currently.</div>`;
+        return;
+      }
+
+      grid.innerHTML = tests.map(test => `
+        <div class="col-md-6 col-lg-4">
+          <div class="portal-card h-100 d-flex flex-column">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="feature-icon-bubble mb-0" style="background: ${test.badgeColor}18; color: ${test.badgeColor}; width: 50px; height: 50px; font-size: 1.4rem;">
+                <i class="bi ${test.icon}"></i>
+              </div>
+              <div>
+                <h5 class="fw-bold text-navy mb-0" style="font-size: 1.05rem;">${test.title}</h5>
+                <span class="badge bg-light text-muted small">${test.skillCategory}</span>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center text-muted small mb-4 mt-auto">
+              <span><i class="bi bi-question-circle me-1"></i>${test.questionCount} Questions</span>
+              <span><i class="bi bi-clock me-1"></i>${test.durationMinutes} min</span>
+            </div>
+
+            <button class="btn btn-forge-primary btn-sm w-100 py-2" onclick="startQuiz('${test._id}')">
+              <span>Start Test</span>
+              <i class="bi bi-play-circle ms-1"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Start Interactive Quiz
+    async function startQuiz(testId) {
+      try {
+        const data = await apiFetch(`/assessments/${testId}`);
+        activeQuiz = data.assessment;
+        currentQuestionIndex = 0;
+        userAnswers = new Array(activeQuiz.questions.length).fill(null);
+
+        document.getElementById('quizModalTitle').textContent = activeQuiz.title;
+        document.getElementById('quizModalCategory').textContent = activeQuiz.skillCategory;
+
+        // Timer setup
+        timeRemaining = activeQuiz.durationMinutes * 60;
+        updateTimerDisplay();
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          timeRemaining--;
+          updateTimerDisplay();
+          if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            submitQuiz();
+          }
+        }, 1000);
+
+        renderCurrentQuestion();
+        new bootstrap.Modal(document.getElementById('quizModal')).show();
+      } catch (err) {
+        showToast('Failed to load test questions.', 'danger');
+      }
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      document.getElementById('timerCountdown').textContent =
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function renderCurrentQuestion() {
+      const q = activeQuiz.questions[currentQuestionIndex];
+      const container = document.getElementById('quizQuestionContainer');
+
+      document.getElementById('questionCounterText').textContent =
+        `Question ${currentQuestionIndex + 1} of ${activeQuiz.questions.length}`;
+
+      document.getElementById('prevQuestionBtn').disabled = currentQuestionIndex === 0;
+      const nextBtn = document.getElementById('nextQuestionBtn');
+      if (currentQuestionIndex === activeQuiz.questions.length - 1) {
+        nextBtn.innerHTML = `<span>Submit Test</span> <i class="bi bi-check-lg ms-1"></i>`;
+      } else {
+        nextBtn.innerHTML = `<span>Next</span> <i class="bi bi-arrow-right ms-1"></i>`;
+      }
+
+      container.innerHTML = `
+        <h6 class="fw-bold text-navy mb-3">${currentQuestionIndex + 1}. ${q.questionText}</h6>
+        <div class="d-flex flex-column gap-2">
+          ${q.options.map((opt, idx) => `
+            <label class="p-3 border rounded-3 d-flex align-items-center gap-3 cursor-pointer ${userAnswers[currentQuestionIndex] === idx ? 'border-primary bg-primary-subtle' : 'bg-light'}">
+              <input type="radio" name="quizOption" value="${idx}" class="form-check-input"
+                     ${userAnswers[currentQuestionIndex] === idx ? 'checked' : ''}
+                     onchange="selectOption(${idx})">
+              <span class="small fw-semibold text-navy">${opt}</span>
+            </label>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function selectOption(idx) {
+      userAnswers[currentQuestionIndex] = idx;
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex === activeQuiz.questions.length - 1) {
+        submitQuiz();
+      } else {
+        currentQuestionIndex++;
+        renderCurrentQuestion();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderCurrentQuestion();
+      }
+    }
+
+    // Submit Quiz to Express Backend
+    async function submitQuiz() {
+      clearInterval(timerInterval);
+      bootstrap.Modal.getInstance(document.getElementById('quizModal')).hide();
+
+      try {
+        const response = await apiFetch(`/assessments/${activeQuiz._id}/submit`, {
+          method: 'POST',
+          body: JSON.stringify({ answers: userAnswers })
+        });
+
+        const r = response.result;
+        document.getElementById('resultScoreText').textContent = `${r.score} / ${r.totalQuestions}`;
+        document.getElementById('resultPercentageText').textContent = `${r.percentage}%`;
+
+        const iconWrapper = document.getElementById('quizResultIconWrapper');
+        if (r.passed) {
+          iconWrapper.innerHTML = `<i class="bi bi-patch-check-fill text-success" style="font-size: 4rem;"></i>`;
+          document.getElementById('quizResultTitle').textContent = 'Congratulations! You Passed!';
+          document.getElementById('quizResultSubtitle').textContent = 'Your verified skill badge has been added to your profile.';
+        } else {
+          iconWrapper.innerHTML = `<i class="bi bi-exclamation-circle text-warning" style="font-size: 4rem;"></i>`;
+          document.getElementById('quizResultTitle').textContent = 'Keep Practicing!';
+          document.getElementById('quizResultSubtitle').textContent = `Passing threshold is ${r.passingPercentage}%. Review your roadmap and try again!`;
+        }
+
+        new bootstrap.Modal(document.getElementById('quizResultModal')).show();
+      } catch (err) {
+        showToast('Error submitting assessment.', 'danger');
+      }
+    }
+
+    function finishQuizReview() {
+      loadAssessments();
+    }
+
+    // Load Past Test Results
+    async function loadMyResults() {
+      try {
+        const data = await apiFetch('/assessments/my-results');
+        const tbody = document.getElementById('resultsTableBody');
+
+        if (!data.results || data.results.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">No test results recorded yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = data.results.map(r => `
+          <tr>
+            <td class="fw-bold text-navy">${r.assessmentTitle}</td>
+            <td>${r.score} / ${r.totalQuestions}</td>
+            <td class="fw-semibold text-primary">${r.percentage}%</td>
+            <td>
+              <span class="badge ${r.passed ? 'badge-status-meets' : 'badge-status-missing'}">
+                ${r.passed ? 'Passed ✓' : 'Failed'}
+              </span>
+            </td>
+            <td class="text-muted small">${new Date(r.completedAt).toLocaleDateString()}</td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        showToast('Failed to load past test results.', 'danger');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadAssessments);
+  </script>
+</body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile & Skills – SkillForge</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- Dark Navy Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a class="brand-logo text-white" href="dashboard.html">
+          <div class="brand-icon">
+            <i class="bi bi-hammer"></i>
+          </div>
+          <span class="text-white">SkillForge</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main Navigation</div>
+        <a href="dashboard.html" class="sidebar-link">
+          <i class="bi bi-speedometer2"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="sidebar-link active">
+          <i class="bi bi-person"></i>
+          <span>My Profile</span>
+        </a>
+        <a href="profile.html#skillsSection" class="sidebar-link">
+          <i class="bi bi-cpu"></i>
+          <span>My Skills</span>
+        </a>
+        <a href="careers.html" class="sidebar-link">
+          <i class="bi bi-compass"></i>
+          <span>Career Explorer</span>
+        </a>
+        <a href="gap-analysis.html" class="sidebar-link">
+          <i class="bi bi-bar-chart-steps"></i>
+          <span>Skill Gap Analysis</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-link">
+          <i class="bi bi-map"></i>
+          <span>Learning Roadmap</span>
+        </a>
+        <a href="assessments.html" class="sidebar-link">
+          <i class="bi bi-clipboard2-check"></i>
+          <span>Assessments</span>
+        </a>
+        <a href="portfolio.html" class="sidebar-link">
+          <i class="bi bi-folder2"></i>
+          <span>My Projects</span>
+        </a>
+        <a href="portfolio.html#certifications" class="sidebar-link">
+          <i class="bi bi-award"></i>
+          <span>Certifications</span>
+        </a>
+        <a href="portfolio.html#achievements" class="sidebar-link">
+          <i class="bi bi-trophy"></i>
+          <span>Achievements</span>
+        </a>
+        <a href="internships.html" class="sidebar-link">
+          <i class="bi bi-briefcase"></i>
+          <span>Internship Tracker</span>
+        </a>
+        <a href="resume-builder.html" class="sidebar-link">
+          <i class="bi bi-file-earmark-person"></i>
+          <span>Resume Builder</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="javascript:void(0)" onclick="logout()" class="sidebar-link logout-link">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="main-content">
+
+      <!-- Top Header Navbar -->
+      <header class="app-header">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-sm btn-light d-lg-none" id="sidebar-toggle">
+            <i class="bi bi-list fs-5"></i>
+          </button>
+          <div class="app-header-nav d-none d-md-flex">
+            <a href="dashboard.html" class="header-nav-link">Dashboard</a>
+            <a href="careers.html" class="header-nav-link">Careers</a>
+            <a href="profile.html" class="header-nav-link active">Profile & Skills</a>
+            <a href="gap-analysis.html" class="header-nav-link">Gap Analysis</a>
+            <a href="roadmap.html" class="header-nav-link">Roadmap</a>
+            <a href="assessments.html" class="header-nav-link">Assessments</a>
+            <a href="portfolio.html" class="header-nav-link">Projects</a>
+            <a href="internships.html" class="header-nav-link">Internships</a>
+            <a href="resume-builder.html" class="header-nav-link">Resume</a>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <div class="user-badge-dropdown" data-bs-toggle="dropdown">
+            <div class="user-avatar" id="header-user-avatar">ST</div>
+            <div class="d-none d-sm-block text-start">
+              <div class="fw-semibold small" id="header-user-name">Student</div>
+              <div class="text-muted" style="font-size: 0.75rem;" id="header-user-role">Student</div>
+            </div>
+            <i class="bi bi-chevron-down text-muted small ms-1"></i>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+            <li><a class="dropdown-item small" href="profile.html"><i class="bi bi-person me-2"></i>My Profile</a></li>
+            <li><a class="dropdown-item small" href="resume-builder.html"><i class="bi bi-file-earmark me-2"></i>My Resume</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item small text-danger" href="javascript:void(0)" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <!-- Main Profile Canvas -->
+      <main class="portal-container">
+        
+        <div class="portal-title-block d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <div>
+            <h2 class="portal-title">Student Profile & Skills</h2>
+            <p class="portal-subtitle">Manage your personal information, academic background, career goal, and verified skills inventory.</p>
+          </div>
+          <button class="btn btn-forge-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#addSkillModal">
+            <i class="bi bi-plus-lg me-1"></i>
+            <span>Add Skill</span>
+          </button>
+        </div>
+
+        <div class="row g-4">
+          
+          <!-- Left Column: Personal & Academic Information Form -->
+          <div class="col-lg-7">
+            <div class="portal-card mb-4">
+              
+              <!-- Profile Header Card -->
+              <div class="d-flex align-items-center gap-3 pb-3 mb-4 border-bottom border-light">
+                <div class="user-avatar" style="width: 64px; height: 64px; font-size: 1.5rem;" id="profileLargeAvatar">ST</div>
+                <div>
+                  <h4 class="fw-bold text-navy mb-0" id="profileDisplayName">Student</h4>
+                  <div class="text-muted small" id="profileDisplayEmail">student@example.com</div>
+                  <div class="badge bg-primary-subtle text-primary mt-1" id="profileDisplayRole">Target: Full Stack Developer</div>
+                </div>
+              </div>
+
+              <!-- Form for Personal & Academic Updates -->
+              <form id="profileForm">
+                
+                <h6 class="fw-bold text-navy mb-3 d-flex align-items-center gap-2">
+                  <i class="bi bi-person-lines-fill text-primary"></i> Basic Account Details
+                </h6>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold text-secondary">Full Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="profileName" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold text-secondary">Email Address (Registered)</label>
+                    <input type="email" class="form-control bg-light" id="profileEmail" disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold text-secondary">Phone Number</label>
+                    <input type="text" class="form-control" id="profilePhone" placeholder="+91 98765 43210">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold text-secondary">Location</label>
+                    <input type="text" class="form-control" id="profileLocation" placeholder="City, Country">
+                  </div>
+                </div>
+
+                <h6 class="fw-bold text-navy mb-3 d-flex align-items-center gap-2">
+                  <i class="bi bi-mortarboard-fill text-primary"></i> College & Academic Information
+                </h6>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold text-secondary">College / Institution Name</label>
+                    <input type="text" class="form-control" id="profileCollege" placeholder="e.g. National Institute of Technology">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold text-secondary">Degree / Course</label>
+                    <input type="text" class="form-control" id="profileDegree" placeholder="e.g. B.Tech / MCA">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold text-secondary">Department / Specialization</label>
+                    <input type="text" class="form-control" id="profileDepartment" placeholder="e.g. Computer Science & Engineering">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold text-secondary">Academic Year / Semester</label>
+                    <input type="text" class="form-control" id="profileAcademicYear" placeholder="e.g. Final Year (8th Sem)">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold text-secondary">Educational Background</label>
+                    <select class="form-select" id="profileEducationalBackground">
+                      <option value="Computer Science">Computer Science</option>
+                      <option value="Information Technology">Information Technology</option>
+                      <option value="Another Engineering Discipline">Another Engineering Discipline</option>
+                      <option value="Non-Computer Science Background">Non-Computer Science Background</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <h6 class="fw-bold text-navy mb-3 d-flex align-items-center gap-2">
+                  <i class="bi bi-compass-fill text-primary"></i> Career Target & Professional Bio
+                </h6>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold text-secondary">Target Career Goal</label>
+                    <select class="form-select fw-semibold" id="profileCareerInterest">
+                      <option value="Full Stack Developer">Full Stack Developer</option>
+                      <option value="Frontend Developer">Frontend Developer</option>
+                      <option value="Backend Developer">Backend Developer</option>
+                      <option value="Software Developer">Software Developer</option>
+                      <option value="Data Analyst">Data Analyst</option>
+                      <option value="UI/UX Designer">UI/UX Designer</option>
+                      <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+                    </select>
+                    <div class="form-text small text-muted">Updating this automatically recalculates your skill gap analysis and generates new roadmap milestones.</div>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold text-secondary">Professional Bio / Summary</label>
+                    <textarea class="form-control" id="profileBio" rows="3" placeholder="Brief summary of your background, technical interests, and career goals..."></textarea>
+                  </div>
+                </div>
+
+                <div>
+                  <button type="submit" class="btn btn-forge-primary px-4" id="saveProfileBtn">
+                    <i class="bi bi-check2-circle me-1"></i>
+                    <span>Save Changes</span>
+                  </button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+
+          <!-- Right Column: Skills Management Section -->
+          <div class="col-lg-5" id="skillsSection">
+            <div class="portal-card h-100 d-flex flex-column">
+              <div class="portal-card-header">
+                <div>
+                  <h5 class="portal-card-title mb-0">Skills Inventory</h5>
+                  <span class="text-muted small" id="skillsCountHeader">0 Skills Recorded</span>
+                </div>
+                <button class="btn btn-sm btn-forge-primary" data-bs-toggle="modal" data-bs-target="#addSkillModal">
+                  <i class="bi bi-plus-lg me-1"></i>Add Skill
+                </button>
+              </div>
+
+              <!-- Filter & Search Controls -->
+              <div class="mb-3">
+                <div class="input-group input-group-sm mb-2">
+                  <span class="input-group-text bg-white text-muted"><i class="bi bi-search"></i></span>
+                  <input type="text" class="form-control" id="skillSearchInput" placeholder="Filter skills by name...">
+                </div>
+                
+                <div class="d-flex flex-wrap gap-1" id="skillFilterPills">
+                  <button class="btn btn-sm btn-light py-0 px-2 active small" onclick="filterSkillsByCategory('All', this)">All</button>
+                  <button class="btn btn-sm btn-light py-0 px-2 small" onclick="filterSkillsByCategory('Programming', this)">Programming</button>
+                  <button class="btn btn-sm btn-light py-0 px-2 small" onclick="filterSkillsByCategory('Web Development', this)">Web Dev</button>
+                  <button class="btn btn-sm btn-light py-0 px-2 small" onclick="filterSkillsByCategory('Database', this)">Database</button>
+                  <button class="btn btn-sm btn-light py-0 px-2 small" onclick="filterSkillsByCategory('Tools and Platforms', this)">Tools</button>
+                </div>
+              </div>
+
+              <!-- Skills List Container -->
+              <div id="skillsContainer" class="flex-grow-1 overflow-auto" style="max-height: 520px;">
+                <div class="text-center py-5 text-muted small">
+                  <div class="spinner-border spinner-border-sm me-2"></div>
+                  Loading skills inventory...
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Add Skill Modal -->
+  <div class="modal fade" id="addSkillModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom border-light">
+          <h5 class="modal-title fw-bold text-navy"><i class="bi bi-plus-circle text-primary me-2"></i>Add Skill to Inventory</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="addSkillForm">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Skill Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="modalSkillName" placeholder="e.g. React, Node.js, Python, SQL, Docker" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Category</label>
+              <select class="form-select" id="modalSkillCategory">
+                <option value="Programming">Programming</option>
+                <option value="Web Development">Web Development</option>
+                <option value="Database">Database</option>
+                <option value="Tools and Platforms">Tools and Platforms</option>
+                <option value="Data Analysis">Data Analysis</option>
+                <option value="Design">Design</option>
+                <option value="Communication">Communication</option>
+                <option value="Problem Solving">Problem Solving</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Proficiency Level</label>
+              <select class="form-select" id="modalSkillProficiency">
+                <option value="Beginner">Beginner (Level 1/5)</option>
+                <option value="Basic">Basic (Level 2/5)</option>
+                <option value="Intermediate" selected>Intermediate (Level 3/5)</option>
+                <option value="Advanced">Advanced (Level 4/5)</option>
+                <option value="Expert">Expert (Level 5/5)</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer border-top border-light">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-3">
+              <span>Save Skill</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Skill Modal -->
+  <div class="modal fade" id="editSkillModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom border-light">
+          <h5 class="modal-title fw-bold text-navy"><i class="bi bi-pencil-square text-primary me-2"></i>Edit Skill Proficiency</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="editSkillForm">
+          <input type="hidden" id="editSkillId">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Skill Name</label>
+              <input type="text" class="form-control bg-light" id="editSkillName" disabled>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Category</label>
+              <select class="form-select" id="editSkillCategory">
+                <option value="Programming">Programming</option>
+                <option value="Web Development">Web Development</option>
+                <option value="Database">Database</option>
+                <option value="Tools and Platforms">Tools and Platforms</option>
+                <option value="Data Analysis">Data Analysis</option>
+                <option value="Design">Design</option>
+                <option value="Communication">Communication</option>
+                <option value="Problem Solving">Problem Solving</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Proficiency Level</label>
+              <select class="form-select" id="editSkillProficiency">
+                <option value="Beginner">Beginner (Level 1/5)</option>
+                <option value="Basic">Basic (Level 2/5)</option>
+                <option value="Intermediate">Intermediate (Level 3/5)</option>
+                <option value="Advanced">Advanced (Level 4/5)</option>
+                <option value="Expert">Expert (Level 5/5)</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer border-top border-light">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-3">
+              <span>Update Skill</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle & API helper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    const user = requireAuth();
+    let currentSkills = [];
+    let activeFilterCategory = 'All';
+    let searchQuery = '';
+
+    async function loadProfile() {
+      try {
+        const data = await apiFetch('/student/profile');
+        const p = data.profile;
+        currentSkills = data.skills || [];
+
+        // Populate Form
+        document.getElementById('profileName').value = p.name || '';
+        document.getElementById('profileEmail').value = p.email || '';
+        document.getElementById('profilePhone').value = p.phone || '';
+        document.getElementById('profileLocation').value = p.location || '';
+        
+        document.getElementById('profileCollege').value = p.college || '';
+        document.getElementById('profileDegree').value = p.degree || '';
+        document.getElementById('profileDepartment').value = p.department || '';
+        document.getElementById('profileAcademicYear').value = p.academicYear || '';
+        document.getElementById('profileEducationalBackground').value = p.educationalBackground || 'Computer Science';
+
+        document.getElementById('profileCareerInterest').value = p.targetCareer || p.careerInterest || 'Full Stack Developer';
+        document.getElementById('profileBio').value = p.bio || p.professionalSummary || '';
+
+        // Populate Card Header
+        document.getElementById('profileDisplayName').textContent = p.name;
+        document.getElementById('profileDisplayEmail').textContent = p.email;
+        document.getElementById('profileDisplayRole').textContent = `Target: ${p.targetCareer || p.careerInterest || 'Full Stack Developer'}`;
+        
+        const initials = (p.name || 'S').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        document.getElementById('profileLargeAvatar').textContent = initials;
+
+        renderSkills();
+      } catch (err) {
+        showToast('Failed to load profile details.', 'danger');
+      }
+    }
+
+    function renderSkills() {
+      const container = document.getElementById('skillsContainer');
+      document.getElementById('skillsCountHeader').textContent = `${currentSkills.length} Skills Recorded`;
+
+      let filtered = currentSkills;
+      if (activeFilterCategory !== 'All') {
+        filtered = filtered.filter(s => s.category === activeFilterCategory);
+      }
+      if (searchQuery) {
+        filtered = filtered.filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()));
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-5 text-muted small">
+            <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
+            No skills found ${activeFilterCategory !== 'All' ? `in category "${activeFilterCategory}"` : ''}.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(s => {
+        const prof = s.proficiency || (['Beginner','Basic','Intermediate','Advanced','Expert'][(s.rating || 3) - 1]);
+        const profBadgeClass = prof === 'Expert' || prof === 'Advanced' ? 'bg-success-subtle text-success' : (prof === 'Intermediate' ? 'bg-primary-subtle text-primary' : 'bg-warning-subtle text-warning-emphasis');
+
+        return `
+          <div class="d-flex align-items-center justify-content-between p-3 mb-2 rounded-3 bg-light border border-light">
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="fw-bold text-navy small">${s.name}</span>
+                ${s.isVerified ? '<span class="badge bg-success-subtle text-success small" title="Verified via skill assessment"><i class="bi bi-patch-check-fill me-1"></i>Verified</span>' : ''}
+              </div>
+              <div class="d-flex align-items-center gap-2 mt-1">
+                <span class="badge bg-white text-muted border small">${s.category || 'Programming'}</span>
+                <span class="badge ${profBadgeClass} small">${prof}</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-1">
+              <button class="btn btn-sm btn-light text-primary" title="Edit proficiency" onclick="openEditSkillModal('${s._id}')">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-light text-danger" title="Delete skill" onclick="deleteSkill('${s._id}', '${s.name}')">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterSkillsByCategory(cat, btnEl) {
+      activeFilterCategory = cat;
+      document.querySelectorAll('#skillFilterPills button').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+      renderSkills();
+    }
+
+    document.getElementById('skillSearchInput').addEventListener('input', (e) => {
+      searchQuery = e.target.value.trim();
+      renderSkills();
+    });
+
+    // Save Profile Form
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const saveBtn = document.getElementById('saveProfileBtn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+
+      const payload = {
+        name: document.getElementById('profileName').value.trim(),
+        phone: document.getElementById('profilePhone').value.trim(),
+        location: document.getElementById('profileLocation').value.trim(),
+        college: document.getElementById('profileCollege').value.trim(),
+        degree: document.getElementById('profileDegree').value.trim(),
+        department: document.getElementById('profileDepartment').value.trim(),
+        academicYear: document.getElementById('profileAcademicYear').value.trim(),
+        educationalBackground: document.getElementById('profileEducationalBackground').value,
+        targetCareer: document.getElementById('profileCareerInterest').value,
+        careerInterest: document.getElementById('profileCareerInterest').value,
+        bio: document.getElementById('profileBio').value.trim()
+      };
+
+      try {
+        const response = await apiFetch('/student/profile', {
+          method: 'PUT',
+          body: JSON.stringify(payload)
+        });
+
+        setSession(response.profile);
+        showToast('Profile updated successfully!', 'success');
+        loadProfile();
+      } catch (err) {
+        showToast(err.message || 'Failed to update profile.', 'danger');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="bi bi-check2-circle me-1"></i><span>Save Changes</span>';
+      }
+    });
+
+    // Add Skill Form
+    document.getElementById('addSkillForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('modalSkillName').value.trim();
+      const category = document.getElementById('modalSkillCategory').value;
+      const proficiency = document.getElementById('modalSkillProficiency').value;
+
+      try {
+        const response = await apiFetch('/student/skills', {
+          method: 'POST',
+          body: JSON.stringify({ name, category, proficiency })
+        });
+
+        showToast(response.message || 'Skill added successfully.', 'success');
+        bootstrap.Modal.getInstance(document.getElementById('addSkillModal')).hide();
+        document.getElementById('addSkillForm').reset();
+        loadProfile();
+      } catch (err) {
+        showToast(err.message || 'Failed to add skill.', 'danger');
+      }
+    });
+
+    // Open Edit Skill Modal
+    function openEditSkillModal(skillId) {
+      const skill = currentSkills.find(s => s._id === skillId);
+      if (!skill) return;
+
+      document.getElementById('editSkillId').value = skill._id;
+      document.getElementById('editSkillName').value = skill.name;
+      document.getElementById('editSkillCategory').value = skill.category || 'Programming';
+      document.getElementById('editSkillProficiency').value = skill.proficiency || 'Intermediate';
+
+      new bootstrap.Modal(document.getElementById('editSkillModal')).show();
+    }
+
+    // Submit Edit Skill
+    document.getElementById('editSkillForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const skillId = document.getElementById('editSkillId').value;
+      const category = document.getElementById('editSkillCategory').value;
+      const proficiency = document.getElementById('editSkillProficiency').value;
+
+      try {
+        await apiFetch(`/student/skills/${skillId}`, {
+          method: 'PUT',
+          body: JSON.stringify({ category, proficiency })
+        });
+
+        showToast('Skill proficiency updated.', 'success');
+        bootstrap.Modal.getInstance(document.getElementById('editSkillModal')).hide();
+        loadProfile();
+      } catch (err) {
+        showToast(err.message || 'Failed to update skill.', 'danger');
+      }
+    });
+
+    // Delete Skill
+    async function deleteSkill(skillId, skillName) {
+      if (!confirm(`Are you sure you want to remove "${skillName}" from your profile?`)) return;
+
+      try {
+        await apiFetch(`/student/skills/${skillId}`, {
+          method: 'DELETE'
+        });
+
+        showToast(`Skill "${skillName}" removed.`, 'success');
+        loadProfile();
+      } catch (err) {
+        showToast('Failed to delete skill.', 'danger');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadProfile);
+  </script>
+</body>
+</html>

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Learning Roadmap – SkillForge</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- Dark Navy Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a class="brand-logo text-white" href="dashboard.html">
+          <div class="brand-icon">
+            <i class="bi bi-hammer"></i>
+          </div>
+          <span class="text-white">SkillForge</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main Navigation</div>
+        <a href="dashboard.html" class="sidebar-link">
+          <i class="bi bi-speedometer2"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="sidebar-link">
+          <i class="bi bi-person"></i>
+          <span>My Profile</span>
+        </a>
+        <a href="profile.html#skills" class="sidebar-link">
+          <i class="bi bi-cpu"></i>
+          <span>My Skills</span>
+        </a>
+        <a href="careers.html" class="sidebar-link">
+          <i class="bi bi-compass"></i>
+          <span>Career Explorer</span>
+        </a>
+        <a href="gap-analysis.html" class="sidebar-link">
+          <i class="bi bi-bar-chart-steps"></i>
+          <span>Skill Gap Analysis</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-link active">
+          <i class="bi bi-map"></i>
+          <span>Learning Roadmap</span>
+        </a>
+        <a href="assessments.html" class="sidebar-link">
+          <i class="bi bi-clipboard2-check"></i>
+          <span>Assessments</span>
+        </a>
+        <a href="portfolio.html" class="sidebar-link">
+          <i class="bi bi-folder2"></i>
+          <span>My Projects</span>
+        </a>
+        <a href="portfolio.html#certifications" class="sidebar-link">
+          <i class="bi bi-award"></i>
+          <span>Certifications</span>
+        </a>
+        <a href="portfolio.html#achievements" class="sidebar-link">
+          <i class="bi bi-trophy"></i>
+          <span>Achievements</span>
+        </a>
+        <a href="internships.html" class="sidebar-link">
+          <i class="bi bi-briefcase"></i>
+          <span>Internship Tracker</span>
+        </a>
+        <a href="resume-builder.html" class="sidebar-link">
+          <i class="bi bi-file-earmark-person"></i>
+          <span>Resume Builder</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="javascript:void(0)" onclick="logout()" class="sidebar-link logout-link">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="main-content">
+
+      <!-- Top Header Navbar -->
+      <header class="app-header">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-sm btn-light d-lg-none" id="sidebar-toggle">
+            <i class="bi bi-list fs-5"></i>
+          </button>
+          <div class="app-header-nav d-none d-md-flex">
+            <a href="dashboard.html" class="header-nav-link">Dashboard</a>
+            <a href="careers.html" class="header-nav-link">Careers</a>
+            <a href="gap-analysis.html" class="header-nav-link">Gap Analysis</a>
+            <a href="roadmap.html" class="header-nav-link active">Roadmap</a>
+            <a href="assessments.html" class="header-nav-link">Assessments</a>
+            <a href="portfolio.html" class="header-nav-link">Portfolio</a>
+            <a href="internships.html" class="header-nav-link">Internships</a>
+            <a href="resume-builder.html" class="header-nav-link">Resume</a>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <div class="user-badge-dropdown" data-bs-toggle="dropdown">
+            <div class="user-avatar" id="header-user-avatar">ST</div>
+            <div class="d-none d-sm-block text-start">
+              <div class="fw-semibold small" id="header-user-name">Student</div>
+              <div class="text-muted" style="font-size: 0.75rem;" id="header-user-role">Student</div>
+            </div>
+            <i class="bi bi-chevron-down text-muted small ms-1"></i>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+            <li><a class="dropdown-item small" href="profile.html"><i class="bi bi-person me-2"></i>My Profile</a></li>
+            <li><a class="dropdown-item small" href="resume-builder.html"><i class="bi bi-file-earmark me-2"></i>My Resume</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item small text-danger" href="javascript:void(0)" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <!-- Main Learning Roadmap Canvas -->
+      <main class="portal-container">
+        
+        <!-- Header Controls Row -->
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+          <div>
+            <h2 class="portal-title mb-1">Career Learning Roadmap</h2>
+            <p class="portal-subtitle mb-0">Personalized milestone guidance based on your skill gaps and target career.</p>
+          </div>
+          <div class="d-flex align-items-center flex-wrap gap-2">
+            <button class="btn btn-outline-primary btn-sm" id="changeCareerBtn" data-bs-toggle="modal" data-bs-target="#changeCareerModal">
+              <i class="bi bi-shuffle me-1"></i>Change Target Career
+            </button>
+            <button class="btn btn-forge-primary btn-sm" id="regenRoadmapBtn" onclick="regenerateRoadmap()">
+              <i class="bi bi-arrow-repeat me-1"></i>Update Recommendations
+            </button>
+          </div>
+        </div>
+
+        <!-- Career Target Banner (Section 5A) -->
+        <div class="career-target-banner" id="careerTargetBanner">
+          <div class="row align-items-center gy-3">
+            <div class="col-lg-8">
+              <div class="career-banner-badge">
+                <i class="bi bi-compass me-1"></i> Target Career Track
+              </div>
+              <h3 class="career-banner-title" id="bannerCareerTitle">
+                Full Stack Developer
+              </h3>
+              <p class="career-banner-desc" id="bannerCareerDesc">
+                Builds end-to-end web applications covering user interface engineering, server architectures, databases, and secure APIs.
+              </p>
+              
+              <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+                <span class="text-white-50 small fw-semibold">Required Skills:</span>
+                <div id="bannerRequiredSkills" class="d-flex flex-wrap gap-1">
+                  <!-- Skill badges -->
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 text-lg-end">
+              <div class="bg-white bg-opacity-10 p-3 rounded-4 border border-white border-opacity-20 d-inline-block text-start w-100" style="max-width: 320px;">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <span class="text-white-50 small">Current Readiness</span>
+                  <span class="badge bg-success fw-bold" id="bannerReadinessBadge">0% Matched</span>
+                </div>
+                <div class="progress mb-2" style="height: 8px; background: rgba(255,255,255,0.2);">
+                  <div class="progress-bar bg-success" id="bannerReadinessBar" style="width: 0%;"></div>
+                </div>
+                <div class="text-white-50" style="font-size: 0.76rem;" id="bannerCriticalGap">
+                  Critical to focus: <span class="text-white fw-bold" id="bannerGapSkillNames">Loading...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Overall Roadmap Progress Card -->
+        <div class="portal-card mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+            <div>
+              <span class="fw-bold text-navy small">Overall Roadmap Progress</span>
+              <span class="text-muted small ms-2" id="roadmapTasksCountText">(0 of 0 Milestones Completed)</span>
+            </div>
+            <span class="fw-bold text-primary" id="roadmapPercentageText">0% Completed</span>
+          </div>
+          <div class="progress" style="height: 10px; border-radius: 9999px; background-color: #E2E8F0;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" id="roadmapProgressBar" role="progressbar"
+                 style="width: 0%; background: var(--sf-primary-gradient); border-radius: 9999px;">
+            </div>
+          </div>
+          <div class="mt-2 text-muted" style="font-size: 0.75rem;">
+            <i class="bi bi-info-circle me-1"></i>
+            This learning roadmap is an educational guidance pathway to close technical competency gaps. Completing tasks marks verified progress in your portfolio.
+          </div>
+        </div>
+
+        <!-- Roadmap Phased Container (Phases 1 through 5) -->
+        <div id="roadmapPhasesContainer">
+          <div class="text-center py-5 text-muted">
+            <div class="spinner-border text-primary" role="status"></div>
+            <div class="small mt-2">Loading customized career roadmap...</div>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Task Detail Modal (Section 5C) -->
+  <div class="modal fade" id="taskDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom border-light pb-3">
+          <div>
+            <span class="badge phase-header-badge mb-2" id="modalTaskPhase">Phase 1</span>
+            <h5 class="modal-title fw-bold text-navy" id="modalTaskTitle">Task Title</h5>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          
+          <!-- Key Meta Chips -->
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <span class="badge px-3 py-2" id="modalTaskPriorityBadge">Priority: High</span>
+            <span class="badge bg-light text-navy border px-3 py-2"><i class="bi bi-clock me-1"></i>Effort: <span id="modalTaskEffort">10 - 15 hours</span></span>
+            <span class="badge bg-light text-navy border px-3 py-2"><i class="bi bi-flag me-1"></i>Status: <span id="modalTaskStatusText">Not Started</span></span>
+          </div>
+
+          <!-- Why It Matters -->
+          <div class="mb-3">
+            <h6 class="fw-bold text-navy small text-uppercase mb-1"><i class="bi bi-lightbulb text-warning me-1"></i> Why It Matters</h6>
+            <p class="text-secondary small mb-0" id="modalTaskWhyItMatters">Explains why the skill is vital for your chosen career.</p>
+          </div>
+
+          <!-- What to Learn -->
+          <div class="mb-3">
+            <h6 class="fw-bold text-navy small text-uppercase mb-1"><i class="bi bi-book text-primary me-1"></i> What to Learn</h6>
+            <ul class="text-secondary small mb-0 ps-3" id="modalTaskWhatToLearn">
+              <!-- Bullet points -->
+            </ul>
+          </div>
+
+          <!-- What to Practise -->
+          <div class="mb-3">
+            <h6 class="fw-bold text-navy small text-uppercase mb-1"><i class="bi bi-code-slash text-success me-1"></i> What to Practise</h6>
+            <ul class="text-secondary small mb-0 ps-3" id="modalTaskWhatToPractice">
+              <!-- Practice exercises -->
+            </ul>
+          </div>
+
+          <!-- Mini-Project / Deliverable -->
+          <div class="mb-3 p-3 bg-light rounded-3 border border-light">
+            <h6 class="fw-bold text-navy small text-uppercase mb-1"><i class="bi bi-box-seam text-primary me-1"></i> Expected Deliverable</h6>
+            <p class="text-secondary small mb-0" id="modalTaskDeliverable">Concrete project or code deliverable.</p>
+          </div>
+
+          <!-- Completion Criteria -->
+          <div class="mb-3">
+            <h6 class="fw-bold text-navy small text-uppercase mb-1"><i class="bi bi-check-all text-success me-1"></i> Completion Criteria</h6>
+            <p class="text-secondary small mb-0" id="modalTaskCompletionCriteria">How to know when you have finished this milestone.</p>
+          </div>
+
+          <!-- Official Learning Resources -->
+          <div class="mb-3">
+            <h6 class="fw-bold text-navy small text-uppercase mb-2"><i class="bi bi-link-45deg text-primary me-1"></i> Recommended Official Resources</h6>
+            <div id="modalTaskResources" class="d-flex flex-wrap gap-2">
+              <!-- Resource links -->
+            </div>
+          </div>
+
+          <!-- Status Action -->
+          <div class="p-3 bg-light rounded-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <label class="form-label small fw-semibold text-navy mb-0">Update Milestone Progress:</label>
+              <div class="text-muted" style="font-size: 0.72rem;">Changes persist directly to your MongoDB record.</div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <select class="form-select form-select-sm fw-bold text-navy" id="modalStatusSelect" style="width: 150px;">
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+              <button class="btn btn-forge-primary btn-sm px-3" onclick="saveTaskStatusFromModal()">
+                Save Status
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Target Career Modal -->
+  <div class="modal fade" id="changeCareerModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom border-light">
+          <h5 class="modal-title fw-bold text-navy"><i class="bi bi-compass me-2 text-primary"></i>Change Target Career</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-3">Selecting a new career will recalculate your skill gap and update your recommended roadmap milestones while keeping already completed tasks intact.</p>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-secondary">Select Career Role</label>
+            <select class="form-select" id="newCareerRoleSelect">
+              <!-- Dynamically populated from allRoles -->
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer border-top border-light">
+          <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-forge-primary btn-sm px-3" onclick="confirmChangeCareer()">Confirm & Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle & API helper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    const user = requireAuth();
+    let currentRoleTitle = 'Full Stack Developer';
+    let cachedRoadmapData = null;
+    let activeModalTaskId = null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('role')) {
+      currentRoleTitle = urlParams.get('role');
+    }
+
+    async function loadRoadmap() {
+      try {
+        const data = await apiFetch(`/careers/roadmap?role=${encodeURIComponent(currentRoleTitle)}`);
+        cachedRoadmapData = data;
+
+        // Populate header role info
+        if (data.roleInfo) {
+          const info = data.roleInfo;
+          currentRoleTitle = info.title;
+          document.getElementById('bannerCareerTitle').textContent = info.title;
+          document.getElementById('bannerCareerDesc').textContent = info.description || '';
+          
+          const reqSkills = info.requiredSkills || [];
+          document.getElementById('bannerRequiredSkills').innerHTML = reqSkills.length > 0 ? reqSkills.map(s => {
+            const skillName = typeof s === 'string' ? s : (s.name || s.title || 'Skill');
+            const prof = (typeof s === 'object' && s.minProficiency) ? ` <span class="badge bg-light text-dark border ms-1" style="font-size: 0.68rem;">${s.minProficiency}</span>` : '';
+            return `<span class="badge bg-white text-dark shadow-sm px-2 py-1 border fw-bold small d-inline-flex align-items-center me-1 mb-1"><i class="bi bi-patch-check-fill text-success me-1"></i>${skillName}${prof}</span>`;
+          }).join('') : '<span class="text-white-50 small">No prerequisite skills listed.</span>';
+
+          const pct = info.readinessPercentage || 0;
+          document.getElementById('bannerReadinessBadge').textContent = `${pct}% Matched`;
+          document.getElementById('bannerReadinessBar').style.width = `${pct}%`;
+
+          const gaps = [...(info.missingSkills || []), ...(info.needsImprovementSkills || [])];
+          document.getElementById('bannerGapSkillNames').textContent = gaps.length > 0 ? gaps.slice(0, 4).join(', ') : 'All key skills matched!';
+        }
+
+        // Populate Roles in Change Career Modal
+        if (data.allRoles && data.allRoles.length > 0) {
+          const select = document.getElementById('newCareerRoleSelect');
+          select.innerHTML = data.allRoles.map(r => `
+            <option value="${r.title}" ${r.title.toLowerCase() === currentRoleTitle.toLowerCase() ? 'selected' : ''}>${r.title}</option>
+          `).join('');
+        }
+
+        // Overall progress
+        const overallPct = data.completionPercentage || 0;
+        document.getElementById('roadmapPercentageText').textContent = `${overallPct}% Completed`;
+        document.getElementById('roadmapTasksCountText').textContent = `(${data.completedTasksCount || 0} of ${data.totalTasks || 0} Milestones Completed)`;
+        document.getElementById('roadmapProgressBar').style.width = `${overallPct}%`;
+
+        // Render Phased Container
+        renderPhasedRoadmap(data.roadmapSteps || []);
+
+      } catch (err) {
+        console.error('Failed to load roadmap:', err);
+        showToast('Failed to load learning roadmap.', 'danger');
+      }
+    }
+
+    function renderPhasedRoadmap(steps) {
+      const container = document.getElementById('roadmapPhasesContainer');
+
+      if (!steps || steps.length === 0) {
+        container.innerHTML = `
+          <div class="portal-card text-center py-5 text-muted">
+            <i class="bi bi-map fs-1 d-block mb-2 text-secondary"></i>
+            <h5>No roadmap milestones generated yet</h5>
+            <p class="small mb-3">Click the button below to generate milestone tasks for your current skills.</p>
+            <button class="btn btn-forge-primary btn-sm px-3" onclick="regenerateRoadmap()">
+              <i class="bi bi-arrow-repeat me-1"></i>Generate Recommendations
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = steps.map((step, idx) => {
+        const tasks = step.tasks || [];
+        const phaseCompleted = tasks.filter(t => t.status === 'Completed').length;
+        const phaseTotal = tasks.length;
+        const phasePct = phaseTotal > 0 ? Math.round((phaseCompleted / phaseTotal) * 100) : 0;
+
+        const tasksHtml = tasks.map(t => {
+          const taskId = t.taskId || t._id;
+          const isCompleted = t.status === 'Completed';
+          const isInProgress = t.status === 'In Progress';
+
+          const priorityClass = t.priority === 'High' ? 'task-priority-badge high' : t.priority === 'Medium' ? 'task-priority-badge medium' : 'task-priority-badge low';
+          const statusBadge = isCompleted
+            ? '<span class="badge bg-success-subtle text-success px-2 py-1"><i class="bi bi-check-circle-fill me-1"></i>Completed</span>'
+            : isInProgress
+            ? '<span class="badge bg-primary-subtle text-primary px-2 py-1"><i class="bi bi-play-circle-fill me-1"></i>In Progress</span>'
+            : '<span class="badge bg-light text-secondary border px-2 py-1"><i class="bi bi-circle me-1"></i>Not Started</span>';
+
+          return `
+            <div class="task-card-enhanced ${isCompleted ? 'completed' : ''}" id="task-card-${taskId}">
+              <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
+                <div class="d-flex align-items-start gap-2">
+                  <input class="form-check-input mt-1" type="checkbox"
+                         ${isCompleted ? 'checked' : ''}
+                         onchange="quickToggleTask('${taskId}', this)"
+                         title="Mark Completed / Not Started">
+                  <div>
+                    <h6 class="fw-bold text-navy mb-1 ${isCompleted ? 'text-decoration-line-through text-muted' : ''}">${t.title}</h6>
+                    <div class="text-muted small mb-1">${t.description}</div>
+                    ${t.whyItMatters ? `<div class="text-primary small" style="font-size: 0.76rem;"><i class="bi bi-info-circle me-1"></i>${t.whyItMatters}</div>` : ''}
+                  </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge ${priorityClass} fw-semibold">${t.priority || 'Medium'} Priority</span>
+                  ${statusBadge}
+                </div>
+              </div>
+
+              <!-- Footer with Effort & Details Button -->
+              <div class="d-flex justify-content-between align-items-center pt-2 border-top border-light mt-1 flex-wrap gap-2">
+                <div class="text-muted" style="font-size: 0.75rem;">
+                  <i class="bi bi-clock me-1"></i>Estimated: <strong>${t.estimatedEffort || '10 - 15 hours'}</strong>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-outline-secondary py-1 px-2" style="font-size: 0.78rem;" onclick="openTaskModal('${taskId}')">
+                    <i class="bi bi-journal-text me-1"></i>View Full Guide
+                  </button>
+                  <button class="btn btn-sm ${isInProgress ? 'btn-success' : 'btn-forge-primary'} py-1 px-3" style="font-size: 0.78rem;" onclick="stepProgressTask('${taskId}', '${t.status}')">
+                    ${isCompleted ? 'Review Task' : isInProgress ? 'Mark Complete' : 'Start Learning'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="portal-card mb-4">
+            <div class="portal-card-header flex-wrap gap-2">
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge phase-header-badge">Step ${idx + 1}</span>
+                <h5 class="portal-card-title mb-0">${step.weekTitle}</h5>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-muted small">${phaseCompleted} of ${phaseTotal} completed (${phasePct}%)</span>
+                <div class="progress" style="width: 80px; height: 6px;">
+                  <div class="progress-bar bg-primary" style="width: ${phasePct}%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tasks-container mt-3">
+              ${tasksHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Open detailed task specifications in modal
+    function openTaskModal(taskId) {
+      if (!cachedRoadmapData || !cachedRoadmapData.roadmapSteps) return;
+
+      let foundTask = null;
+      let foundPhase = 'Phase 1';
+
+      for (const step of cachedRoadmapData.roadmapSteps) {
+        for (const t of step.tasks) {
+          if ((t.taskId || t._id) === taskId) {
+            foundTask = t;
+            foundPhase = step.weekTitle;
+            break;
+          }
+        }
+        if (foundTask) break;
+      }
+
+      if (!foundTask) return;
+
+      activeModalTaskId = taskId;
+      document.getElementById('modalTaskPhase').textContent = foundPhase;
+      document.getElementById('modalTaskTitle').textContent = foundTask.title;
+      
+      const pBadge = document.getElementById('modalTaskPriorityBadge');
+      pBadge.className = `badge px-3 py-2 ${foundTask.priority === 'High' ? 'task-priority-badge high' : foundTask.priority === 'Medium' ? 'task-priority-badge medium' : 'task-priority-badge low'}`;
+      pBadge.textContent = `Priority: ${foundTask.priority || 'Medium'}`;
+
+      document.getElementById('modalTaskEffort').textContent = foundTask.estimatedEffort || '10 - 15 hours';
+      document.getElementById('modalTaskStatusText').textContent = foundTask.status || 'Not Started';
+      document.getElementById('modalStatusSelect').value = foundTask.status || 'Not Started';
+
+      document.getElementById('modalTaskWhyItMatters').textContent = foundTask.whyItMatters || foundTask.reason || 'Critical for career readiness.';
+
+      // What to learn
+      const learnList = document.getElementById('modalTaskWhatToLearn');
+      learnList.innerHTML = (foundTask.whatToLearn && foundTask.whatToLearn.length > 0)
+        ? foundTask.whatToLearn.map(item => `<li>${item}</li>`).join('')
+        : `<li>Core theory and syntax for ${foundTask.title}</li><li>Standard conventions and patterns</li>`;
+
+      // What to practice
+      const practiceList = document.getElementById('modalTaskWhatToPractice');
+      practiceList.innerHTML = (foundTask.whatToPractice && foundTask.whatToPractice.length > 0)
+        ? foundTask.whatToPractice.map(item => `<li>${item}</li>`).join('')
+        : `<li>Complete targeted coding drills</li><li>Implement working test cases</li>`;
+
+      document.getElementById('modalTaskDeliverable').textContent = foundTask.deliverable || 'Working repository code saved to your portfolio.';
+      document.getElementById('modalTaskCompletionCriteria').textContent = foundTask.completionCriteria || 'Meets functional requirements with 0 syntax errors.';
+
+      // Official Documentation Resources
+      const resContainer = document.getElementById('modalTaskResources');
+      if (foundTask.learningResources && foundTask.learningResources.length > 0) {
+        resContainer.innerHTML = foundTask.learningResources.map(r => `
+          <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-light border text-primary">
+            <i class="bi bi-box-arrow-up-right me-1"></i>${r.title}
+          </a>
+        `).join('');
+      } else {
+        resContainer.innerHTML = `<span class="text-muted small">Refer to official developer documentation.</span>`;
+      }
+
+      const modal = new bootstrap.Modal(document.getElementById('taskDetailModal'));
+      modal.show();
+    }
+
+    // Save status from inside the detail modal
+    async function saveTaskStatusFromModal() {
+      if (!activeModalTaskId) return;
+      const newStatus = document.getElementById('modalStatusSelect').value;
+
+      try {
+        const res = await apiFetch('/careers/roadmap/toggle-task', {
+          method: 'POST',
+          body: JSON.stringify({ taskId: activeModalTaskId, status: newStatus })
+        });
+        showToast(res.message || 'Milestone status updated!', 'success');
+        
+        // Hide modal & reload
+        const modalEl = document.getElementById('taskDetailModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+
+        await loadRoadmap();
+      } catch (err) {
+        showToast('Failed to update task status.', 'danger');
+      }
+    }
+
+    // Quick toggle checkbox
+    async function quickToggleTask(taskId, checkboxEl) {
+      try {
+        const res = await apiFetch('/careers/roadmap/toggle-task', {
+          method: 'POST',
+          body: JSON.stringify({ taskId })
+        });
+        showToast(res.message || 'Progress updated.', 'success');
+        await loadRoadmap();
+      } catch (err) {
+        showToast('Failed to update task progress.', 'danger');
+        checkboxEl.checked = !checkboxEl.checked;
+      }
+    }
+
+    // Step Progress (Not Started -> In Progress -> Completed)
+    async function stepProgressTask(taskId, currentStatus) {
+      let nextStatus = 'In Progress';
+      if (currentStatus === 'In Progress') {
+        nextStatus = 'Completed';
+      } else if (currentStatus === 'Completed') {
+        openTaskModal(taskId);
+        return;
+      }
+
+      try {
+        const res = await apiFetch('/careers/roadmap/toggle-task', {
+          method: 'POST',
+          body: JSON.stringify({ taskId, status: nextStatus })
+        });
+        showToast(res.message || `Status set to ${nextStatus}`, 'success');
+        await loadRoadmap();
+      } catch (err) {
+        showToast('Failed to advance task progress.', 'danger');
+      }
+    }
+
+    // Confirm changing target career
+    async function confirmChangeCareer() {
+      const select = document.getElementById('newCareerRoleSelect');
+      const selectedRole = select.value;
+      if (!selectedRole) return;
+
+      try {
+        const res = await apiFetch('/careers/select-target', {
+          method: 'POST',
+          body: JSON.stringify({ roleTitle: selectedRole })
+        });
+
+        showToast(res.message || `Target career set to ${selectedRole}`, 'success');
+        currentRoleTitle = selectedRole;
+
+        const modalEl = document.getElementById('changeCareerModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+
+        await loadRoadmap();
+      } catch (err) {
+        showToast(err.message || 'Failed to change career role.', 'danger');
+      }
+    }
+
+    // Regenerate roadmap
+    async function regenerateRoadmap() {
+      const btn = document.getElementById('regenRoadmapBtn');
+      if (btn) btn.disabled = true;
+      try {
+        const res = await apiFetch('/careers/roadmap/generate', {
+          method: 'POST',
+          body: JSON.stringify({ role: currentRoleTitle })
+        });
+        showToast(res.message || 'Roadmap updated from your profile and career requirements.', 'success');
+        await loadRoadmap();
+      } catch (err) {
+        showToast(err.message || 'Failed to update roadmap.', 'danger');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!urlParams.get('role') && user && user.targetCareer) {
+        currentRoleTitle = user.targetCareer;
+      }
+      loadRoadmap();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillForge – Skill Development and Career Readiness Platform</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top Public Navbar -->
+  <nav class="navbar navbar-expand-lg public-navbar">
+    <div class="container-fluid max-w-1200 px-lg-4">
+      <a class="brand-logo" href="index.html">
+        <div class="brand-icon">
+          <i class="bi bi-hammer"></i>
+        </div>
+        <span>SkillForge</span>
+      </a>
+
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#publicNav">
+        <i class="bi bi-list fs-2"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="publicNav">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#features">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#contact">Contact</a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0" id="authNavButtons">
+          <a href="login.html" class="btn btn-forge-outline-dark">Login</a>
+          <a href="register.html" class="btn btn-forge-primary">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-wrapper">
+    <div class="hero-card">
+      <div class="row align-items-center gy-5">
+        <div class="col-lg-7">
+          <div class="hero-badge">
+            <i class="bi bi-stars"></i>
+            <span>Skill Development & Career Readiness</span>
+          </div>
+          <h1 class="hero-title">Build Your Skills<br>Forge Your Future</h1>
+          <p class="hero-subtitle">
+            SkillForge helps students assess their skills, identify skill gaps, and build a personalized roadmap for career success.
+          </p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="register.html" class="btn btn-forge-primary">
+              <span>Get Started!</span>
+              <i class="bi bi-arrow-right"></i>
+            </a>
+            <a href="#features" class="btn btn-forge-outline">Learn More</a>
+          </div>
+        </div>
+
+        <div class="col-lg-5 hero-illustration-wrapper">
+          <div class="hero-illustration-box">
+            <!-- Modern Tech SVG Illustration -->
+            <svg viewBox="0 0 400 320" class="img-fluid" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="laptopGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#4F46E5"/>
+                  <stop offset="100%" stop-color="#7C3AED"/>
+                </linearGradient>
+                <linearGradient id="screenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#0F172A"/>
+                  <stop offset="100%" stop-color="#1E293B"/>
+                </linearGradient>
+              </defs>
+              <!-- Desk surface -->
+              <ellipse cx="200" cy="270" rx="180" ry="25" fill="#1E293B" opacity="0.6"/>
+              <!-- Student Avatar -->
+              <circle cx="200" cy="110" r="38" fill="#F87171"/>
+              <path d="M150 200 C150 150 250 150 250 200 Z" fill="#6366F1"/>
+              <!-- Graduation Cap -->
+              <polygon points="200,65 150,85 200,105 250,85" fill="#38BDF8"/>
+              <line x1="200" y1="65" x2="200" y2="55" stroke="#38BDF8" stroke-width="3"/>
+              <!-- Laptop Base -->
+              <polygon points="120,240 280,240 300,255 100,255" fill="#334155"/>
+              <!-- Laptop Screen -->
+              <rect x="135" y="160" width="130" height="80" rx="6" fill="#1E293B" stroke="#475569" stroke-width="2"/>
+              <rect x="142" y="167" width="116" height="66" rx="4" fill="#0F172A"/>
+              <!-- Code lines on screen -->
+              <rect x="150" y="177" width="40" height="4" rx="2" fill="#38BDF8"/>
+              <rect x="150" y="187" width="70" height="4" rx="2" fill="#10B981"/>
+              <rect x="150" y="197" width="55" height="4" rx="2" fill="#F59E0B"/>
+              <rect x="150" y="207" width="80" height="4" rx="2" fill="#818CF8"/>
+              <!-- Floating Floating Badges -->
+              <g transform="translate(60, 90)">
+                <rect width="65" height="32" rx="16" fill="#1E293B" stroke="#38BDF8" stroke-width="1.5"/>
+                <text x="32" y="21" fill="#38BDF8" font-size="12" font-weight="700" text-anchor="middle">&lt;HTML/&gt;</text>
+              </g>
+              <g transform="translate(285, 80)">
+                <rect width="65" height="32" rx="16" fill="#1E293B" stroke="#F59E0B" stroke-width="1.5"/>
+                <text x="32" y="21" fill="#F59E0B" font-size="12" font-weight="700" text-anchor="middle">{JS}</text>
+              </g>
+              <g transform="translate(270, 190)">
+                <rect width="70" height="32" rx="16" fill="#1E293B" stroke="#10B981" stroke-width="1.5"/>
+                <text x="35" y="21" fill="#10B981" font-size="12" font-weight="700" text-anchor="middle">Passed ✓</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 Feature Cards (Panel 1 from design) -->
+  <section class="container py-4" id="features">
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon-bubble" style="background: #E0F2FE; color: #0284C7;">
+            <i class="bi bi-clipboard2-check"></i>
+          </div>
+          <h5>Skill Assessment</h5>
+          <p>Test and improve your skills with topic-focused MCQs and verified badges.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon-bubble" style="background: #FEF3C7; color: #D97706;">
+            <i class="bi bi-compass"></i>
+          </div>
+          <h5>Career Exploration</h5>
+          <p>Discover your ideal career path with required skill sets and benchmarks.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon-bubble" style="background: #EDE9FE; color: #7C3AED;">
+            <i class="bi bi-map"></i>
+          </div>
+          <h5>Personalized Roadmap</h5>
+          <p>Learn at your own pace with curated week-by-week learning goals.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon-bubble" style="background: #DCFCE7; color: #16A34A;">
+            <i class="bi bi-graph-up-arrow"></i>
+          </div>
+          <h5>Track Progress</h5>
+          <p>Achieve your goals with real-time gap analysis and career readiness scores.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Journey Section (Panel 1 from design) -->
+  <section class="journey-section container" id="about">
+    <h2 class="fw-bold mb-2">Your Career Journey, Made Simple</h2>
+    <p class="text-muted max-w-600 mx-auto mb-5">
+      From skill assessment to resume building, SkillForge supports you in every step of your career development.
+    </p>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="journey-step-card h-100">
+          <div class="step-number">1</div>
+          <h5 class="fw-bold mb-2">Assess Current Skills</h5>
+          <p class="text-muted small mb-0">Record your technical skills, take quick quizzes, and establish your verified baseline knowledge.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="journey-step-card h-100">
+          <div class="step-number">2</div>
+          <h5 class="fw-bold mb-2">Choose Career Role</h5>
+          <p class="text-muted small mb-0">Select from high-demand industry profiles like Web Developer, Data Analyst, or Software Engineer.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="journey-step-card h-100">
+          <div class="step-number">3</div>
+          <h5 class="fw-bold mb-2">Bridge The Gaps</h5>
+          <p class="text-muted small mb-0">Analyze what you know vs what employers require, and follow structured roadmaps to close gaps.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="journey-step-card h-100">
+          <div class="step-number">4</div>
+          <h5 class="fw-bold mb-2">Launch Career</h5>
+          <p class="text-muted small mb-0">Build your ATS-friendly resume, track internship applications, and secure your dream job.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Inspirational Callout Banner (Panel 15 from design) -->
+  <section class="container" id="contact">
+    <div class="cta-banner">
+      <h2>Your Future is Built on the Skills You Gain Today</h2>
+      <p>Keep learning, keep growing, keep forging your path.</p>
+      <a href="register.html" class="btn btn-forge-primary px-4 py-2">Get Started!</a>
+    </div>
+  </section>
+
+  <!-- Navy Site Footer (Panel 14 from design) -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6">
+          <div class="brand-logo text-white mb-3">
+            <div class="brand-icon">
+              <i class="bi bi-hammer"></i>
+            </div>
+            <span class="text-white">SkillForge</span>
+          </div>
+          <p class="small text-muted mb-3 pe-lg-4">
+            Empowering students to build skills, explore careers, and achieve their goals through data-driven roadmaps.
+          </p>
+          <div class="d-flex">
+            <a href="#" class="footer-social-link"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="footer-social-link"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="footer-social-link"><i class="bi bi-linkedin"></i></a>
+            <a href="#" class="footer-social-link"><i class="bi bi-github"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-6 col-6">
+          <h6>Quick Links</h6>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+          <h6>Features</h6>
+          <ul>
+            <li><a href="login.html">Skill Assessment</a></li>
+            <li><a href="login.html">Career Exploration</a></li>
+            <li><a href="login.html">Learning Roadmap</a></li>
+            <li><a href="login.html">Resume Builder</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h6>Support</h6>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Campus Partner Program</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 SkillForge. All rights reserved.</div>
+        <div>MCA Semester 1 WAD Lab Project</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // Update navbar buttons if user is already logged in
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = getCurrentUser();
+      const authNavButtons = document.getElementById('authNavButtons');
+      if (user && authNavButtons) {
+        authNavButtons.innerHTML = `
+          <a href="dashboard.html" class="btn btn-forge-primary">
+            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+          </a>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

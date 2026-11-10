@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login to Your Account – SkillForge</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-light">
+
+  <!-- Top Simple Nav -->
+  <nav class="navbar navbar-expand-lg public-navbar">
+    <div class="container-fluid max-w-1200 px-lg-4">
+      <a class="brand-logo" href="index.html">
+        <div class="brand-icon">
+          <i class="bi bi-hammer"></i>
+        </div>
+        <span>SkillForge</span>
+      </a>
+      <div class="ms-auto">
+        <span class="text-muted small me-2 d-none d-sm-inline">Don't have an account?</span>
+        <a href="register.html" class="btn btn-forge-primary btn-sm">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Login Container (Matches Panel 3 in screenshot) -->
+  <main class="container py-5 my-auto">
+    <div class="row justify-content-center">
+      <div class="col-xl-9 col-lg-10">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+          <div class="row g-0">
+            
+            <!-- Left Form Column -->
+            <div class="col-md-7 p-4 p-lg-5 bg-white">
+              <div class="mb-4">
+                <h3 class="fw-bold text-navy mb-1">Welcome Back!</h3>
+                <p class="text-muted small">Login to your SkillForge account</p>
+              </div>
+
+              <!-- Alert Box for Error Messages -->
+              <div id="alertBox" class="alert alert-danger d-none py-2 px-3 small" role="alert"></div>
+              <div id="infoBox" class="alert alert-info d-none py-2 px-3 small" role="alert"></div>
+
+              <form id="loginForm" novalidate>
+                <div class="mb-3">
+                  <label for="email" class="form-label small fw-semibold text-secondary">Email Address</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
+                    <input type="email" class="form-control bg-light border-start-0" id="email" placeholder="Enter your email" required>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="password" class="form-label small fw-semibold text-secondary">Password</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
+                    <input type="password" class="form-control bg-light border-start-0" id="password" placeholder="Enter your password" required>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="rememberMe">
+                    <label class="form-check-label small text-muted" for="rememberMe">
+                      Remember me
+                    </label>
+                  </div>
+                  <a href="javascript:void(0)" onclick="alert('For this project demo, you can log in directly or create a new student account.')" class="text-primary small text-decoration-none fw-semibold">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-forge-primary w-100 py-2 mb-3" id="submitBtn">
+                  <span>Login</span>
+                  <i class="bi bi-box-arrow-in-right ms-1"></i>
+                </button>
+
+                <div class="text-center">
+                  <span class="text-muted small">Don't have an account? </span>
+                  <a href="register.html" class="text-primary fw-semibold small text-decoration-none">Register</a>
+                </div>
+              </form>
+            </div>
+
+            <!-- Right Promotional Column (Student on laptop) -->
+            <div class="col-md-5 p-4 p-lg-5 text-center d-flex flex-column justify-content-center" style="background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);">
+              <div class="my-auto py-3">
+                <!-- Student vector SVG -->
+                <svg viewBox="0 0 280 220" class="img-fluid mb-4" style="max-height: 190px;" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Desk shadow -->
+                  <ellipse cx="140" cy="190" rx="110" ry="15" fill="#C7D2FE"/>
+                  <!-- Student figure -->
+                  <circle cx="140" cy="70" r="28" fill="#F87171"/>
+                  <path d="M100 150 C100 105 180 105 180 150 Z" fill="#4F46E5"/>
+                  <!-- Laptop -->
+                  <polygon points="90,175 190,175 200,185 80,185" fill="#334155"/>
+                  <rect x="98" y="115" width="84" height="60" rx="5" fill="#0F172A"/>
+                  <rect x="104" y="121" width="72" height="48" rx="3" fill="#1E293B"/>
+                  <rect x="112" y="130" width="30" height="4" rx="2" fill="#38BDF8"/>
+                  <rect x="112" y="138" width="55" height="4" rx="2" fill="#10B981"/>
+                  <rect x="112" y="146" width="42" height="4" rx="2" fill="#F59E0B"/>
+                  <!-- Sparkles -->
+                  <circle cx="70" cy="50" r="4" fill="#6366F1"/>
+                  <circle cx="210" cy="65" r="5" fill="#38BDF8"/>
+                  <polygon points="65,90 68,96 74,99 68,102 65,108 62,102 56,99 62,96" fill="#F59E0B"/>
+                </svg>
+
+                <h4 class="fw-bold text-navy mb-2">Build Skills<br>Create Opportunities</h4>
+                <p class="text-muted small mb-0 px-3">Your career journey starts here.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bootstrap 5 JS Bundle & API client -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    const form = document.getElementById('loginForm');
+    const alertBox = document.getElementById('alertBox');
+    const infoBox = document.getElementById('infoBox');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Check URL query parameters for session expiration messages
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('session') === 'expired') {
+      infoBox.textContent = 'Your session has expired. Please log in again.';
+      infoBox.classList.remove('d-none');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertBox.classList.add('d-none');
+      infoBox.classList.add('d-none');
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) {
+        alertBox.textContent = 'Please enter both your email and password.';
+        alertBox.classList.remove('d-none');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Logging in...';
+
+      try {
+        const response = await apiFetch('/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+
+        // Save session
+        setSession(response.user, response.token);
+        showToast('Login successful! Welcome back.', 'success');
+
+        const redirectUrl = urlParams.get('redirect') || 'dashboard.html';
+        setTimeout(() => {
+          window.location.href = redirectUrl;
+        }, 700);
+      } catch (err) {
+        alertBox.textContent = err.message || 'Invalid email or password.';
+        alertBox.classList.remove('d-none');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Login</span> <i class="bi bi-box-arrow-in-right ms-1"></i>';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Career Roles – SkillForge</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- Dark Navy Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a class="brand-logo text-white" href="dashboard.html">
+          <div class="brand-icon">
+            <i class="bi bi-hammer"></i>
+          </div>
+          <span class="text-white">SkillForge</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main Navigation</div>
+        <a href="dashboard.html" class="sidebar-link">
+          <i class="bi bi-speedometer2"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="sidebar-link">
+          <i class="bi bi-person"></i>
+          <span>My Profile</span>
+        </a>
+        <a href="profile.html#skills" class="sidebar-link">
+          <i class="bi bi-cpu"></i>
+          <span>My Skills</span>
+        </a>
+        <a href="careers.html" class="sidebar-link active">
+          <i class="bi bi-compass"></i>
+          <span>Career Explorer</span>
+        </a>
+        <a href="gap-analysis.html" class="sidebar-link">
+          <i class="bi bi-bar-chart-steps"></i>
+          <span>Skill Gap Analysis</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-link">
+          <i class="bi bi-map"></i>
+          <span>Learning Roadmap</span>
+        </a>
+        <a href="assessments.html" class="sidebar-link">
+          <i class="bi bi-clipboard2-check"></i>
+          <span>Assessments</span>
+        </a>
+        <a href="portfolio.html" class="sidebar-link">
+          <i class="bi bi-folder2"></i>
+          <span>My Projects</span>
+        </a>
+        <a href="portfolio.html#certifications" class="sidebar-link">
+          <i class="bi bi-award"></i>
+          <span>Certifications</span>
+        </a>
+        <a href="internships.html" class="sidebar-link">
+          <i class="bi bi-briefcase"></i>
+          <span>Internships</span>
+        </a>
+        <a href="resume-builder.html" class="sidebar-link">
+          <i class="bi bi-file-earmark-person"></i>
+          <span>Resume Builder</span>
+        </a>
+        <a href="admin.html" class="sidebar-link admin-only-link d-none text-warning">
+          <i class="bi bi-shield-lock"></i>
+          <span>Admin Panel</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="javascript:void(0)" onclick="logout()" class="sidebar-link logout-link">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="main-content">
+
+      <!-- Top Header Navbar -->
+      <header class="app-header">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-sm btn-light d-lg-none" id="sidebar-toggle">
+            <i class="bi bi-list fs-5"></i>
+          </button>
+          <div class="app-header-nav d-none d-md-flex">
+            <a href="dashboard.html" class="header-nav-link">Dashboard</a>
+            <a href="careers.html" class="header-nav-link active">Careers</a>
+            <a href="profile.html#skills" class="header-nav-link">Skills</a>
+            <a href="assessments.html" class="header-nav-link">Assessments</a>
+            <a href="portfolio.html" class="header-nav-link">Projects</a>
+            <a href="internships.html" class="header-nav-link">Internships</a>
+            <a href="resume-builder.html" class="header-nav-link">Resume</a>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <div class="user-badge-dropdown" data-bs-toggle="dropdown">
+            <div class="user-avatar" id="header-user-avatar">ST</div>
+            <div class="d-none d-sm-block text-start">
+              <div class="fw-semibold small" id="header-user-name">Student</div>
+              <div class="text-muted" style="font-size: 0.75rem;">Student</div>
+            </div>
+            <i class="bi bi-chevron-down text-muted small ms-1"></i>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+            <li><a class="dropdown-item small" href="profile.html"><i class="bi bi-person me-2"></i>My Profile</a></li>
+            <li><a class="dropdown-item small" href="resume-builder.html"><i class="bi bi-file-earmark me-2"></i>My Resume</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item small text-danger" href="javascript:void(0)" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <!-- Main Career Explorer Canvas (Matches Panel 6 in reference) -->
+      <main class="portal-container">
+        
+        <div class="portal-title-block">
+          <h2 class="portal-title">Explore Career Roles</h2>
+          <p class="portal-subtitle">Discover different career paths, industry requirements, and benchmark skills.</p>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div class="row g-3 align-items-center mb-4">
+          <div class="col-md-6 col-lg-5">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control border-start-0 ps-0" id="searchInput" placeholder="Search careers or skills (e.g. React, Python, Data)...">
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Pills (All, Tech, Data, Design, Business, Others) -->
+        <div class="filter-pills" id="categoryFilterContainer">
+          <button class="filter-pill active" onclick="setCategoryFilter('All', this)">All</button>
+          <button class="filter-pill" onclick="setCategoryFilter('Tech', this)">Tech</button>
+          <button class="filter-pill" onclick="setCategoryFilter('Data', this)">Data</button>
+          <button class="filter-pill" onclick="setCategoryFilter('Design', this)">Design</button>
+          <button class="filter-pill" onclick="setCategoryFilter('Business', this)">Business</button>
+          <button class="filter-pill" onclick="setCategoryFilter('Others', this)">Others</button>
+        </div>
+
+        <!-- Career Cards Grid (Panel 6 from reference) -->
+        <div class="row g-4" id="careerCardsGrid">
+          <div class="col-12 text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <div class="text-muted small mt-2">Loading career roles catalog...</div>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Role Detail Modal -->
+  <div class="modal fade" id="roleDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom border-light">
+          <div>
+            <h5 class="modal-title fw-bold text-navy" id="modalRoleTitle">Career Role</h5>
+            <span class="badge bg-primary-subtle text-primary" id="modalRoleCategory">Category</span>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <p class="text-muted" id="modalRoleDesc"></p>
+          <div class="d-flex align-items-center gap-2 mb-4">
+            <span class="fw-bold small text-navy">Average Salary Benchmark:</span>
+            <span class="badge bg-success-subtle text-success fw-bold" id="modalRoleSalary">₹6 - 12 LPA</span>
+          </div>
+
+          <h6 class="fw-bold text-navy mb-2">Required Skills & Benchmark Levels:</h6>
+          <div class="table-responsive mb-4">
+            <table class="table table-sm table-forge">
+              <thead>
+                <tr>
+                  <th>Skill</th>
+                  <th>Required Level</th>
+                  <th>Importance</th>
+                </tr>
+              </thead>
+              <tbody id="modalSkillsTable"></tbody>
+            </table>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted small">Compare your skills against this role:</span>
+            <a href="#" id="modalCompareBtn" class="btn btn-forge-primary btn-sm px-3">
+              <span>Compare My Skills</span>
+              <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle & API helper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    let activeCategory = 'All';
+    let searchQuery = '';
+    let rolesCache = [];
+
+    async function loadCareerRoles() {
+      try {
+        let url = `/careers?category=${activeCategory}`;
+        if (searchQuery) url += `&search=${encodeURIComponent(searchQuery)}`;
+        const data = await apiFetch(url);
+        rolesCache = data.roles || [];
+        renderRoleCards(rolesCache);
+      } catch (err) {
+        showToast('Failed to load career roles.', 'danger');
+      }
+    }
+
+    function renderRoleCards(roles) {
+      const grid = document.getElementById('careerCardsGrid');
+      if (!roles || roles.length === 0) {
+        grid.innerHTML = `
+          <div class="col-12 text-center py-5 text-muted">
+            <i class="bi bi-search fs-1 d-block mb-2 text-secondary"></i>
+            <h5>No career roles found</h5>
+            <p class="small">Try adjusting your search terms or filter category.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = roles.map(role => {
+        const skillsBadges = (role.requiredSkills || []).slice(0, 5).map(s => `
+          <span class="badge-tech">${s.name}</span>
+        `).join('');
+
+        return `
+          <div class="col-md-6 col-lg-4">
+            <div class="portal-card h-100 d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="fw-bold text-navy mb-0">${role.title}</h5>
+                <span class="badge bg-light text-muted small">${role.category || 'Tech'}</span>
+              </div>
+              <p class="text-muted small mb-3 flex-grow-1" style="min-height: 48px;">
+                ${role.description}
+              </p>
+
+              <div class="mb-3">
+                <div class="small fw-semibold text-secondary mb-1">Required Skills:</div>
+                <div>${skillsBadges}</div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center pt-2 mt-auto border-top border-light">
+                <span class="small fw-semibold text-success">${role.averageSalary || '₹6 - 12 LPA'}</span>
+                <button class="btn btn-forge-primary btn-sm px-3" onclick="openRoleModal('${role._id}')">
+                  <span>View Details</span>
+                  <i class="bi bi-arrow-right ms-1"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setCategoryFilter(category, buttonEl) {
+      activeCategory = category;
+      document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+      buttonEl.classList.add('active');
+      loadCareerRoles();
+    }
+
+    // Live search listener with debounce
+    let searchTimeout;
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        searchQuery = e.target.value.trim();
+        loadCareerRoles();
+      }, 300);
+    });
+
+    // View Details Modal
+    function openRoleModal(roleId) {
+      const role = rolesCache.find(r => r._id === roleId);
+      if (!role) return;
+
+      document.getElementById('modalRoleTitle').textContent = role.title;
+      document.getElementById('modalRoleCategory').textContent = role.category || 'Tech';
+      document.getElementById('modalRoleDesc').textContent = role.description;
+      document.getElementById('modalRoleSalary').textContent = role.averageSalary || '₹6 - 12 LPA';
+
+      const tbody = document.getElementById('modalSkillsTable');
+      tbody.innerHTML = (role.requiredSkills || []).map(s => `
+        <tr>
+          <td class="fw-semibold text-navy">${s.name}</td>
+          <td><span class="badge bg-light text-dark">${s.requiredLevel}/5</span></td>
+          <td><span class="badge ${s.importance === 'Must-Have' ? 'bg-danger-subtle text-danger' : 'bg-primary-subtle text-primary'}">${s.importance}</span></td>
+        </tr>
+      `).join('');
+
+      document.getElementById('modalCompareBtn').href = `gap-analysis.html?role=${encodeURIComponent(role.title)}`;
+      new bootstrap.Modal(document.getElementById('roleDetailModal')).show();
+    }
+
+    document.addEventListener('DOMContentLoaded', loadCareerRoles);
+  </script>
+</body>
+</html>

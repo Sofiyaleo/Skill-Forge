@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillForge Administration Portal</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- Dark Obsidian Left Sidebar for Admin -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a class="brand-logo text-white" href="admin.html">
+          <div class="brand-icon">
+            <i class="bi bi-shield-lock"></i>
+          </div>
+          <span class="text-white">SkillForge Admin</span>
+        </a>
+      </div>
+
+      <!-- Dedicated Admin Menu (Strictly for Authorized Administrators) -->
+      <nav class="sidebar-nav">
+        <div class="nav-label">Admin Management</div>
+        <a href="#dashboard" class="sidebar-link active" id="menu-dashboard" onclick="switchAdminTab('dashboard', this)">
+          <i class="bi bi-speedometer2"></i>
+          <span>Admin Dashboard</span>
+        </a>
+        <a href="#students" class="sidebar-link" id="menu-students" onclick="switchAdminTab('students', this)">
+          <i class="bi bi-people"></i>
+          <span>Manage Students</span>
+        </a>
+        <a href="#skills" class="sidebar-link" id="menu-skills" onclick="switchAdminTab('skills', this)">
+          <i class="bi bi-cpu"></i>
+          <span>Manage Skills</span>
+        </a>
+        <a href="#careers" class="sidebar-link" id="menu-careers" onclick="switchAdminTab('careers', this)">
+          <i class="bi bi-compass"></i>
+          <span>Manage Careers</span>
+        </a>
+        <a href="#assessments" class="sidebar-link" id="menu-assessments" onclick="switchAdminTab('assessments', this)">
+          <i class="bi bi-clipboard2-check"></i>
+          <span>Manage Assessments</span>
+        </a>
+        <a href="#roadmaps" class="sidebar-link" id="menu-roadmaps" onclick="switchAdminTab('roadmaps', this)">
+          <i class="bi bi-map"></i>
+          <span>Manage Learning Roadmaps</span>
+        </a>
+        <a href="#reports" class="sidebar-link" id="menu-reports" onclick="switchAdminTab('reports', this)">
+          <i class="bi bi-graph-up-arrow"></i>
+          <span>Reports and Analytics</span>
+        </a>
+        <a href="#profile" class="sidebar-link" id="menu-profile" onclick="switchAdminTab('profile', this)">
+          <i class="bi bi-person-badge"></i>
+          <span>Admin Profile</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="javascript:void(0)" onclick="logout()" class="sidebar-link logout-link">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="main-content">
+
+      <!-- Top Header Navbar -->
+      <header class="app-header">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-sm btn-light d-lg-none" id="sidebar-toggle">
+            <i class="bi bi-list fs-5"></i>
+          </button>
+          <div class="badge bg-danger-subtle text-danger fw-bold px-3 py-2">
+            <i class="bi bi-shield-lock-fill me-1"></i> Administrator Workspace
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <div class="user-badge-dropdown" data-bs-toggle="dropdown" role="button">
+            <div class="user-avatar bg-dark text-white" id="header-user-avatar">AD</div>
+            <div class="d-none d-sm-block text-start">
+              <div class="fw-semibold small text-navy" id="header-user-name">Admin Faculty</div>
+              <div class="text-muted" style="font-size: 0.75rem;">Verified Administrator</div>
+            </div>
+            <i class="bi bi-chevron-down text-muted small ms-1"></i>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+            <li><a class="dropdown-item small" href="#profile" onclick="switchAdminTab('profile', document.getElementById('menu-profile'))"><i class="bi bi-person me-2"></i>Admin Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item small text-danger" href="javascript:void(0)" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <!-- Main Admin Content Canvas -->
+      <main class="portal-container">
+
+        <!-- ================= SECTION 1: ADMIN DASHBOARD ================= -->
+        <section id="section-dashboard" class="admin-tab-pane">
+          <div class="portal-title-block">
+            <h2 class="portal-title">Admin Dashboard</h2>
+            <p class="portal-subtitle">Platform overview and live database statistics across students, skills, careers, assessments, and learning progress.</p>
+          </div>
+
+          <!-- Platform Metric Cards (Real Database Data) -->
+          <div class="row g-4 mb-4">
+            <div class="col-sm-6 col-xl-2dot4 col-lg-4">
+              <div class="stat-card stat-teal">
+                <div class="stat-icon-wrapper"><i class="bi bi-people"></i></div>
+                <div>
+                  <div class="stat-label">Total Students</div>
+                  <div class="stat-number" id="dashTotalStudents">0</div>
+                  <div class="stat-delta">Registered candidates</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-2dot4 col-lg-4">
+              <div class="stat-card stat-purple">
+                <div class="stat-icon-wrapper"><i class="bi bi-cpu"></i></div>
+                <div>
+                  <div class="stat-label">Available Skills</div>
+                  <div class="stat-number" id="dashTotalSkills">0</div>
+                  <div class="stat-delta">Platform repository</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-2dot4 col-lg-4">
+              <div class="stat-card stat-amber">
+                <div class="stat-icon-wrapper"><i class="bi bi-compass"></i></div>
+                <div>
+                  <div class="stat-label">Total Careers</div>
+                  <div class="stat-number" id="dashTotalCareers">0</div>
+                  <div class="stat-delta">Curated industry tracks</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-2dot4 col-lg-4">
+              <div class="stat-card stat-teal">
+                <div class="stat-icon-wrapper"><i class="bi bi-clipboard2-check"></i></div>
+                <div>
+                  <div class="stat-label">Assessments</div>
+                  <div class="stat-number" id="dashTotalAssessments">0</div>
+                  <div class="stat-delta">Active question banks</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-2dot4 col-lg-4">
+              <div class="stat-card stat-pink">
+                <div class="stat-icon-wrapper"><i class="bi bi-map"></i></div>
+                <div>
+                  <div class="stat-label">Learning Roadmaps</div>
+                  <div class="stat-number" id="dashTotalRoadmaps">0</div>
+                  <div class="stat-delta" id="dashRoadmapPct">0% completion rate</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Career Track Distribution & Recent Student Activity -->
+          <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+              <div class="portal-card h-100">
+                <div class="portal-card-header">
+                  <h5 class="portal-card-title"><i class="bi bi-pie-chart text-primary me-2"></i>Student Target Career Choices</h5>
+                  <span class="badge bg-light text-navy">Live MongoDB Data</span>
+                </div>
+                <div id="dashCareerDistributionBox" class="p-3">
+                  <div class="text-center py-4 text-muted small">Loading career distributions...</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="portal-card h-100">
+                <div class="portal-card-header">
+                  <h5 class="portal-card-title"><i class="bi bi-clock-history text-primary me-2"></i>Recent Student Activity</h5>
+                  <span class="badge bg-light text-navy">Real-Time Logs</span>
+                </div>
+                <div id="dashRecentActivityBox" class="p-3">
+                  <div class="text-center py-4 text-muted small">Loading student activities...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recently Registered Students Table -->
+          <div class="portal-card">
+            <div class="portal-card-header d-flex justify-content-between align-items-center">
+              <h5 class="portal-card-title"><i class="bi bi-person-plus text-primary me-2"></i>Recently Registered Students</h5>
+              <button class="btn btn-sm btn-outline-primary" onclick="switchAdminTab('students', document.getElementById('menu-students'))">View All Students</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-forge mb-0">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Email Address</th>
+                    <th>College / University</th>
+                    <th>Target Career</th>
+                    <th>Registration Date</th>
+                  </tr>
+                </thead>
+                <tbody id="dashRecentStudentsTable">
+                  <tr><td colspan="5" class="text-center py-4 text-muted">Loading students...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SECTION 2: MANAGE STUDENTS ================= -->
+        <section id="section-students" class="admin-tab-pane d-none">
+          <div class="portal-title-block d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <h2 class="portal-title">Manage Students</h2>
+              <p class="portal-subtitle">Review registered students, search candidates, view detailed profiles and learning progress.</p>
+            </div>
+            <span class="badge bg-primary text-white px-3 py-2" id="studentsTotalBadge">0 Students Registered</span>
+          </div>
+
+          <div class="portal-card">
+            <div class="portal-card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+              <div class="d-flex align-items-center gap-2 flex-grow-1" style="max-width: 480px;">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                  <input type="text" class="form-control" id="studentSearchInput" placeholder="Search by name, email, or career..." oninput="filterStudentsTable()">
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <select class="form-select form-select-sm" id="studentCareerFilter" onchange="filterStudentsTable()" style="max-width: 220px;">
+                  <option value="All">All Careers</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-forge mb-0">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Contact & College</th>
+                    <th>Academic Standing</th>
+                    <th>Target Career</th>
+                    <th>Registered</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminStudentsTableBody">
+                  <tr><td colspan="6" class="text-center py-4 text-muted">Loading student records...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SECTION 3: MANAGE SKILLS ================= -->
+        <section id="section-skills" class="admin-tab-pane d-none">
+          <div class="portal-title-block d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <h2 class="portal-title">Manage Skills</h2>
+              <p class="portal-subtitle">Add, edit, view, and delete available platform skills. Saved to MongoDB and synchronized across student portals.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-primary text-white px-3 py-2" id="skillsTrackedBadge">0 Skills Available</span>
+              <button class="btn btn-sm btn-forge-primary" onclick="openAddSkillModal()">
+                <i class="bi bi-plus-lg me-1"></i> Add Skill
+              </button>
+            </div>
+          </div>
+
+          <div class="portal-card">
+            <div class="portal-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <h5 class="portal-card-title">Available Skills Repository</h5>
+              <input type="text" class="form-control form-control-sm" id="skillSearchInput" placeholder="Filter skills..." style="max-width: 260px;" oninput="filterSkillsTable()">
+            </div>
+            <div class="table-responsive">
+              <table class="table table-forge mb-0">
+                <thead>
+                  <tr>
+                    <th>Skill Name</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Student Adoption</th>
+                    <th>Verification</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminSkillsTableBody">
+                  <tr><td colspan="6" class="text-center py-4 text-muted">Loading available skills...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SECTION 4: MANAGE CAREERS ================= -->
+        <section id="section-careers" class="admin-tab-pane d-none">
+          <div class="portal-title-block d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <h2 class="portal-title">Manage Careers</h2>
+              <p class="portal-subtitle">Create, edit, view, and delete career tracks and required skill benchmarks. Updated instantly in Career Explorer and Gap Analysis.</p>
+            </div>
+            <button class="btn btn-sm btn-forge-primary" onclick="openAddCareerModal()">
+              <i class="bi bi-plus-lg me-1"></i> Add Career
+            </button>
+          </div>
+
+          <div class="portal-card">
+            <div class="portal-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <h5 class="portal-card-title">Industry Career Catalog</h5>
+              <span class="badge bg-light text-navy" id="careersCountBadge">0 Careers</span>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-forge mb-0">
+                <thead>
+                  <tr>
+                    <th>Career Title</th>
+                    <th>Category</th>
+                    <th>Required Skills & Proficiency</th>
+                    <th>Average Salary</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminCareersTableBody">
+                  <tr><td colspan="5" class="text-center py-4 text-muted">Loading careers...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SECTION 5: MANAGE ASSESSMENTS ================= -->
+        <section id="section-assessments" class="admin-tab-pane d-none">
+          <div class="portal-title-block d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <h2 class="portal-title">Manage Assessments</h2>
+              <p class="portal-subtitle">Create and update technical quizzes, MCQ questions, answer options, and passing scores. Synchronized directly with student assessments.</p>
+            </div>
+            <button class="btn btn-sm btn-forge-primary" onclick="openCreateAssessmentModal()">
+              <i class="bi bi-plus-lg me-1"></i> Create Assessment
+            </button>
+          </div>
+
+          <div class="portal-card">
+            <div class="portal-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <h5 class="portal-card-title">Active Assessments & Question Banks</h5>
+              <span class="badge bg-light text-navy" id="assessmentsCountBadge">0 Assessments</span>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-forge mb-0">
+                <thead>
+                  <tr>
+                    <th>Assessment Title / Topic</th>
+                    <th>Category & Skill</th>
+                    <th>Difficulty</th>
+                    <th>Questions</th>
+                    <th>Passing Score</th>
+                    <th>Student Attempts</th>
+                    <th>Pass Rate</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminAssessmentsTableBody">
+                  <tr><td colspan="8" class="text-center py-4 text-muted">Loading assessments...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SECTION 6: MANAGE ROADMAPS ================= -->
+        <section id="section-roadmaps" class="admin-tab-pane d-none">
+          <div class="portal-title-block d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <h2 class="portal-title">Manage Learning Roadmaps</h2>
+              <p class="portal-subtitle">Create and curate structured career roadmaps, phases, instructions, and learning resources. Student task completion is preserved.</p>
+            </div>
+            <button class="btn btn-sm btn-forge-primary" onclick="openCreateRoadmapModal()">
+              <i class="bi bi-plus-lg me-1"></i> Create Roadmap
+            </button>
+          </div>
+
+          <!-- Roadmap Summary KPIs -->
+          <div class="row g-3 mb-4">
+            <div class="col-sm-6 col-lg-3">
+              <div class="p-3 bg-white rounded-3 border text-center shadow-sm">
+                <div class="text-muted small fw-bold">Active Roadmaps</div>
+                <h3 class="fw-bold text-navy mb-0" id="rmTotalRoadmaps">0</h3>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <div class="p-3 bg-white rounded-3 border text-center shadow-sm">
+                <div class="text-success small fw-bold">Completed Milestones</div>
+                <h3 class="fw-bold text-success mb-0" id="rmCompletedTasks">0</h3>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <div class="p-3 bg-white rounded-3 border text-center shadow-sm">
+                <div class="text-warning small fw-bold">In Progress</div>
+                <h3 class="fw-bold text-warning mb-0" id="rmInProgressTasks">0</h3>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <div class="p-3 bg-white rounded-3 border text-center shadow-sm">
+                <div class="text-primary small fw-bold">Overall Progress Rate</div>
+                <h3 class="fw-bold text-primary mb-0" id="rmProgressRate">0%</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- Curated Career Roadmaps Table -->
+          <div class="portal-card mb-4">
+            <div class="portal-card-header d-flex justify-content-between align-items-center">
+              <h5 class="portal-card-title"><i class="bi bi-diagram-3 text-primary me-2"></i>Curated Career Roadmaps</h5>
+              <span class="badge bg-light text-navy">MongoDB Saved Templates</span>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-forge mb-0">
+                <thead>
+                  <tr>
+                    <th>Career Track</th>
+                    <th>Description</th>
+                    <th>Phases</th>
+                    <th>Total Tasks</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminCustomRoadmapsTableBody">
+                  <tr><td colspan="5" class="text-center py-4 text-muted">No custom roadmaps configured yet. Click "Create Roadmap" above.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Phase Completion Distribution -->
+          <div class="portal-card">
+            <div class="portal-card-header">
+              <h5 class="portal-card-title"><i class="bi bi-bar-chart-steps text-primary me-2"></i>Roadmap Phase Progress Distribution</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-forge mb-0">
+                <thead>
+                  <tr>
+                    <th>Roadmap Phase</th>
+                    <th>Total Tasks Assigned</th>
+                    <th>Completed by Students</th>
+                    <th>Phase Completion Rate</th>
+                  </tr>
+                </thead>
+                <tbody id="adminRoadmapsTableBody">
+                  <tr><td colspan="4" class="text-center py-4 text-muted">Loading phase progression metrics...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SECTION 7: REPORTS AND ANALYTICS ================= -->
+        <section id="section-reports" class="admin-tab-pane d-none">
+          <div class="portal-title-block">
+            <h2 class="portal-title">Reports & Analytics</h2>
+            <p class="portal-subtitle">Detailed reports based on actual database records covering registration totals, assessment performance, roadmap completion, and skills.</p>
+          </div>
+
+          <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+              <div class="portal-card h-100">
+                <div class="portal-card-header">
+                  <h5 class="portal-card-title"><i class="bi bi-clipboard2-data text-primary me-2"></i>Assessment Participation & Pass Rates</h5>
+                </div>
+                <div id="reportsAssessmentPassBox" class="p-3">
+                  <div class="text-center py-4 text-muted small">Loading assessment reports...</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="portal-card h-100">
+                <div class="portal-card-header">
+                  <h5 class="portal-card-title"><i class="bi bi-speedometer text-primary me-2"></i>Skill Proficiency Breakdown</h5>
+                </div>
+                <div id="reportsProficiencyBox" class="p-3">
+                  <div class="text-center py-4 text-muted small">Loading proficiency distribution...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+              <div class="portal-card h-100">
+                <div class="portal-card-header">
+                  <h5 class="portal-card-title"><i class="bi bi-mortarboard text-primary me-2"></i>Top Participating Colleges / Universities</h5>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-forge mb-0">
+                    <thead>
+                      <tr>
+                        <th>Institution</th>
+                        <th>Students</th>
+                        <th>Platform Share</th>
+                      </tr>
+                    </thead>
+                    <tbody id="reportsCollegeTableBody">
+                      <tr><td colspan="3" class="text-center py-4 text-muted">Loading institution data...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="portal-card h-100">
+                <div class="portal-card-header">
+                  <h5 class="portal-card-title"><i class="bi bi-check2-all text-primary me-2"></i>Roadmap Milestone Completion Summary</h5>
+                </div>
+                <div id="reportsRoadmapSummaryBox" class="p-3">
+                  <div class="text-center py-4 text-muted small">Loading roadmap summary...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SECTION 8: ADMIN PROFILE ================= -->
+        <section id="section-profile" class="admin-tab-pane d-none">
+          <div class="portal-title-block">
+            <h2 class="portal-title">Admin Profile</h2>
+            <p class="portal-subtitle">Manage your administrator account credentials. Role is strictly managed and non-changeable.</p>
+          </div>
+
+          <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+              <div class="portal-card">
+                
+                <!-- Profile Avatar and Header -->
+                <div class="d-flex align-items-center gap-4 mb-4 pb-4 border-bottom">
+                  <div class="user-avatar bg-dark text-white fs-2 fw-bold shadow-sm" id="profAvatarCircle" style="width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    AD
+                  </div>
+                  <div>
+                    <h4 class="fw-bold text-navy mb-1" id="profDisplayName">Admin Faculty</h4>
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="badge bg-danger-subtle text-danger fw-bold px-3 py-1">
+                        <i class="bi bi-shield-check me-1"></i>Role: Admin
+                      </span>
+                      <span class="text-muted small" id="profAccountCreated">Joined SkillForge</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Profile Edit Form -->
+                <form id="adminProfileForm">
+                  <div class="mb-3">
+                    <label for="profAdminNameInput" class="form-label small fw-semibold text-secondary">Full Name</label>
+                    <input type="text" class="form-control" id="profAdminNameInput" value="Admin Faculty" readonly required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="profAdminEmailInput" class="form-label small fw-semibold text-secondary">Email Address</label>
+                    <input type="email" class="form-control" id="profAdminEmailInput" value="admin@skillforge.com" readonly required>
+                  </div>
+
+                  <div class="mb-4">
+                    <label class="form-label small fw-semibold text-secondary">Assigned Role</label>
+                    <input type="text" class="form-control bg-light" value="Admin" readonly disabled>
+                    <div class="form-text small text-muted">Role permissions are verified and cannot be changed through the profile.</div>
+                  </div>
+
+                  <!-- Form Action Buttons -->
+                  <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-outline-primary" id="btnEditProfile" onclick="toggleProfileEdit(true)">
+                      <i class="bi bi-pencil-square me-1"></i>Edit Profile
+                    </button>
+                    <button type="submit" class="btn btn-forge-primary d-none" id="btnSaveProfile">
+                      <i class="bi bi-check2 me-1"></i>Save Changes
+                    </button>
+                    <button type="button" class="btn btn-light d-none" id="btnCancelProfile" onclick="toggleProfileEdit(false)">
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- ================= MODALS CONTAINER ================= -->
+
+  <!-- 1. View Student Profile & Progress Modal -->
+  <div class="modal fade" id="studentDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header bg-light border-bottom">
+          <h5 class="modal-title fw-bold text-navy" id="modalStudentName">Student Profile & Progress</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4" id="modalStudentBody">
+          <div class="text-center py-4 text-muted"><span class="spinner-border spinner-border-sm me-2"></span>Loading student profile...</div>
+        </div>
+        <div class="modal-footer border-top">
+          <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Add / Edit Skill Modal -->
+  <div class="modal fade" id="skillModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title fw-bold text-navy" id="skillModalTitle">Add Skill</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="skillForm">
+          <input type="hidden" id="skillFormId" value="">
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label for="skillFormName" class="form-label small fw-semibold text-secondary">Skill Name</label>
+              <input type="text" class="form-control" id="skillFormName" placeholder="e.g. Docker, TypeScript, React" required>
+            </div>
+            <div class="mb-3">
+              <label for="skillFormCategory" class="form-label small fw-semibold text-secondary">Category</label>
+              <select class="form-select" id="skillFormCategory">
+                <option value="Programming">Programming</option>
+                <option value="Web Development">Web Development</option>
+                <option value="Frontend">Frontend</option>
+                <option value="Backend">Backend</option>
+                <option value="Database">Database</option>
+                <option value="DevOps">DevOps</option>
+                <option value="Tools and Platforms">Tools and Platforms</option>
+                <option value="Data Analysis">Data Analysis</option>
+                <option value="Design">Design</option>
+                <option value="Core CS">Core CS</option>
+                <option value="Soft Skills">Soft Skills</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="skillFormDesc" class="form-label small fw-semibold text-secondary">Description</label>
+              <textarea class="form-control" id="skillFormDesc" rows="3" placeholder="Brief summary of practical knowledge and tools..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-top">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-4" id="btnSaveSkill">
+              Save Skill
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Add / Edit Career Role Modal -->
+  <div class="modal fade" id="careerModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title fw-bold text-navy" id="careerModalTitle">Add Career Role</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="careerForm">
+          <input type="hidden" id="careerFormId" value="">
+          <div class="modal-body p-4">
+            <div class="row g-3 mb-3">
+              <div class="col-md-7">
+                <label for="careerFormTitle" class="form-label small fw-semibold text-secondary">Career Role Title</label>
+                <input type="text" class="form-control" id="careerFormTitle" placeholder="e.g. AI / ML Engineer" required>
+              </div>
+              <div class="col-md-5">
+                <label for="careerFormCategory" class="form-label small fw-semibold text-secondary">Category</label>
+                <select class="form-select" id="careerFormCategory">
+                  <option value="Engineering">Engineering</option>
+                  <option value="Tech">Tech</option>
+                  <option value="Data">Data</option>
+                  <option value="Design">Design</option>
+                  <option value="Business">Business</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="careerFormDesc" class="form-label small fw-semibold text-secondary">Description & Responsibilities</label>
+              <textarea class="form-control" id="careerFormDesc" rows="2" placeholder="Summary of responsibilities and day-to-day focus..." required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="careerFormSalary" class="form-label small fw-semibold text-secondary">Average Industry Salary</label>
+              <input type="text" class="form-control" id="careerFormSalary" placeholder="e.g. ₹8 - 16 LPA">
+            </div>
+
+            <!-- Required Skills Builder -->
+            <div class="mb-2">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label small fw-semibold text-secondary mb-0">Required Skills & Minimum Proficiency</label>
+                <button type="button" class="btn btn-xs btn-outline-primary" onclick="addCareerSkillRow()">
+                  <i class="bi bi-plus me-1"></i>Add Skill Row
+                </button>
+              </div>
+              <div id="careerSkillsListContainer" class="d-flex flex-column gap-2">
+                <!-- Skill rows dynamically inserted -->
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer border-top">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-4" id="btnSaveCareer">
+              Save Career Role
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Create / Edit Assessment Modal -->
+  <div class="modal fade" id="assessmentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title fw-bold text-navy" id="assessmentModalTitle">Create Assessment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="assessmentForm">
+          <input type="hidden" id="assessmentFormId" value="">
+          <div class="modal-body p-4" style="max-height: 75vh; overflow-y: auto;">
+            
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label for="assFormTitle" class="form-label small fw-semibold text-secondary">Assessment Title</label>
+                <input type="text" class="form-control" id="assFormTitle" placeholder="e.g. Python Programming Fundamentals" required>
+              </div>
+              <div class="col-md-6">
+                <label for="assFormSkill" class="form-label small fw-semibold text-secondary">Related Skill Name</label>
+                <input type="text" class="form-control" id="assFormSkill" placeholder="e.g. Python" required>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-4">
+                <label for="assFormCategory" class="form-label small fw-semibold text-secondary">Skill Category</label>
+                <select class="form-select" id="assFormCategory">
+                  <option value="Programming">Programming</option>
+                  <option value="Frontend">Frontend</option>
+                  <option value="Backend">Backend</option>
+                  <option value="Database">Database</option>
+                  <option value="Core CS">Core CS</option>
+                  <option value="DevOps">DevOps</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="assFormDifficulty" class="form-label small fw-semibold text-secondary">Difficulty Level</label>
+                <select class="form-select" id="assFormDifficulty">
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="assFormDuration" class="form-label small fw-semibold text-secondary">Time (Mins)</label>
+                <input type="number" class="form-control" id="assFormDuration" value="15" min="5" max="60" required>
+              </div>
+              <div class="col-md-2">
+                <label for="assFormPassScore" class="form-label small fw-semibold text-secondary">Pass Score %</label>
+                <input type="number" class="form-control" id="assFormPassScore" value="70" min="40" max="100" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="assFormDesc" class="form-label small fw-semibold text-secondary">Assessment Description</label>
+              <textarea class="form-control" id="assFormDesc" rows="2" placeholder="Brief outline of test topics and competencies..."></textarea>
+            </div>
+
+            <!-- Dynamic Multiple Choice Question Bank -->
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold text-navy mb-0"><i class="bi bi-question-circle text-primary me-2"></i>Multiple-Choice Questions</h6>
+                <button type="button" class="btn btn-xs btn-outline-primary" onclick="addAssessmentQuestionBlock()">
+                  <i class="bi bi-plus me-1"></i>Add Question
+                </button>
+              </div>
+              <div id="assessmentQuestionsList" class="d-flex flex-column gap-3">
+                <!-- Questions inserted dynamically -->
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer border-top">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-4" id="btnSaveAssessment">
+              Save Assessment
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Create / Edit Learning Roadmap Modal -->
+  <div class="modal fade" id="roadmapModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title fw-bold text-navy" id="roadmapModalTitle">Create Learning Roadmap</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="roadmapForm">
+          <input type="hidden" id="roadmapFormId" value="">
+          <div class="modal-body p-4" style="max-height: 75vh; overflow-y: auto;">
+            
+            <div class="mb-3">
+              <label for="rmFormCareerTitle" class="form-label small fw-semibold text-secondary">Target Career Track</label>
+              <input type="text" class="form-control" id="rmFormCareerTitle" placeholder="e.g. Full Stack Developer, DevOps Engineer" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="rmFormDesc" class="form-label small fw-semibold text-secondary">Roadmap Summary</label>
+              <textarea class="form-control" id="rmFormDesc" rows="2" placeholder="Overview of phase milestones and learning goals..."></textarea>
+            </div>
+
+            <!-- Dynamic Learning Phases & Tasks -->
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold text-navy mb-0"><i class="bi bi-diagram-3 text-primary me-2"></i>Learning Phases & Milestones</h6>
+                <button type="button" class="btn btn-xs btn-outline-primary" onclick="addRoadmapPhaseBlock()">
+                  <i class="bi bi-plus me-1"></i>Add Phase
+                </button>
+              </div>
+              <div id="roadmapPhasesList" class="d-flex flex-column gap-3">
+                <!-- Phases inserted dynamically -->
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer border-top">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-forge-primary btn-sm px-4" id="btnSaveRoadmap">
+              Save Roadmap
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1200;">
+    <div id="adminToast" class="toast align-items-center text-white border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body" id="adminToastMsg">Notification message.</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .col-xl-2dot4 {
+      flex: 0 0 auto;
+      width: 20%;
+    }
+    @media (max-width: 1200px) {
+      .col-xl-2dot4 { width: 33.333%; }
+    }
+    @media (max-width: 768px) {
+      .col-xl-2dot4 { width: 50%; }
+    }
+    @media (max-width: 576px) {
+      .col-xl-2dot4 { width: 100%; }
+    }
+    .btn-xs {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: 0.25rem;
+    }
+    .action-btn-group .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+    }
+    .question-card, .phase-card {
+      border: 1px solid #E5E7EB;
+      background-color: #FAFAFA;
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+  </style>
+
+  <!-- Bootstrap 5 JS Bundle & API helper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // Strict Admin Authorization Guard
+    const adminUser = requireAdmin();
+    let allStudentsCache = [];
+    let allSkillsCache = [];
+    let allCareersCache = [];
+
+    function showAdminToast(msg, type = 'success') {
+      const toastEl = document.getElementById('adminToast');
+      document.getElementById('adminToastMsg').textContent = msg;
+      toastEl.className = `toast align-items-center text-white bg-${type === 'danger' ? 'danger' : 'success'} border-0`;
+      const bsToast = new bootstrap.Toast(toastEl, { delay: 3500 });
+      bsToast.show();
+    }
+
+    // Tab Navigation Switcher
+    function switchAdminTab(tabKey, linkEl) {
+      document.querySelectorAll('.admin-tab-pane').forEach(el => el.classList.add('d-none'));
+      const activeSection = document.getElementById(`section-${tabKey}`);
+      if (activeSection) {
+        activeSection.classList.remove('d-none');
+      }
+
+      document.querySelectorAll('.sidebar-nav .sidebar-link').forEach(el => el.classList.remove('active'));
+      if (linkEl) {
+        linkEl.classList.add('active');
+      }
+
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('show');
+
+      // Refresh specific tab data
+      if (tabKey === 'dashboard') loadDashboardData();
+      if (tabKey === 'students') loadStudentsData();
+      if (tabKey === 'skills') loadSkillsData();
+      if (tabKey === 'careers') loadCareersData();
+      if (tabKey === 'assessments') loadAssessmentsData();
+      if (tabKey === 'roadmaps') loadRoadmapsData();
+      if (tabKey === 'reports') loadReportsData();
+      if (tabKey === 'profile') loadProfileData();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!adminUser || adminUser.role !== 'admin') return;
+
+      document.getElementById('header-user-name').textContent = adminUser.name || 'Admin Faculty';
+      document.getElementById('profDisplayName').textContent = adminUser.name || 'Admin Faculty';
+      document.getElementById('profAdminNameInput').value = adminUser.name || 'Admin Faculty';
+      document.getElementById('profAdminEmailInput').value = adminUser.email || 'admin@skillforge.com';
+
+      const hash = window.location.hash.replace('#', '') || 'dashboard';
+      const initialLink = document.getElementById(`menu-${hash}`) || document.getElementById('menu-dashboard');
+      switchAdminTab(hash, initialLink);
+    });
+
+    // ================= 1. ADMIN DASHBOARD =================
+    async function loadDashboardData() {
+      try {
+        const data = await apiFetch('/admin/stats');
+        const s = data.stats || {};
+        document.getElementById('dashTotalStudents').textContent = s.totalStudents || 0;
+        document.getElementById('dashTotalSkills').textContent = s.totalSkills || 0;
+        document.getElementById('dashTotalCareers').textContent = s.totalRoles || 0;
+        document.getElementById('dashTotalAssessments').textContent = s.totalAssessments || 0;
+        document.getElementById('dashTotalRoadmaps').textContent = s.totalRoadmaps || 0;
+        document.getElementById('dashRoadmapPct').textContent = `${s.studentProgressPercent || 0}% completion rate`;
+
+        // Career Distribution
+        const distBox = document.getElementById('dashCareerDistributionBox');
+        if (!data.careerDistribution || data.careerDistribution.length === 0) {
+          distBox.innerHTML = '<div class="text-center py-4 text-muted small">No student career selections recorded yet.</div>';
+        } else {
+          distBox.innerHTML = data.careerDistribution.map(cd => {
+            const count = cd.count;
+            const pct = s.totalStudents > 0 ? Math.round((count / s.totalStudents) * 100) : 0;
+            return `
+              <div class="mb-3">
+                <div class="d-flex justify-content-between small fw-bold mb-1">
+                  <span>${cd._id || 'Undecided'}</span>
+                  <span class="text-primary">${count} students (${pct}%)</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                  <div class="progress-bar bg-primary" style="width: ${pct}%;"></div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Recent Student Activities
+        const actBox = document.getElementById('dashRecentActivityBox');
+        if (!data.recentActivities || data.recentActivities.length === 0) {
+          actBox.innerHTML = '<div class="text-center py-4 text-muted small">No recent student activities recorded.</div>';
+        } else {
+          actBox.innerHTML = data.recentActivities.map(act => `
+            <div class="d-flex align-items-center gap-3 py-2 border-bottom">
+              <div class="p-2 rounded-circle" style="background-color: #ECFDF5; color: ${act.color || '#059669'};">
+                <i class="bi ${act.icon || 'bi-check-circle'} fs-6"></i>
+              </div>
+              <div class="flex-grow-1">
+                <div class="small fw-semibold text-navy">${act.text}</div>
+                <div class="text-muted" style="font-size: 0.72rem;">${act.studentName} (${act.studentEmail}) • ${new Date(act.createdAt).toLocaleString()}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Recent Students
+        const tbody = document.getElementById('dashRecentStudentsTable');
+        if (!data.recentStudents || data.recentStudents.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No students registered yet.</td></tr>';
+        } else {
+          tbody.innerHTML = data.recentStudents.map(st => `
+            <tr>
+              <td class="fw-bold text-navy">${st.name}</td>
+              <td class="text-muted small">${st.email}</td>
+              <td class="small">${st.college || '—'}</td>
+              <td><span class="badge bg-light text-navy border">${st.targetCareer || 'Full Stack Developer'}</span></td>
+              <td class="text-muted small">${new Date(st.createdAt).toLocaleDateString()}</td>
+            </tr>
+          `).join('');
+        }
+      } catch (err) {
+        showAdminToast('Failed to load dashboard metrics.', 'danger');
+      }
+    }
+
+    // ================= 2. MANAGE STUDENTS =================
+    async function loadStudentsData() {
+      try {
+        const data = await apiFetch('/admin/users');
+        allStudentsCache = data.users || [];
+        document.getElementById('studentsTotalBadge').textContent = `${data.count || 0} Students Registered`;
+        
+        // Populate career filter
+        const careersSet = new Set();
+        allStudentsCache.forEach(s => { if (s.targetCareer) careersSet.add(s.targetCareer); });
+        const filterSelect = document.getElementById('studentCareerFilter');
+        filterSelect.innerHTML = '<option value="All">All Careers</option>' + 
+          Array.from(careersSet).map(c => `<option value="${c}">${c}</option>`).join('');
+
+        renderStudentsTable(allStudentsCache);
+      } catch (err) {
+        showAdminToast('Failed to load student directory.', 'danger');
+      }
+    }
+
+    function renderStudentsTable(students) {
+      const tbody = document.getElementById('adminStudentsTableBody');
+      if (!students || students.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No registered students match your query.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = students.map(st => `
+        <tr>
+          <td>
+            <div class="fw-bold text-navy">${st.name}</div>
+            <div class="text-muted small">${st.location || 'Location Not Specified'}</div>
+          </td>
+          <td>
+            <div class="small fw-semibold">${st.email}</div>
+            <div class="text-muted small">${st.college || 'College Not Stated'}</div>
+          </td>
+          <td>
+            <div class="small">${st.degree || 'B.Tech'} - ${st.department || 'CS'}</div>
+            <div class="text-muted small">${st.academicYear || 'Current Student'}</div>
+          </td>
+          <td>
+            <span class="badge bg-primary-subtle text-primary border">${st.targetCareer || 'Full Stack Developer'}</span>
+          </td>
+          <td class="text-muted small">${new Date(st.createdAt).toLocaleDateString()}</td>
+          <td class="text-end action-btn-group">
+            <button class="btn btn-sm btn-outline-primary me-1" onclick="viewStudentDetails('${st._id}')" title="View Profile & Progress">
+              <i class="bi bi-eye"></i> View
+            </button>
+            <button class="btn btn-sm btn-light text-danger border" onclick="deleteStudent('${st._id}', '${st.name}')" title="Delete Student Account">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterStudentsTable() {
+      const q = document.getElementById('studentSearchInput').value.toLowerCase().trim();
+      const careerFilter = document.getElementById('studentCareerFilter').value;
+
+      let filtered = allStudentsCache;
+      if (careerFilter && careerFilter !== 'All') {
+        filtered = filtered.filter(s => s.targetCareer === careerFilter);
+      }
+      if (q) {
+        filtered = filtered.filter(s => 
+          (s.name && s.name.toLowerCase().includes(q)) ||
+          (s.email && s.email.toLowerCase().includes(q)) ||
+          (s.college && s.college.toLowerCase().includes(q)) ||
+          (s.targetCareer && s.targetCareer.toLowerCase().includes(q))
+        );
+      }
+      renderStudentsTable(filtered);
+    }
+
+    async function viewStudentDetails(studentId) {
+      const modal = new bootstrap.Modal(document.getElementById('studentDetailModal'));
+      document.getElementById('modalStudentBody').innerHTML = '<div class="text-center py-4 text-muted"><span class="spinner-border spinner-border-sm me-2"></span>Loading student profile...</div>';
+      modal.show();
+
+      try {
+        const data = await apiFetch(`/admin/users/${studentId}`);
+        const st = data.student;
+        document.getElementById('modalStudentName').textContent = `${st.name} — Student Profile & Progress`;
+
+        const skillsPills = (st.skills && st.skills.length > 0)
+          ? st.skills.map(sk => `<span class="badge bg-light text-navy border p-2">${sk.name} <span class="text-primary fw-bold">(${sk.proficiency})</span></span>`).join(' ')
+          : '<span class="text-muted small">No skills added yet.</span>';
+
+        const testsRows = (st.assessments && st.assessments.length > 0)
+          ? st.assessments.map(a => `
+            <tr>
+              <td>${a.topic}</td>
+              <td>${a.score} / ${a.totalQuestions} (${a.percentage}%)</td>
+              <td><span class="badge bg-${a.passed ? 'success' : 'danger'}-subtle text-${a.passed ? 'success' : 'danger'}">${a.passed ? 'Passed' : 'Needs Retest'}</span></td>
+              <td class="text-muted small">${new Date(a.createdAt).toLocaleDateString()}</td>
+            </tr>
+          `).join('')
+          : '<tr><td colspan="4" class="text-center text-muted small py-2">No assessments taken yet.</td></tr>';
+
+        document.getElementById('modalStudentBody').innerHTML = `
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded-3">
+                <div class="text-muted small fw-bold text-uppercase">Contact & Academic</div>
+                <div class="fw-bold text-navy mt-1">${st.name}</div>
+                <div class="small text-muted">${st.email} • ${st.phone}</div>
+                <div class="small text-muted">${st.college} (${st.degree} - ${st.department})</div>
+                <div class="small text-muted">${st.academicYear} • ${st.location}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded-3">
+                <div class="text-muted small fw-bold text-uppercase">Target Career Track</div>
+                <div class="fw-bold text-primary fs-5 mt-1">${st.targetCareer}</div>
+                <div class="small text-muted mb-2">${st.bio}</div>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="progress flex-grow-1" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: ${st.roadmap.progressPercentage}%;"></div>
+                  </div>
+                  <span class="small fw-bold">${st.roadmap.progressPercentage}% Roadmap Done</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="fw-bold text-navy mb-2"><i class="bi bi-cpu text-primary me-2"></i>Declared Skills (${st.skillsCount})</h6>
+            <div class="d-flex flex-wrap gap-2">${skillsPills}</div>
+          </div>
+
+          <div>
+            <h6 class="fw-bold text-navy mb-2"><i class="bi bi-clipboard2-check text-primary me-2"></i>Assessment Results (${st.assessments.length})</h6>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered">
+                <thead class="table-light">
+                  <tr><th>Topic</th><th>Score</th><th>Status</th><th>Date</th></tr>
+                </thead>
+                <tbody>${testsRows}</tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        document.getElementById('modalStudentBody').innerHTML = '<div class="alert alert-danger">Failed to load student details.</div>';
+      }
+    }
+
+    async function deleteStudent(id, name) {
+      if (!confirm(`Are you sure you want to remove student '${name}'? This deletes all associated skills, roadmaps, and records.`)) return;
+      try {
+        await apiFetch(`/admin/users/${id}`, { method: 'DELETE' });
+        showAdminToast(`Student '${name}' removed successfully.`, 'success');
+        loadStudentsData();
+      } catch (err) {
+        showAdminToast(err.message || 'Failed to remove student.', 'danger');
+      }
+    }
+
+    // ================= 3. MANAGE SKILLS =================
+    async function loadSkillsData() {
+      try {
+        const data = await apiFetch('/admin/skills');
+        allSkillsCache = data.skills || [];
+        document.getElementById('skillsTrackedBadge').textContent = `${data.totalTracked || 0} Skills Available`;
+        renderSkillsTable(allSkillsCache);
+      } catch (err) {
+        showAdminToast('Failed to load skills repository.', 'danger');
+      }
+    }
+
+    function renderSkillsTable(skills) {
+      const tbody = document.getElementById('adminSkillsTableBody');
+      if (!skills || skills.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No skills found. Click "Add Skill" above.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = skills.map(sk => `
+        <tr>
+          <td class="fw-bold text-navy">${sk.name}</td>
+          <td><span class="badge bg-light text-secondary border">${sk.category}</span></td>
+          <td class="small text-muted" style="max-width: 280px;">${sk.description || 'Core technical skill'}</td>
+          <td><span class="badge bg-primary-subtle text-primary">${sk.studentCount || 0} students</span></td>
+          <td><span class="badge bg-success-subtle text-success">${sk.verifiedCount || 0} verified</span></td>
+          <td class="text-end action-btn-group">
+            <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditSkillModal('${sk._id}')" title="Edit Skill">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-light text-danger border" onclick="deleteSkill('${sk._id}', '${sk.name}')" title="Delete Skill">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterSkillsTable() {
+      const q = document.getElementById('skillSearchInput').value.toLowerCase().trim();
+      if (!q) {
+        renderSkillsTable(allSkillsCache);
+        return;
+      }
+      const filtered = allSkillsCache.filter(s => 
+        (s.name && s.name.toLowerCase().includes(q)) ||
+        (s.category && s.category.toLowerCase().includes(q)) ||
+        (s.description && s.description.toLowerCase().includes(q))
+      );
+      renderSkillsTable(filtered);
+    }
+
+    function openAddSkillModal() {
+      document.getElementById('skillModalTitle').textContent = 'Add Platform Skill';
+      document.getElementById('skillFormId').value = '';
+      document.getElementById('skillForm').reset();
+      new bootstrap.Modal(document.getElementById('skillModal')).show();
+    }
+
+    function openEditSkillModal(skillId) {
+      const sk = allSkillsCache.find(s => s._id === skillId || s.id === skillId);
+      if (!sk) return;
+      document.getElementById('skillModalTitle').textContent = 'Edit Platform Skill';
+      document.getElementById('skillFormId').value = sk._id || sk.id;
+      document.getElementById('skillFormName').value = sk.name;
+      document.getElementById('skillFormCategory').value = sk.category;
+      document.getElementById('skillFormDesc').value = sk.description || '';
+      new bootstrap.Modal(document.getElementById('skillModal')).show();
+    }
+
+    document.getElementById('skillForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('skillFormId').value;
+      const payload = {
+        name: document.getElementById('skillFormName').value.trim(),
+        category: document.getElementById('skillFormCategory').value,
+        description: document.getElementById('skillFormDesc').value.trim()
+      };
+
+      const btn = document.getElementById('btnSaveSkill');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+
+      try {
+        if (id) {
+          await apiFetch(`/admin/skills/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+          showAdminToast(`Skill '${payload.name}' updated successfully!`, 'success');
+        } else {
+          await apiFetch('/admin/skills', { method: 'POST', body: JSON.stringify(payload) });
+          showAdminToast(`Skill '${payload.name}' added successfully!`, 'success');
+        }
+        bootstrap.Modal.getInstance(document.getElementById('skillModal')).hide();
+        loadSkillsData();
+      } catch (err) {
+        showAdminToast(err.message || 'Failed to save skill.', 'danger');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Save Skill';
+      }
+    });
+
+    async function deleteSkill(id, name) {
+      if (!confirm(`Are you sure you want to delete skill '${name}' from the platform catalog?`)) return;
+      try {
+        await apiFetch(`/admin/skills/${id}`, { method: 'DELETE' });
+        showAdminToast(`Skill '${name}' deleted successfully.`, 'success');
+        loadSkillsData();
+      } catch (err) {
+        showAdminToast(err.message || 'Failed to delete skill.', 'danger');
+      }
+    }
+
+    // ================= 4. MANAGE CAREERS =================
+    async function loadCareersData() {
+      try {
+        const data = await apiFetch('/admin/roles');
+        allCareersCache = data.roles || [];
+        document.getElementById('careersCountBadge').textContent = `${data.count || 0} Careers Available`;
+        renderCareersTable(allCareersCache);
+      } catch (err) {
+        showAdminToast('Failed to load career catalog.', 'danger');
+      }
+    }
+
+    function renderCareersTable(careers) {
+      const tbody = document.getElementById('adminCareersTableBody');
+      if (!careers || careers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No careers configured. Click "Add Career" above.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = careers.map(r => {
+        const skillsBadges = (r.requiredSkills || []).map(s => 
+          `<span class="badge bg-light text-navy border me-1 mb-1">${typeof s === 'string' ? s : s.name + ' (' + (s.minProficiency || 'Intermediate') + ')'}</span>`
+        ).join('');
+
+        return `
+          <tr>
+            <td>
+              <div class="fw-bold text-navy">${r.title}</div>
+              <div class="small text-muted" style="max-width: 250px;">${r.description || ''}</div>
+            </td>
+            <td><span class="badge bg-light text-secondary border">${r.category}</span></td>
+            <td style="max-width: 320px;">${skillsBadges || '—'}</td>
+            <td><span class="badge bg-success-subtle text-success">${r.averageSalary || '₹6 - 12 LPA'}</span></td>
+            <td class="text-end action-btn-group">
+              <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditCareerModal('${r._id}')" title="Edit Career">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-light text-danger border" onclick="deleteCareer('${r._id}', '${r.title}')" title="Delete Career">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function addCareerSkillRow(name = '', minProficiency = 'Intermediate', requiredLevel = 3) {
+      const container = document.getElementById('careerSkillsListContainer');
+      const rowId = `csk_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
+      const div = document.createElement('div');
+      div.className = 'd-flex align-items-center gap-2 career-skill-row';
+      div.id = rowId;
+      div.innerHTML = `
+        <input type="text" class="form-control form-control-sm skill-name-input" placeholder="Skill Name (e.g. Python)" value="${name}" required>
+        <select class="form-select form-select-sm skill-prof-select" style="max-width: 150px;">
+          <option value="Beginner" ${minProficiency === 'Beginner' ? 'selected' : ''}>Beginner (1)</option>
+          <option value="Basic" ${minProficiency === 'Basic' ? 'selected' : ''}>Basic (2)</option>
+          <option value="Intermediate" ${minProficiency === 'Intermediate' ? 'selected' : ''}>Intermediate (3)</option>
+          <option value="Advanced" ${minProficiency === 'Advanced' ? 'selected' : ''}>Advanced (4)</option>
+          <option value="Expert" ${minProficiency === 'Expert' ? 'selected' : ''}>Expert (5)</option>
+        </select>
+        <button type="button" class="btn btn-sm btn-light text-danger border" onclick="document.getElementById('${rowId}').remove()"><i class="bi bi-x-lg"></i></button>
+      `;
+      container.appendChild(div);
+    }
+
+    function openAddCareerModal() {
+      document.getElementById('careerModalTitle').textContent = 'Add Career Role';
+      document.getElementById('careerFormId').value = '';
+      document.getElementById('careerForm').reset();
+      document.getElementById('careerSkillsListContainer').innerHTML = '';
+      addCareerSkillRow('JavaScript', 'Intermediate');
+      addCareerSkillRow('HTML5', 'Intermediate');
+      new bootstrap.Modal(document.getElementById('careerModal')).show();
+    }
+
+    function openEditCareerModal(roleId) {
+      const r = allCareersCache.find(c => c._id === roleId || c.id === roleId);
+      if (!r) return;
+      document.getElementById('careerModalTitle').textContent = 'Edit Career Role';
+      document.getElementById('careerFormId').value = r._id || r.id;
+      document.getElementById('careerFormTitle').value = r.title;
+      document.getElementById('careerFormCategory').value = r.category || 'Engineering';
+      document.getElementById('careerFormDesc').value = r.description || '';
+      document.getElementById('careerFormSalary').value = r.averageSalary || '₹6 - 12 LPA';
+
+      const container = document.getElementById('careerSkillsListContainer');
+      container.innerHTML = '';
+      if (r.requiredSkills && r.requiredSkills.length > 0) {
+        r.requiredSkills.forEach(s => {
+          if (typeof s === 'string') addCareerSkillRow(s, 'Intermediate');
+          else addCareerSkillRow(s.name, s.minProficiency || 'Intermediate', s.requiredLevel || 3);
+        });
+      } else {
+        addCareerSkillRow();
+      }
+      new bootstrap.Modal(document.getElementById('careerModal')).show();
+    }
+
+    document.getElementById('careerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('careerFormId').value;
+
+      const skillRows = document.querySelectorAll('.career-skill-row');
+      const requiredSkills = [];
+      const profToLevel = { 'Beginner': 1, 'Basic': 2, 'Intermediate': 3, 'Advanced': 4, 'Expert': 5 };
+
+      skillRows.forEach(row => {
+        const name = row.querySelector('.skill-name-input').value.trim();
+        const prof = row.querySelector('.skill-prof-select').value;
+        if (name) {
+          requiredSkills.push({
+            name,
+            minProficiency: prof,
+            requiredLevel: profToLevel[prof] || 3,
+            importance: 'High'
+          });
+        }
+      });
+
+      const payload = {
+        title: document.getElementById('careerFormTitle').value.trim(),
+        category: document.getElementById('careerFormCategory').value,
+        description: document.getElementById('careerFormDesc').value.trim(),
+        averageSalary: document.getElementById('careerFormSalary').value.trim() || '₹6 - 12 LPA',
+        requiredSkills
+      };
+
+      const btn = document.getElementById('btnSaveCareer');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+
+      try {
+        if (id) {
+          await apiFetch(`/admin/roles/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+          showAdminToast(`Career '${payload.title}' updated successfully!`, 'success');
+        } else {
+          await apiFetch('/admin/roles', { method: 'POST', body: JSON.stringify(payload) });
+          showAdminToast(`Career '${payload.title}' created successfully!`, 'success');
+        }
+        bootstrap.Modal.getInstance(document.getElementById('careerModal')).hide();
+        loadCareersData();
+      } catch (err) {
+        showAdminToast(err.message || 'Failed to save career.', 'danger');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Save Career Role';
+      }
+    });
+
+    async function deleteCareer(id, title) {
+      if (!confirm(`Are you sure you want to delete career role '${title}'?`)) return;
+      try {
+        await apiFetch(`/admin/roles/${id}`, { method: 'DELETE' });
+        showAdminToast(`Career role '${title}' deleted successfully.`, 'success');
+        loadCareersData();
+      } catch (err) {
+        showAdminToast(err.message || 'Failed to delete role.', 'danger');
+      }
+    }
+
+    // ================= 5. MANAGE ASSESSMENTS =================
+    let allAssessmentsCache = [];
+
+    async function loadAssessmentsData() {
+      try {
+        const data = await apiFetch('/admin/assessments');
+        allAssessmentsCache = data.assessments || [];
+        document.getElementById('assessmentsCountBadge').textContent = `${data.count || 0} Assessments Configured`;
+        renderAssessmentsTable(allAssessmentsCache);
+      } catch (err) {
+        showAdminToast('Failed to load assessments.', 'danger');
+      }
+    }
+
+    function renderAssessmentsTable(assessments) {
+      const tbody = document.getElementById('adminAssessmentsTableBody');
+      if (!assessments || assessments.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-muted">No assessments configured. Click "Create Assessment" above.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = assessments.map(a => `
+        <tr>
+          <td>
+            <div class="fw-bold text-navy">${a.title}</div>
+            <div class="small text-muted">${a.topic}</div>
+          </td>
+          <td><span class="badge bg-light text-secondary border">${a.skillCategory}</span></td>
+          <td><span class="badge bg-secondary-subtle text-secondary">${a.difficulty}</span></td>
+          <td><span class="badge bg-light text-navy border">${a.questionsCount} MCQs</span></td>
+          <td><span class="badge bg-info-subtle text-info">${a.passingPercentage}% Required</span></td>
+          <td>${a.totalAttempts} attempts</td>
+          <td><span class="badge bg-success-subtle text-success">${a.passRate}% Passed</span></td>
+          <td class="text-end action-btn-group">
+            <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditAssessmentModal('${a.id || a._id}')" title="Edit Assessment & Questions">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-light text-danger border" onclick="deleteAssessment('${a.id || a._id}', '${a.title}')" title="Delete Assessment">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function addAssessmentQuestionBlock(qData = null) {
+      const container = document.getElementById('assessmentQuestionsList');
+      const qIndex = container.children.length;
+      const qId = `q_block_${Date.now()}_${qIndex}`;
+
+      const text = qData ? (qData.questionText || qData.question || '') : '';
+      const opts = (qData && qData.options) ? qData.options : ['', '', '', ''];
+      const correctIdx = qData ? (Number(qData.correctOptionIndex) || 0) : 0;
+      const explanation = qData ? (qData.explanation || '') : '';
+
+      const card = document.createElement('div');
+      card.className = 'question-card shadow-sm';
+      card.id = qId;
+      card.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="fw-bold small text-navy"><i class="bi bi-patch-question me-1"></i>Question ${qIndex + 1}</span>
+          <button type="button" class="btn btn-xs btn-light text-danger border" onclick="document.getElementById('${qId}').remove()"><i class="bi bi-trash"></i> Remove</button>
+        </div>
+        <div class="mb-2">
+          <input type="text" class="form-control form-control-sm q-text-input" placeholder="Enter question statement..." value="${text}" required>
+        </div>
+        <div class="row g-2 mb-2">
+          <div class="col-6">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">A</span>
+              <input type="text" class="form-control q-opt-0" placeholder="Option A" value="${opts[0] || ''}" required>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">B</span>
+              <input type="text" class="form-control q-opt-1" placeholder="Option B" value="${opts[1] || ''}" required>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">C</span>
+              <input type="text" class="form-control q-opt-2" placeholder="Option C" value="${opts[2] || ''}" required>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">D</span>
+              <input type="text" class="form-control q-opt-3" placeholder="Option D" value="${opts[3] || ''}" required>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-md-4">
+            <label class="form-label small text-muted mb-1">Correct Answer Option</label>
+            <select class="form-select form-select-sm q-correct-select">
+              <option value="0" ${correctIdx === 0 ? 'selected' : ''}>Option A</option>
+              <option value="1" ${correctIdx === 1 ? 'selected' : ''}>Option B</option>
+              <option value="2" ${correctIdx === 2 ? 'selected' : ''}>Option C</option>
+              <option value="3" ${correctIdx === 3 ? 'selected' : ''}>Option D</option>
+            </select>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label small text-muted mb-1">Explanation (optional)</label>
+            <input type="text" class="form-control form-control-sm q-exp-input" placeholder="Why is this answer correct?" value="${explanation}">
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    }
+
+    function openCreateAssessmentModal() {
+      document.getElementById('assessmentModalTitle').textContent = 'Create New Assessment';
+      document.getElementById('assessmentFormId').value = '';
+      document.getElementById('assessmentForm').reset();
+      document.getElementById('assessmentQuestionsList').innerHTML = '';
+      addAssessmentQuestionBlock();
+      new bootstrap.Modal(document.getElementById('assessmentModal')).show();
+    }
+
+    async function openEditAssessmentModal(id) {
+      try {
+        const data = await apiFetch(`/admin/assessments/${id}`);
+        const a = data.assessment;
+        if (!a) return;
+
+        document.getElementById('assessmentModalTitle').textContent = 'Edit Assessment & Questions';
+        document.getElementById('assessmentFormId').value = a._id || a.id;
+        document.getElementById('assFormTitle').value = a.title;
+        document.getElementById('assFormSkill').value = a.relatedSkill || a.title;
+        document.getElementById('assFormCategory').value = a.skillCategory || 'Programming';
+        document.getElementById('assFormDifficulty').value = a.difficulty || 'Beginner';
+        document.getElementById('assFormDuration').value = a.durationMinutes || 15;
+        document.getElementById('assFormPassScore').value = a.passingPercentage || 70;
+        document.getElementById('assFormDesc').value = a.description || '';
+
+        const container = document.getElementById('assessmentQuestionsList');
+        container.innerHTML = '';
+        if (a.questions && a.questions.length > 0) {
+          a.questions.forEach(q => addAssessmentQuestionBlock(q));
+        } else {
+          addAssessmentQuestionBlock();
+        }
+
+        new bootstrap.Modal(document.getElementById('assessmentModal')).show();
+      } catch (err) {
+        showAdminToast('Failed to load assessment details.', 'danger');
+      }
+    }
+
+    document.getElementById('assessmentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('assessmentFormId').value;
+
+      const qCards = document.querySelectorAll('.question-card');
+      const questions = [];
+      qCards.forEach(card => {
+        const text = card.querySelector('.q-text-input').value.trim();
+        const o0 = card.querySelector('.q-opt-0').value.trim();
+        const o1 = card.querySelector('.q-opt-1').value.trim();
+        const o2 = card.querySelector('.q-opt-2').value.trim();
+        const o3 = card.querySelector('.q-opt-3').value.trim();
+        const correct = Number(card.querySelector('.q-correct-select').value);
+        const exp = card.querySelector('.q-exp-input').value.trim();
+
+        if (text) {
+          questions.push({
+            questionText: text,
+            options: [o0, o1, o2, o3],
+            correctOptionIndex: correct,
+            explanation: exp
+          });
+        }
+      });
+
+      if (questions.length === 0) {
+        showAdminToast('Please add at least one question.', 'danger');
+        return;
+      }
+
+      const payload = {
+        title: document.getElementById('assFormTitle').value.trim(),
+        relatedSkill: document.getElementById('assFormSkill').value.trim(),
+        skillCategory: document.getElementById('assFormCategory').value,
+        difficulty: document.getElementById('assFormDifficulty').value,
+        durationMinutes: Number(document.getElementById('assFormDuration').value) || 15,
+        passingPercentage: Number(document.getElementById('assFormPassScore').value) || 70,
+        description: document.getElementById('assFormDesc').value.trim(),
+        questions
+      };
+
+      const btn = document.getElementById('btnSaveAssessment');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+
+      try {
+        if (id) {
+          await apiFetch(`/admin/assessments/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+          showAdminToast(`Assessment '${payload.title}' updated successfully!`, 'success');
+        } else {
+          await apiFetch('/admin/assessments', { method: 'POST', body: JSON.stringify(payload) });
+          showAdminToast(`Assessment '${payload.title}' created successfully!`, 'success');
+        }
+        bootstrap.Modal.getInstance(document.getElementById('assessmentModal')).hide();
+        loadAssessmentsData();
+      } catch (err) {
+        showAdminToast(err.message || 'Failed to save assessment.', 'danger');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Save Assessment';
+      }
+    });
+
+    async function deleteAssessment(id, title) {
+      if (!confirm(`Are you sure you want to delete assessment '${title}' and its question bank?`)) return;
+      try {
+        await apiFetch(`/admin/assessments/${id}`, { method: 'DELETE' });
+        showAdminToast(`Assessment '${title}' deleted successfully.`, 'success');
+        loadAssessmentsData();
+      } catch (err) {
+        showAdminToast(err.message || 'Failed to delete assessment.', 'danger');
+      }
+    }
+
+    // ================= 6. MANAGE LEARNING ROADMAPS =================
+    let allCustomRoadmapsCache = [];
+
+    async function loadRoadmapsData() {
+      try {
+        const data = await apiFetch('/admin/roadmaps');
+        document.getElementById('rmTotalRoadmaps').textContent = data.totalRoadmaps || 0;
+        document.getElementById('rmCompletedTasks').textContent = data.completedTasks || 0;
+        document.getElementById('rmInProgressTasks').textContent = data.inProgressTasks || 0;
+        document.getElementById('rmProgressRate').textContent = `${data.progressRate || 0}%`;
+
+        allCustomRoadmapsCache = data.customRoadmaps || [];
+        renderCustomRoadmapsTable(allCustomRoadmapsCache);
+
+        // Render Phase progression table
+        const tbody = document.getElementById('adminRoadmapsTableBody');
+        if (!data.tasksByPhase || data.tasksByPhase.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">No phase progression data available.</td></tr>';
+        } else {
+          tbody.innerHTML = data.tasksByPhase.map(p => {
+            const compRate = p.count > 0 ? Math.round((p.completed / p.count) * 100) : 0;
+            return `
+              <tr>
+                <td class="fw-bold text-navy">${p._id || 'Core Foundation'}</td>
+                <td>${p.count} tasks assigned</td>
+                <td><span class="badge bg-success-subtle text-success">${p.completed} completed</span></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="progress flex-grow-1" style="height: 6px;">
+                      <div class="progress-bar bg-success" style="width: ${compRate}%;"></div>
+                    </div>
+                    <span class="small fw-bold text-muted">${compRate}%</span>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        showAdminToast('Failed to load roadmap metrics.', 'danger');
+      }
+    }
+
+    function renderCustomRoadmapsTable(roadmaps) {
+      const tbody = document.getElementById('adminCustomRoadmapsTableBody');
+      if (!roadmaps || roadmaps.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No custom career roadmaps configured yet. Click "Create Roadmap" above.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = roadmaps.map(rm => {
+        const totalTasks = (rm.phases || []).reduce((acc, p) => acc + (p.tasks ? p.tasks.length : 0), 0);
+        return `
+          <tr>
+            <td class="fw-bold text-navy">${rm.careerTitle}</td>
+            <td class="small text-muted" style="max-width: 280px;">${rm.description || 'Structured learning track'}</td>
+            <td><span class="badge bg-light text-navy border">${(rm.phases || []).length} Phases</span></td>
+            <td><span class="badge bg-primary-subtle text-primary">${totalTasks} Tasks</span></td>
+            <td class="text-end action-btn-group">
+              <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditRoadmapModal('${rm._id}')" title="Edit Roadmap & Phases">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-light text-danger border" onclick="deleteRoadmap('${rm._id}', '${rm.careerTitle}')" title="Delete Roadmap">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function addRoadmapPhaseBlock(pData = null) {
+      const container = document.getElementById('roadmapPhasesList');
+      const pIndex = container.children.length;
+      const pId = `phase_block_${Date.now()}_${pIndex}`;
+
+      const name = pData ? (pData.phaseName || `Phase ${pIndex + 1}`) : `Phase ${pIndex + 1} — Core Competencies`;
+      const tasks = pData ? (pData.tasks || []) : [];
+
+      const card = document.createElement('div');
+      card.className = 'phase-card shadow-sm mb-3';
+      card.id = pId;
+      card.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="fw-bold text-navy small"><i class="bi bi-layers me-1"></i>Phase ${pIndex + 1}</span>
+          <button type="button" class="btn btn-xs btn-light text-danger border" onclick="document.getElementById('${pId}').remove()"><i class="bi bi-trash"></i> Remove Phase</button>
+        </div>
+        <div class="mb-2">
+          <input type="text" class="form-control form-control-sm phase-name-input" placeholder="Phase Name (e.g. Phase 1 — Foundations)" value="${name}" required>
+        </div>
+        <div class="ps-3 border-start border-2 border-primary">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="small fw-semibold text-secondary">Phase Tasks</span>
+            <button type="button" class="btn btn-xs btn-outline-secondary" onclick="addPhaseTaskRow('${pId}')"><i class="bi bi-plus"></i> Add Task</button>
+          </div>
+          <div class="phase-tasks-container d-flex flex-column gap-2" id="${pId}_tasks"></div>
+        </div>
+      `;
+      container.appendChild(card);
+
+      const tasksContainer = document.getElementById(`${pId}_tasks`);
+      if (tasks.length > 0) {
+        tasks.forEach(t => addPhaseTaskRow(pId, t));
+      } else {
+        addPhaseTaskRow(pId);
+      }
+    }
+
+    function addPhaseTaskRow(phaseId, tData = null) {
+      const container = document.getElementById(`${phaseId}_tasks`);
+      const rowId = `t_row_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
+      const title = tData ? (tData.title || '') : '';
+      const instructions = tData ? (tData.instructions || '') : '';
+      const effort = tData ? (tData.estimatedEffort || '10 - 15 hours') : '10 - 15 hours';
+
+      const div = document.createElement('div');
+      div.className = 'task-row p-2 bg-white rounded border';
+      div.id = rowId;
+      div.innerHTML = `
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <input type="text" class="form-control form-control-sm task-title-input" placeholder="Task Title (e.g. Master Syntax)" value="${title}" required>
+          <input type="text" class="form-control form-control-sm task-effort-input" placeholder="Effort (e.g. 12 hrs)" value="${effort}" style="max-width: 140px;">
+          <button type="button" class="btn btn-xs btn-light text-danger border" onclick="document.getElementById('${rowId}').remove()"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <input type="text" class="form-control form-control-sm task-inst-input text-muted" placeholder="Instructions / Deliverable..." value="${instructions}">
+      `;
+      container.appendChild(div);
+    }
+
+    function openCreateRoadmapModal() {
+      document.getElementById('roadmapModalTitle').textContent = 'Create Learning Roadmap';
+      document.getElementById('roadmapFormId').value = '';
+      document.getElementById('roadmapForm').reset();
+      document.getElementById('roadmapPhasesList').innerHTML = '';
+      addRoadmapPhaseBlock();
+      new bootstrap.Modal(document.getElementById('roadmapModal')).show();
+    }
+
+    async function openEditRoadmapModal(id) {
+      try {
+        const data = await apiFetch(`/admin/roadmaps/${id}`);
+        const rm = data.roadmap;
+        if (!rm) return;
+
+        document.getElementById('roadmapModalTitle').textContent = `Edit Roadmap — ${rm.careerTitle}`;
+        document.getElementById('roadmapFormId').value = rm._id;
+        document.getElementById('rmFormCareerTitle').value = rm.careerTitle;
+        document.getElementById('rmFormDesc').value = rm.description || '';
+
+        const container = document.getElementById('roadmapPhasesList');
+        container.innerHTML = '';
+        if (rm.phases && rm.phases.length > 0) {
+          rm.phases.forEach(ph => addRoadmapPhaseBlock(ph));
+        } else {
+          addRoadmapPhaseBlock();
+        }
+
+        new bootstrap.Modal(document.getElementById('roadmapModal')).show();
+      } catch (err) {
+        showAdminToast('Failed to load roadmap details.', 'danger');
+      }
+    }
+
+    document.getElementById('roadmapForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('roadmapFormId').value;
+
+      const phaseCards = document.querySelectorAll('.phase-card');
+      const phases = [];
+
+      phaseCards.forEach((pCard, pIdx) => {
+        const phaseName = pCard.querySelector('.phase-name-input').value.trim();
+        const taskRows = pCard.querySelectorAll('.task-row');
+        const tasks = [];
+
+        taskRows.forEach((tRow, tIdx) => {
+          const title = tRow.querySelector('.task-title-input').value.trim();
+          const effort = tRow.querySelector('.task-effort-input').value.trim();
+          const inst = tRow.querySelector('.task-inst-input').value.trim();
+          if (title) {
+            tasks.push({
+              taskId: `task_${Date.now()}_${pIdx}_${tIdx}`,
+              title,
+              instructions: inst,
+              estimatedEffort: effort || '10 - 15 hours',
+              order: tIdx + 1
+            });
+          }
+        });
+
+        if (phaseName) {
+          phases.push({
+            phaseOrder: pIdx + 1,
+            phaseName,
+            tasks
+          });
+        }
+      });
+
+      if (phases.length === 0) {
+        showAdminToast('Please add at least one phase to the roadmap.', 'danger');
+        return;
+      }
+
+      const payload = {
+        careerTitle: document.getElementById('rmFormCareerTitle').value.trim(),
+        description: document.getElementById('rmFormDesc').value.trim(),
+        phases
+      };
+
+      const btn = document.getElementById('btnSaveRoadmap');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+
+      try {
+        if (id) {
+          await apiFetch(`/admin/roadmaps/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+          showAdminToast(`Roadmap for '${payload.careerTitle}' updated! Student progress preserved.`, 'success');
+        } else {
+          await apiFetch('/admin/roadmaps', { method: 'POST', body: JSON.stringify(payload) });
+          showAdminToast(`Roadmap for '${payload.careerTitle}' created successfully!`, 'success');
+        }
+        bootstrap.Modal.getInstance(document.getElementById('roadmapModal')).hide();
+        loadRoadmapsData();
+      } catch (err) {
+        showAdminToast(err.message || 'Failed to save roadmap.', 'danger');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Save Roadmap';
+      }
+    });
+
+    async function deleteRoadmap(id, careerTitle) {
+      if (!confirm(`Are you sure you want to delete the roadmap for '${careerTitle}'?`)) return;
+      try {
+        await apiFetch(`/admin/roadmaps/${id}`, { method: 'DELETE' });
+        showAdminToast(`Roadmap for '${careerTitle}' deleted.`, 'success');
+        loadRoadmapsData();
+      } catch (err) {
+        showAdminToast(err.message || 'Failed to delete roadmap.', 'danger');
+      }
+    }
+
+    // ================= 7. REPORTS AND ANALYTICS =================
+    async function loadReportsData() {
+      try {
+        const data = await apiFetch('/admin/reports');
+
+        // Assessment Pass Rates Breakdown
+        const passBox = document.getElementById('reportsAssessmentPassBox');
+        if (!data.assessmentStats || data.assessmentStats.length === 0) {
+          passBox.innerHTML = '<div class="text-center py-4 text-muted small">No assessment results recorded yet.</div>';
+        } else {
+          passBox.innerHTML = data.assessmentStats.map(as => `
+            <div class="mb-3">
+              <div class="d-flex justify-content-between small fw-bold mb-1">
+                <span class="text-uppercase">${as.topic}</span>
+                <span class="text-success">${as.passRate}% Pass Rate (${as.totalAttempts} tests)</span>
+              </div>
+              <div class="progress" style="height: 8px;">
+                <div class="progress-bar bg-success" style="width: ${as.passRate}%;"></div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Skill Proficiency Breakdown
+        const profBox = document.getElementById('reportsProficiencyBox');
+        if (!data.proficiencyStats || data.proficiencyStats.length === 0) {
+          profBox.innerHTML = '<div class="text-center py-4 text-muted small">No proficiency metrics available.</div>';
+        } else {
+          const totalProf = data.proficiencyStats.reduce((sum, p) => sum + p.count, 0);
+          profBox.innerHTML = data.proficiencyStats.map(p => {
+            const pct = totalProf > 0 ? Math.round((p.count / totalProf) * 100) : 0;
+            return `
+              <div class="mb-3">
+                <div class="d-flex justify-content-between small fw-bold mb-1">
+                  <span>${p._id || 'Intermediate'}</span>
+                  <span class="text-primary">${p.count} skills (${pct}%)</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                  <div class="progress-bar bg-primary" style="width: ${pct}%;"></div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Institution Data
+        const colBody = document.getElementById('reportsCollegeTableBody');
+        if (!data.collegeStats || data.collegeStats.length === 0) {
+          colBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-muted">No institution data reported yet.</td></tr>';
+        } else {
+          colBody.innerHTML = data.collegeStats.map(c => {
+            const pct = data.totalStudents > 0 ? Math.round((c.count / data.totalStudents) * 100) : 0;
+            return `
+              <tr>
+                <td class="fw-bold text-navy">${c._id}</td>
+                <td><span class="badge bg-primary-subtle text-primary">${c.count} students</span></td>
+                <td><span class="small text-muted">${pct}% platform share</span></td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        // Roadmap Summary
+        const rmBox = document.getElementById('reportsRoadmapSummaryBox');
+        if (!data.roadmapSummary) {
+          rmBox.innerHTML = '<div class="text-center py-4 text-muted small">No roadmap data available.</div>';
+        } else {
+          const rm = data.roadmapSummary;
+          rmBox.innerHTML = `
+            <div class="d-flex justify-content-between mb-2 small fw-bold">
+              <span>Overall Roadmap Completion Rate</span>
+              <span class="text-success">${rm.completionRate}%</span>
+            </div>
+            <div class="progress mb-3" style="height: 10px;">
+              <div class="progress-bar bg-success" style="width: ${rm.completionRate}%;"></div>
+            </div>
+            <div class="row g-2 text-center">
+              <div class="col-4 p-2 bg-light rounded">
+                <div class="text-muted small">Total Tasks</div>
+                <div class="fw-bold text-navy fs-5">${rm.totalTasks}</div>
+              </div>
+              <div class="col-4 p-2 bg-light rounded">
+                <div class="text-muted small">Completed</div>
+                <div class="fw-bold text-success fs-5">${rm.completedTasks}</div>
+              </div>
+              <div class="col-4 p-2 bg-light rounded">
+                <div class="text-muted small">In Progress</div>
+                <div class="fw-bold text-warning fs-5">${rm.inProgressTasks}</div>
+              </div>
+            </div>
+          `;
+        }
+      } catch (err) {
+        showAdminToast('Failed to generate analytics report.', 'danger');
+      }
+    }
+
+    // ================= 8. ADMIN PROFILE =================
+    let cachedAdminProfile = null;
+
+    async function loadProfileData() {
+      try {
+        const data = await apiFetch('/admin/profile');
+        if (data.admin) {
+          cachedAdminProfile = data.admin;
+          document.getElementById('profDisplayName').textContent = data.admin.name || 'Admin Faculty';
+          document.getElementById('profAdminNameInput').value = data.admin.name || 'Admin Faculty';
+          document.getElementById('profAdminEmailInput').value = data.admin.email || 'admin@skillforge.com';
+          document.getElementById('profAccountCreated').textContent = `Admin since ${new Date(data.admin.createdAt).toLocaleDateString()}`;
+          
+          const initials = (data.admin.name || 'Admin Faculty').split(' ').map(w => w[0]).join('').toUpperCase().substring(0, 2);
+          document.getElementById('profAvatarCircle').textContent = initials;
+          document.getElementById('header-user-avatar').textContent = initials;
+        }
+      } catch (err) {
+        // Continue with local defaults
+      }
+    }
+
+    function toggleProfileEdit(isEditing) {
+      const nameInput = document.getElementById('profAdminNameInput');
+      const emailInput = document.getElementById('profAdminEmailInput');
+      const btnEdit = document.getElementById('btnEditProfile');
+      const btnSave = document.getElementById('btnSaveProfile');
+      const btnCancel = document.getElementById('btnCancelProfile');
+
+      if (isEditing) {
+        nameInput.removeAttribute('readonly');
+        nameInput.classList.add('border-primary');
+        emailInput.removeAttribute('readonly');
+        emailInput.classList.add('border-primary');
+        btnEdit.classList.add('d-none');
+        btnSave.classList.remove('d-none');
+        btnCancel.classList.remove('d-none');
+        nameInput.focus();
+      } else {
+        nameInput.setAttribute('readonly', true);
+        nameInput.classList.remove('border-primary');
+        emailInput.setAttribute('readonly', true);
+        emailInput.classList.remove('border-primary');
+        btnEdit.classList.remove('d-none');
+        btnSave.classList.add('d-none');
+        btnCancel.classList.add('d-none');
+
+        // Revert inputs to original cached values
+        if (cachedAdminProfile) {
+          nameInput.value = cachedAdminProfile.name || '';
+          emailInput.value = cachedAdminProfile.email || '';
+        }
+      }
+    }
+
+    document.getElementById('adminProfileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('profAdminNameInput').value.trim();
+      const email = document.getElementById('profAdminEmailInput').value.trim();
+
+      const btnSave = document.getElementById('btnSaveProfile');
+      btnSave.disabled = true;
+      btnSave.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+
+      try {
+        const res = await apiFetch('/admin/profile', {
+          method: 'PUT',
+          body: JSON.stringify({ name, email })
+        });
+
+        showAdminToast('Admin profile details saved to MongoDB successfully!', 'success');
+        cachedAdminProfile = res.admin;
+        document.getElementById('profDisplayName').textContent = res.admin.name;
+        document.getElementById('header-user-name').textContent = res.admin.name;
+
+        // Update session user name/email
+        const currentSession = getSession();
+        if (currentSession && currentSession.user) {
+          currentSession.user.name = res.admin.name;
+          currentSession.user.email = res.admin.email;
+          setSession(currentSession.user, currentSession.token);
+        }
+
+        toggleProfileEdit(false);
+      } catch (err) {
+        showAdminToast(err.message || 'Failed to update profile.', 'danger');
+      } finally {
+        btnSave.disabled = false;
+        btnSave.innerHTML = '<i class="bi bi-check2 me-1"></i>Save Changes';
+      }
+    });
+  </script>
+</body>
+</html>

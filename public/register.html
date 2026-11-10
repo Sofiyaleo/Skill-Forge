@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration – SkillForge</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-light">
+
+  <!-- Top Simple Nav -->
+  <nav class="navbar navbar-expand-lg public-navbar">
+    <div class="container-fluid max-w-1200 px-lg-4">
+      <a class="brand-logo" href="index.html">
+        <div class="brand-icon">
+          <i class="bi bi-hammer"></i>
+        </div>
+        <span>SkillForge</span>
+      </a>
+      <div class="ms-auto">
+        <span class="text-muted small me-2 d-none d-sm-inline">Already have an account?</span>
+        <a href="login.html" class="btn btn-forge-outline-dark btn-sm">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Register Container -->
+  <main class="container py-4 my-auto">
+    <div class="row justify-content-center">
+      <div class="col-xl-10 col-lg-11">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+          <div class="row g-0">
+            
+            <!-- Left Form Column -->
+            <div class="col-lg-8 p-4 p-md-5 bg-white">
+              
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                  <h3 class="fw-bold text-navy mb-1">Create Student Profile</h3>
+                  <p class="text-muted small mb-0">Join SkillForge to track skills, analyze gaps, and plan your career.</p>
+                </div>
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 fw-bold" id="stepCounterBadge">Step 1 of 4</span>
+              </div>
+
+              <!-- Wizard Progress Steps -->
+              <div class="wizard-steps">
+                <div class="wizard-step-item active" id="stepIndicator1">
+                  <div class="wizard-step-circle">1</div>
+                  <div class="wizard-step-label">Account</div>
+                </div>
+                <div class="wizard-step-item" id="stepIndicator2">
+                  <div class="wizard-step-circle">2</div>
+                  <div class="wizard-step-label">Academics</div>
+                </div>
+                <div class="wizard-step-item" id="stepIndicator3">
+                  <div class="wizard-step-circle">3</div>
+                  <div class="wizard-step-label">Skills</div>
+                </div>
+                <div class="wizard-step-item" id="stepIndicator4">
+                  <div class="wizard-step-circle">4</div>
+                  <div class="wizard-step-label">Career Goal</div>
+                </div>
+              </div>
+
+              <!-- Alert Box for Error Messages -->
+              <div id="alertBox" class="alert alert-danger d-none py-2 px-3 small" role="alert"></div>
+
+              <form id="registerWizardForm" novalidate>
+
+                <!-- ================= STEP 1: Basic Account Details ================= -->
+                <div class="wizard-pane" id="wizardStep1">
+                  <h5 class="fw-bold text-navy mb-3"><i class="bi bi-person-circle text-primary me-2"></i>Account Credentials</h5>
+                  
+                  <div class="mb-3">
+                    <label for="fullName" class="form-label small fw-semibold text-secondary">Full Name <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-person"></i></span>
+                      <input type="text" class="form-control bg-light border-start-0" id="fullName" placeholder="e.g. Rohan Sharma" required>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="email" class="form-label small fw-semibold text-secondary">College / Personal Email <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
+                      <input type="email" class="form-control bg-light border-start-0" id="email" placeholder="student@example.com" required>
+                    </div>
+                    <div class="form-text small text-muted">We will verify email uniqueness to prevent duplicate registrations.</div>
+                  </div>
+
+                  <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                      <label for="phone" class="form-label small fw-semibold text-secondary">Phone Number <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-telephone"></i></span>
+                        <input type="tel" class="form-control bg-light border-start-0" id="phone" placeholder="e.g. +91 98765 43210" required>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="location" class="form-label small fw-semibold text-secondary">City / Place <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-geo-alt"></i></span>
+                        <input type="text" class="form-control bg-light border-start-0" id="location" placeholder="e.g. Bangalore, India" required>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row g-3 mb-4">
+                    <div class="col-sm-6">
+                      <label for="password" class="form-label small fw-semibold text-secondary">Password <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
+                        <input type="password" class="form-control bg-light border-start-0" id="password" placeholder="Min. 6 characters" required minlength="6">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="confirmPassword" class="form-label small fw-semibold text-secondary">Confirm Password <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-shield-check"></i></span>
+                        <input type="password" class="form-control bg-light border-start-0" id="confirmPassword" placeholder="Re-enter password" required minlength="6">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ================= STEP 2: College and Academic Info ================= -->
+                <div class="wizard-pane d-none" id="wizardStep2">
+                  <h5 class="fw-bold text-navy mb-3"><i class="bi bi-mortarboard text-primary me-2"></i>College & Academic Information</h5>
+                  
+                  <div class="mb-3">
+                    <label for="college" class="form-label small fw-semibold text-secondary">College / Institution Name <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-building"></i></span>
+                      <input type="text" class="form-control bg-light border-start-0" id="college" placeholder="e.g. National Institute of Technology, ABC College" required>
+                    </div>
+                  </div>
+
+                  <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                      <label for="degree" class="form-label small fw-semibold text-secondary">Degree / Course <span class="text-danger">*</span></label>
+                      <select class="form-select bg-light" id="degree" required>
+                        <option value="">Select Degree</option>
+                        <option value="B.Tech">B.Tech / B.E.</option>
+                        <option value="MCA">MCA (Master of Computer Applications)</option>
+                        <option value="BCA">BCA (Bachelor of Computer Applications)</option>
+                        <option value="B.Sc CS/IT">B.Sc Computer Science / IT</option>
+                        <option value="M.Tech">M.Tech / M.E.</option>
+                        <option value="M.Sc CS/IT">M.Sc Computer Science / IT</option>
+                        <option value="Other">Other Degree / Diploma</option>
+                      </select>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <label for="department" class="form-label small fw-semibold text-secondary">Department / Specialization <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control bg-light" id="department" placeholder="e.g. Computer Science, IT, AI & DS" required>
+                    </div>
+                  </div>
+
+                  <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                      <label for="academicYear" class="form-label small fw-semibold text-secondary">Current Year / Semester <span class="text-danger">*</span></label>
+                      <select class="form-select bg-light" id="academicYear" required>
+                        <option value="">Select Academic Standing</option>
+                        <option value="1st Year (1st/2nd Sem)">1st Year (1st / 2nd Sem)</option>
+                        <option value="2nd Year (3rd/4th Sem)">2nd Year (3rd / 4th Sem)</option>
+                        <option value="3rd Year (5th/6th Sem)">3rd Year (5th / 6th Sem)</option>
+                        <option value="Final Year (7th/8th Sem)">Final Year (7th / 8th Sem)</option>
+                        <option value="Recent Graduate">Recent Graduate</option>
+                      </select>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <label for="educationalBackground" class="form-label small fw-semibold text-secondary">Educational Background <span class="text-danger">*</span></label>
+                      <select class="form-select bg-light" id="educationalBackground" onchange="toggleCustomBackground()" required>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Another Engineering Discipline">Another Engineering Discipline (ECE, EEE, Mech, etc.)</option>
+                        <option value="Non-Computer Science Background">Non-Computer Science Background</option>
+                        <option value="Other">Other / Alternative Background</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-4 d-none" id="customBackgroundContainer">
+                    <label for="customBackground" class="form-label small fw-semibold text-secondary">Specify Your Background</label>
+                    <input type="text" class="form-control bg-light" id="customBackground" placeholder="Describe your educational background">
+                  </div>
+                </div>
+
+                <!-- ================= STEP 3: Current Skills & Proficiency ================= -->
+                <div class="wizard-pane d-none" id="wizardStep3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="fw-bold text-navy mb-0"><i class="bi bi-cpu text-primary me-2"></i>Select Your Current Skills</h5>
+                    <span class="badge bg-primary text-white" id="selectedSkillsCountBadge">0 Skills Selected</span>
+                  </div>
+                  <p class="text-muted small mb-3">Click on any skill to add it. You can adjust your proficiency level (Beginner to Expert) for each skill.</p>
+
+                  <!-- Category Tabs for Skills -->
+                  <ul class="nav nav-pills nav-fill bg-light p-1 rounded-3 mb-3 small" id="skillCategoryTabs">
+                    <li class="nav-item">
+                      <button type="button" class="nav-link active py-1" onclick="showSkillCategory('programming', this)">Programming</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="nav-link py-1" onclick="showSkillCategory('web', this)">Web Dev</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="nav-link py-1" onclick="showSkillCategory('databases', this)">Databases</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="nav-link py-1" onclick="showSkillCategory('tools', this)">Tools</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="nav-link py-1" onclick="showSkillCategory('data', this)">Data</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="nav-link py-1" onclick="showSkillCategory('design', this)">Design</button>
+                    </li>
+                  </ul>
+
+                  <!-- Skill Chips Container -->
+                  <div class="p-3 bg-light rounded-3 mb-3 border" style="min-height: 100px;">
+                    <div id="availableSkillsBox" class="d-flex flex-wrap gap-2">
+                      <!-- Rendered by JS -->
+                    </div>
+                  </div>
+
+                  <!-- Add Custom Unlisted Skill -->
+                  <div class="mb-3">
+                    <div class="input-group input-group-sm">
+                      <input type="text" class="form-control" id="customSkillInput" placeholder="Skill not listed? Type it here...">
+                      <select class="form-select" id="customSkillCategory" style="max-width: 140px;">
+                        <option value="Programming">Programming</option>
+                        <option value="Web Development">Web Dev</option>
+                        <option value="Database">Database</option>
+                        <option value="Tools and Platforms">Tools</option>
+                        <option value="Data Analysis">Data Analysis</option>
+                        <option value="Design">Design</option>
+                        <option value="Communication">Soft Skills</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <button type="button" class="btn btn-outline-primary fw-semibold" onclick="addCustomSkill()"><i class="bi bi-plus-lg me-1"></i>Add Skill</button>
+                    </div>
+                  </div>
+
+                  <!-- Selected Skills List with Proficiency Controls -->
+                  <h6 class="fw-bold text-navy mb-2 small text-uppercase letter-spacing-1">Your Selected Skills & Proficiency Levels:</h6>
+                  <div id="selectedSkillsList" class="overflow-auto border rounded-3 p-2 bg-white" style="max-height: 190px;">
+                    <div class="text-center text-muted small py-4" id="emptySkillsPrompt">
+                      <i class="bi bi-hand-index-thumb fs-4 d-block text-secondary mb-1"></i>
+                      Click any skill chip above to add it to your profile.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ================= STEP 4: Career Goal Selection ================= -->
+                <div class="wizard-pane d-none" id="wizardStep4">
+                  <h5 class="fw-bold text-navy mb-2"><i class="bi bi-compass text-primary me-2"></i>Select Your Target Career</h5>
+                  <p class="text-muted small mb-3">Choose the career track you are aiming for. We will use this to generate your personalized skill gap analysis and roadmap. (You can update this anytime later).</p>
+
+                  <div class="row g-2 mb-3">
+                    
+                    <div class="col-sm-6">
+                      <div class="career-radio-card active" onclick="selectCareerCard('Full Stack Developer', this)">
+                        <div class="career-radio-icon"><i class="bi bi-layers"></i></div>
+                        <div>
+                          <div class="fw-bold text-navy small">Full Stack Developer</div>
+                          <div class="text-muted" style="font-size: 0.75rem;">Frontend, backend, APIs & scalable databases</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="career-radio-card" onclick="selectCareerCard('Frontend Developer', this)">
+                        <div class="career-radio-icon"><i class="bi bi-code-slash"></i></div>
+                        <div>
+                          <div class="fw-bold text-navy small">Frontend Developer</div>
+                          <div class="text-muted" style="font-size: 0.75rem;">HTML, CSS, JavaScript, UI/UX & Responsive Web</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="career-radio-card" onclick="selectCareerCard('Backend Developer', this)">
+                        <div class="career-radio-icon"><i class="bi bi-server"></i></div>
+                        <div>
+                          <div class="fw-bold text-navy small">Backend Developer</div>
+                          <div class="text-muted" style="font-size: 0.75rem;">Node.js, Express, MongoDB, SQL & API design</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="career-radio-card" onclick="selectCareerCard('Software Developer', this)">
+                        <div class="career-radio-icon"><i class="bi bi-cpu"></i></div>
+                        <div>
+                          <div class="fw-bold text-navy small">Software Developer</div>
+                          <div class="text-muted" style="font-size: 0.75rem;">Algorithms, OOP, Data Structures & Architecture</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="career-radio-card" onclick="selectCareerCard('Data Analyst', this)">
+                        <div class="career-radio-icon"><i class="bi bi-bar-chart-line"></i></div>
+                        <div>
+                          <div class="fw-bold text-navy small">Data Analyst</div>
+                          <div class="text-muted" style="font-size: 0.75rem;">Python, SQL, Excel, Visualization & Insights</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="career-radio-card" onclick="selectCareerCard('UI/UX Designer', this)">
+                        <div class="career-radio-icon"><i class="bi bi-palette"></i></div>
+                        <div>
+                          <div class="fw-bold text-navy small">UI/UX Designer</div>
+                          <div class="text-muted" style="font-size: 0.75rem;">Figma, Wireframing, User Research & Design Systems</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="career-radio-card" onclick="selectCareerCard('Cybersecurity Analyst', this)">
+                        <div class="career-radio-icon"><i class="bi bi-shield-check"></i></div>
+                        <div>
+                          <div class="fw-bold text-navy small">Cybersecurity Analyst</div>
+                          <div class="text-muted" style="font-size: 0.75rem;">Networking, Linux, Penetration Testing & Threat Defense</div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- Professional Bio / Career Summary (Prompt Requirement) -->
+                  <div class="mt-4 pt-3 border-top">
+                    <div class="d-flex justify-content-between align-items-center mb-1 flex-wrap gap-2">
+                      <label for="professionalBio" class="form-label small fw-bold text-navy mb-0">
+                        <i class="bi bi-person-lines-fill text-primary me-1"></i>Professional Bio / Summary
+                      </label>
+                      <span class="badge bg-light text-secondary border">Featured on Resume & Profile</span>
+                    </div>
+                    <p class="text-muted small mb-2">Write a brief 2–3 sentence overview of your background, technical interests, and career ambitions.</p>
+                    <textarea class="form-control bg-light" id="professionalBio" rows="3" 
+                      placeholder="e.g. Enthusiastic Computer Science student passionate about full-stack development, modern web technologies, and scalable cloud applications. Seeking opportunities to apply software engineering and problem-solving skills to real-world products."></textarea>
+                    <div class="form-text small text-muted">A compelling summary boosts your profile visibility for recruiters and portfolio evaluations. (Editable anytime in Profile).</div>
+                  </div>
+                </div>
+
+                <!-- Wizard Navigation Buttons -->
+                <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                  <button type="button" class="btn btn-outline-secondary btn-sm px-3 d-none" id="prevStepBtn" onclick="prevStep()">
+                    <i class="bi bi-arrow-left me-1"></i>Previous
+                  </button>
+                  <div class="ms-auto d-flex gap-2">
+                    <button type="button" class="btn btn-forge-primary btn-sm px-4" id="nextStepBtn" onclick="nextStep()">
+                      <span>Next</span><i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                    <button type="submit" class="btn btn-success btn-sm px-4 d-none" id="submitBtn">
+                      <span>Complete Registration</span><i class="bi bi-check2-circle ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+
+            <!-- Right Promotional Column -->
+            <div class="col-lg-4 p-4 p-lg-5 text-center d-flex flex-column justify-content-center" style="background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);">
+              <div class="my-auto py-3">
+                
+                <!-- Academic SVG Illustration -->
+                <svg viewBox="0 0 280 220" class="img-fluid mb-4" style="max-height: 180px;" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="50" y="160" width="180" height="24" rx="4" fill="#059669"/>
+                  <rect x="60" y="132" width="160" height="24" rx="4" fill="#10B981"/>
+                  <rect x="75" y="104" width="130" height="24" rx="4" fill="#34D399"/>
+                  <polygon points="140,40 70,68 140,96 210,68" fill="#111827"/>
+                  <rect x="110" y="75" width="60" height="20" rx="4" fill="#1F2937"/>
+                  <path d="M70 68 L70 110" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
+                  <circle cx="70" cy="112" r="5" fill="#F59E0B"/>
+                  <path d="M140 100 Q130 70 100 70 Q120 90 140 100" fill="#10B981"/>
+                  <path d="M140 100 Q150 65 180 70 Q160 90 140 100" fill="#059669"/>
+                </svg>
+
+                <h4 class="fw-bold text-navy mb-2">Bridge Your Skill Gap</h4>
+                <p class="text-secondary fw-semibold small mb-0 px-2">Discover what industry leaders expect, follow personalized roadmaps, and build an ATS-ready resume.</p>
+                
+                <div class="mt-4 pt-3 border-top border-light-subtle text-start small">
+                  <div class="d-flex align-items-center gap-2 mb-2 text-navy fw-semibold">
+                    <i class="bi bi-check-circle-fill text-success"></i> Comprehensive Skill Matrix
+                  </div>
+                  <div class="d-flex align-items-center gap-2 mb-2 text-navy fw-semibold">
+                    <i class="bi bi-check-circle-fill text-success"></i> 7 Benchmark Career Paths
+                  </div>
+                  <div class="d-flex align-items-center gap-2 text-navy fw-semibold">
+                    <i class="bi bi-check-circle-fill text-success"></i> Instant Skill-Gap Calculation
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bootstrap 5 JS Bundle & API client -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    let currentStep = 1;
+    const totalSteps = 4;
+    let selectedCareer = 'Full Stack Developer';
+    
+    // Predefined skills catalogue by category
+    const SKILL_CATALOGUE = {
+      programming: [
+        { name: 'JavaScript', category: 'Programming' },
+        { name: 'Python', category: 'Programming' },
+        { name: 'Java', category: 'Programming' },
+        { name: 'C++', category: 'Programming' },
+        { name: 'C', category: 'Programming' },
+        { name: 'TypeScript', category: 'Programming' }
+      ],
+      web: [
+        { name: 'HTML5', category: 'Web Development' },
+        { name: 'CSS3', category: 'Web Development' },
+        { name: 'Bootstrap', category: 'Web Development' },
+        { name: 'Node.js', category: 'Web Development' },
+        { name: 'Express.js', category: 'Web Development' },
+        { name: 'React', category: 'Web Development' },
+        { name: 'Tailwind CSS', category: 'Web Development' }
+      ],
+      databases: [
+        { name: 'SQL', category: 'Database' },
+        { name: 'MongoDB', category: 'Database' },
+        { name: 'MySQL', category: 'Database' },
+        { name: 'PostgreSQL', category: 'Database' }
+      ],
+      tools: [
+        { name: 'Git & GitHub', category: 'Tools and Platforms' },
+        { name: 'Linux', category: 'Tools and Platforms' },
+        { name: 'Docker', category: 'Tools and Platforms' },
+        { name: 'Postman', category: 'Tools and Platforms' }
+      ],
+      data: [
+        { name: 'Data Structures & Algorithms', category: 'Data Analysis' },
+        { name: 'Pandas & NumPy', category: 'Data Analysis' },
+        { name: 'Excel / Spreadsheets', category: 'Data Analysis' },
+        { name: 'Data Visualization', category: 'Data Analysis' }
+      ],
+      design: [
+        { name: 'Figma', category: 'Design' },
+        { name: 'UI/UX Design', category: 'Design' },
+        { name: 'Wireframing', category: 'Design' },
+        { name: 'User Research', category: 'Design' }
+      ]
+    };
+
+    // User's selected skills map: key = lowercase name, value = { name, category, proficiency, rating }
+    const selectedSkillsMap = new Map();
+
+    // Default starter selection
+    selectedSkillsMap.set('html5', { name: 'HTML5', category: 'Web Development', proficiency: 'Intermediate', rating: 3 });
+    selectedSkillsMap.set('css3', { name: 'CSS3', category: 'Web Development', proficiency: 'Intermediate', rating: 3 });
+    selectedSkillsMap.set('javascript', { name: 'JavaScript', category: 'Programming', proficiency: 'Basic', rating: 2 });
+
+    async function initSkillSelector() {
+      showSkillCategory('programming', document.querySelector('#skillCategoryTabs button.active'));
+      renderSelectedSkills();
+
+      try {
+        const res = await apiFetch('/careers/available-skills');
+        if (res.skills && res.skills.length > 0) {
+          res.skills.forEach(s => {
+            const cat = (s.category || 'Programming').toLowerCase();
+            let targetGroup = 'programming';
+            if (cat.includes('web') || cat.includes('front')) targetGroup = 'web';
+            else if (cat.includes('data') && cat.includes('base')) targetGroup = 'databases';
+            else if (cat.includes('tool') || cat.includes('devops')) targetGroup = 'tools';
+            else if (cat.includes('data') || cat.includes('analysis')) targetGroup = 'data';
+            else if (cat.includes('design')) targetGroup = 'design';
+
+            if (SKILL_CATALOGUE[targetGroup]) {
+              const exists = SKILL_CATALOGUE[targetGroup].some(item => item.name.toLowerCase() === s.name.toLowerCase());
+              if (!exists) {
+                SKILL_CATALOGUE[targetGroup].push({ name: s.name, category: s.category });
+              }
+            }
+          });
+          const activeTab = document.querySelector('#skillCategoryTabs button.active');
+          const catKey = activeTab ? activeTab.getAttribute('onclick').match(/'([^']+)'/)[1] : 'programming';
+          showSkillCategory(catKey, activeTab);
+        }
+      } catch (e) {
+        // Continue with default catalog
+      }
+    }
+
+    function showSkillCategory(catKey, buttonEl) {
+      if (buttonEl) {
+        document.querySelectorAll('#skillCategoryTabs button').forEach(b => b.classList.remove('active'));
+        buttonEl.classList.add('active');
+      }
+
+      const container = document.getElementById('availableSkillsBox');
+      const list = SKILL_CATALOGUE[catKey] || [];
+
+      container.innerHTML = list.map(item => {
+        const isSelected = selectedSkillsMap.has(item.name.toLowerCase());
+        return `
+          <div class="skill-chip-available ${isSelected ? 'selected' : ''}" onclick="toggleSkillSelection('${item.name}', '${item.category}')">
+            <span>${item.name}</span>
+            <i class="bi ${isSelected ? 'bi-check2' : 'bi-plus'}"></i>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleSkillSelection(name, category) {
+      const key = name.toLowerCase();
+      if (selectedSkillsMap.has(key)) {
+        selectedSkillsMap.delete(key);
+      } else {
+        selectedSkillsMap.set(key, {
+          name,
+          category: category || 'Programming',
+          proficiency: 'Intermediate',
+          rating: 3
+        });
+      }
+      renderSelectedSkills();
+      // Re-render current category buttons
+      const activeTab = document.querySelector('#skillCategoryTabs button.active');
+      const catKey = activeTab ? activeTab.getAttribute('onclick').match(/'([^']+)'/)[1] : 'programming';
+      showSkillCategory(catKey, activeTab);
+    }
+
+    function addCustomSkill() {
+      const input = document.getElementById('customSkillInput');
+      const catSelect = document.getElementById('customSkillCategory');
+      const name = input.value.trim();
+      if (!name) return;
+
+      const key = name.toLowerCase();
+      if (selectedSkillsMap.has(key)) {
+        alert(`Skill "${name}" is already in your selected skills list.`);
+        return;
+      }
+
+      selectedSkillsMap.set(key, {
+        name,
+        category: catSelect.value,
+        proficiency: 'Intermediate',
+        rating: 3
+      });
+
+      input.value = '';
+      renderSelectedSkills();
+    }
+
+    function updateSkillProficiency(name, newProf) {
+      const key = name.toLowerCase();
+      if (selectedSkillsMap.has(key)) {
+        const skill = selectedSkillsMap.get(key);
+        skill.proficiency = newProf;
+        const ranks = { 'Beginner': 1, 'Basic': 2, 'Intermediate': 3, 'Advanced': 4, 'Expert': 5 };
+        skill.rating = ranks[newProf] || 3;
+      }
+    }
+
+    function removeSkill(name) {
+      selectedSkillsMap.delete(name.toLowerCase());
+      renderSelectedSkills();
+      const activeTab = document.querySelector('#skillCategoryTabs button.active');
+      if (activeTab) {
+        const catKey = activeTab.getAttribute('onclick').match(/'([^']+)'/)[1];
+        showSkillCategory(catKey, activeTab);
+      }
+    }
+
+    function renderSelectedSkills() {
+      const listEl = document.getElementById('selectedSkillsList');
+      const countBadge = document.getElementById('selectedSkillsCountBadge');
+      const count = selectedSkillsMap.size;
+      countBadge.textContent = `${count} Skill${count === 1 ? '' : 's'} Selected`;
+
+      if (count === 0) {
+        listEl.innerHTML = `
+          <div class="text-center text-muted small py-4" id="emptySkillsPrompt">
+            <i class="bi bi-hand-index-thumb fs-4 d-block text-secondary mb-1"></i>
+            Click any skill chip above to add it to your profile.
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = Array.from(selectedSkillsMap.values()).map(s => {
+        return `
+          <div class="selected-skill-card">
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-light text-navy border small">${s.category}</span>
+              <span class="fw-bold text-navy small">${s.name}</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <label class="text-muted small mb-0 d-none d-sm-inline" style="font-size: 0.75rem;">Level:</label>
+              <select class="form-select form-select-sm py-0 fw-semibold" style="width: auto; font-size: 0.75rem;" onchange="updateSkillProficiency('${s.name}', this.value)">
+                <option value="Beginner" ${s.proficiency === 'Beginner' ? 'selected' : ''}>Beginner</option>
+                <option value="Basic" ${s.proficiency === 'Basic' ? 'selected' : ''}>Basic</option>
+                <option value="Intermediate" ${s.proficiency === 'Intermediate' ? 'selected' : ''}>Intermediate</option>
+                <option value="Advanced" ${s.proficiency === 'Advanced' ? 'selected' : ''}>Advanced</option>
+                <option value="Expert" ${s.proficiency === 'Expert' ? 'selected' : ''}>Expert</option>
+              </select>
+              <button type="button" class="btn btn-sm text-danger p-0 ms-1" title="Remove" onclick="removeSkill('${s.name}')">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectCareerCard(roleTitle, cardEl) {
+      selectedCareer = roleTitle;
+      document.querySelectorAll('.career-radio-card').forEach(c => c.classList.remove('active'));
+      cardEl.classList.add('active');
+    }
+
+    function toggleCustomBackground() {
+      const select = document.getElementById('educationalBackground');
+      const container = document.getElementById('customBackgroundContainer');
+      if (select.value === 'Other') {
+        container.classList.remove('d-none');
+      } else {
+        container.classList.add('d-none');
+      }
+    }
+
+    // Step Navigation
+    function showStep(stepNumber) {
+      document.getElementById('alertBox').classList.add('d-none');
+
+      for (let i = 1; i <= totalSteps; i++) {
+        const pane = document.getElementById(`wizardStep${i}`);
+        const indicator = document.getElementById(`stepIndicator${i}`);
+        
+        if (i === stepNumber) {
+          pane.classList.remove('d-none');
+          indicator.className = 'wizard-step-item active';
+        } else if (i < stepNumber) {
+          pane.classList.add('d-none');
+          indicator.className = 'wizard-step-item completed';
+        } else {
+          pane.classList.add('d-none');
+          indicator.className = 'wizard-step-item';
+        }
+      }
+
+      document.getElementById('stepCounterBadge').textContent = `Step ${stepNumber} of ${totalSteps}`;
+
+      // Toggle Prev/Next/Submit buttons
+      const prevBtn = document.getElementById('prevStepBtn');
+      const nextBtn = document.getElementById('nextStepBtn');
+      const submitBtn = document.getElementById('submitBtn');
+
+      if (stepNumber === 1) {
+        prevBtn.classList.add('d-none');
+      } else {
+        prevBtn.classList.remove('d-none');
+      }
+
+      if (stepNumber === totalSteps) {
+        nextBtn.classList.add('d-none');
+        submitBtn.classList.remove('d-none');
+      } else {
+        nextBtn.classList.remove('d-none');
+        submitBtn.classList.add('d-none');
+      }
+
+      currentStep = stepNumber;
+    }
+
+    function validateCurrentStep() {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.classList.add('d-none');
+
+      if (currentStep === 1) {
+        const name = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (!name) {
+          alertBox.textContent = 'Please enter your full name.';
+          alertBox.classList.remove('d-none');
+          return false;
+        }
+
+        const emailRegex = /^\S+@\S+\.\S+$/;
+        if (!email || !emailRegex.test(email)) {
+          alertBox.textContent = 'Please provide a valid email address.';
+          alertBox.classList.remove('d-none');
+          return false;
+        }
+
+        const phone = document.getElementById('phone').value.trim();
+        const location = document.getElementById('location').value.trim();
+
+        if (!phone) {
+          alertBox.textContent = 'Please enter your phone number.';
+          alertBox.classList.remove('d-none');
+          return false;
+        }
+
+        if (!location) {
+          alertBox.textContent = 'Please enter your city / place of residence.';
+          alertBox.classList.remove('d-none');
+          return false;
+        }
+
+        if (!password || password.length < 6) {
+          alertBox.textContent = 'Password must be at least 6 characters.';
+          alertBox.classList.remove('d-none');
+          return false;
+        }
+
+        if (password !== confirmPassword) {
+          alertBox.textContent = 'Passwords do not match.';
+          alertBox.classList.remove('d-none');
+          return false;
+        }
+      } else if (currentStep === 2) {
+        const college = document.getElementById('college').value.trim();
+        const degree = document.getElementById('degree').value;
+        const department = document.getElementById('department').value.trim();
+        const year = document.getElementById('academicYear').value;
+
+        if (!college) {
+          alertBox.textContent = 'Please enter your college or institution name.';
+          alertBox.classList.remove('d-none');
+          return false;
+        }
+        if (!degree) {
+          alertBox.textContent = 'Please select your degree or course.';
+          alertBox.classList.remove('d-none');
+          return false;
+        }
+        if (!department) {
+          alertBox.textContent = 'Please enter your department or specialization.';
+          alertBox.classList.remove('d-none');
+          return false;
+        }
+        if (!year) {
+          alertBox.textContent = 'Please select your current academic year or semester.';
+          alertBox.classList.remove('d-none');
+          return false;
+        }
+      } else if (currentStep === 3) {
+        if (selectedSkillsMap.size === 0) {
+          alertBox.textContent = 'Please select at least one skill or enter a custom skill.';
+          alertBox.classList.remove('d-none');
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    function nextStep() {
+      if (!validateCurrentStep()) return;
+      if (currentStep < totalSteps) {
+        showStep(currentStep + 1);
+      }
+    }
+
+    function prevStep() {
+      document.getElementById('alertBox').classList.add('d-none');
+      if (currentStep > 1) {
+        showStep(currentStep - 1);
+      }
+    }
+
+    // Submit complete multi-step registration payload
+    document.getElementById('registerWizardForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validateCurrentStep()) return;
+
+      const submitBtn = document.getElementById('submitBtn');
+      const alertBox = document.getElementById('alertBox');
+      alertBox.classList.add('d-none');
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating profile & roadmap...';
+
+      const payload = {
+        name: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        location: document.getElementById('location').value.trim(),
+        password: document.getElementById('password').value,
+        confirmPassword: document.getElementById('confirmPassword').value,
+        college: document.getElementById('college').value.trim(),
+        degree: document.getElementById('degree').value,
+        department: document.getElementById('department').value.trim(),
+        academicYear: document.getElementById('academicYear').value,
+        educationalBackground: document.getElementById('educationalBackground').value,
+        customBackground: document.getElementById('customBackground').value.trim(),
+        targetCareer: selectedCareer,
+        bio: document.getElementById('professionalBio') ? document.getElementById('professionalBio').value.trim() : '',
+        professionalSummary: document.getElementById('professionalBio') ? document.getElementById('professionalBio').value.trim() : '',
+        skills: Array.from(selectedSkillsMap.values())
+      };
+
+      try {
+        const response = await apiFetch('/auth/register', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        // Set session
+        setSession(response.user, response.token);
+        showToast('Registration successful! Welcome to SkillForge.', 'success');
+
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 800);
+      } catch (err) {
+        alertBox.textContent = err.message || 'Registration failed. Please check your information.';
+        alertBox.classList.remove('d-none');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Complete Registration</span> <i class="bi bi-check2-circle ms-1"></i>';
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initSkillSelector();
+    });
+  </script>
+</body>
+</html>

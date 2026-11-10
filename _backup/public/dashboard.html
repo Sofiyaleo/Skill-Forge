@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard – SkillForge</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- Dark Navy Left Sidebar (Panel 4 from reference) -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a class="brand-logo text-white" href="dashboard.html">
+          <div class="brand-icon">
+            <i class="bi bi-hammer"></i>
+          </div>
+          <span class="text-white">SkillForge</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main Navigation</div>
+        <a href="dashboard.html" class="sidebar-link active">
+          <i class="bi bi-speedometer2"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="sidebar-link">
+          <i class="bi bi-person"></i>
+          <span>My Profile</span>
+        </a>
+        <a href="profile.html#skills" class="sidebar-link">
+          <i class="bi bi-cpu"></i>
+          <span>My Skills</span>
+        </a>
+        <a href="careers.html" class="sidebar-link">
+          <i class="bi bi-compass"></i>
+          <span>Career Explorer</span>
+        </a>
+        <a href="gap-analysis.html" class="sidebar-link">
+          <i class="bi bi-bar-chart-steps"></i>
+          <span>Skill Gap Analysis</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-link">
+          <i class="bi bi-map"></i>
+          <span>Learning Roadmap</span>
+        </a>
+        <a href="assessments.html" class="sidebar-link">
+          <i class="bi bi-clipboard2-check"></i>
+          <span>Assessments</span>
+        </a>
+        <a href="portfolio.html" class="sidebar-link">
+          <i class="bi bi-folder2"></i>
+          <span>My Projects</span>
+        </a>
+        <a href="portfolio.html#certifications" class="sidebar-link">
+          <i class="bi bi-award"></i>
+          <span>Certifications</span>
+        </a>
+        <a href="internships.html" class="sidebar-link">
+          <i class="bi bi-briefcase"></i>
+          <span>Internships</span>
+        </a>
+        <a href="resume-builder.html" class="sidebar-link">
+          <i class="bi bi-file-earmark-person"></i>
+          <span>Resume Builder</span>
+        </a>
+
+        <!-- Admin Only Navigation Link -->
+        <a href="admin.html" class="sidebar-link admin-only-link d-none text-warning">
+          <i class="bi bi-shield-lock"></i>
+          <span>Admin Panel</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="javascript:void(0)" onclick="logout()" class="sidebar-link logout-link">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="main-content">
+
+      <!-- Top Header Navbar -->
+      <header class="app-header">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-sm btn-light d-lg-none" id="sidebar-toggle">
+            <i class="bi bi-list fs-5"></i>
+          </button>
+          <div class="app-header-nav d-none d-md-flex">
+            <a href="dashboard.html" class="header-nav-link active">Dashboard</a>
+            <a href="careers.html" class="header-nav-link">Careers</a>
+            <a href="profile.html#skills" class="header-nav-link">Skills</a>
+            <a href="assessments.html" class="header-nav-link">Assessments</a>
+            <a href="portfolio.html" class="header-nav-link">Projects</a>
+            <a href="internships.html" class="header-nav-link">Internships</a>
+            <a href="resume-builder.html" class="header-nav-link">Resume</a>
+          </div>
+        </div>
+
+        <!-- User Profile Dropdown Badge -->
+        <div class="dropdown">
+          <div class="user-badge-dropdown" data-bs-toggle="dropdown">
+            <div class="user-avatar" id="header-user-avatar">ST</div>
+            <div class="d-none d-sm-block text-start">
+              <div class="fw-semibold small" id="header-user-name">Student</div>
+              <div class="text-muted" style="font-size: 0.75rem;" id="header-user-role">Student</div>
+            </div>
+            <i class="bi bi-chevron-down text-muted small ms-1"></i>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+            <li><a class="dropdown-item small" href="profile.html"><i class="bi bi-person me-2"></i>My Profile</a></li>
+            <li><a class="dropdown-item small" href="resume-builder.html"><i class="bi bi-file-earmark me-2"></i>My Resume</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item small text-danger" href="javascript:void(0)" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <!-- Dashboard Content Container -->
+      <main class="portal-container">
+
+        <!-- Welcome Banner -->
+        <div class="portal-title-block">
+          <h2 class="portal-title" id="welcomeHeading">Welcome back, Student! 👋</h2>
+          <p class="portal-subtitle">Keep going! You're doing great on your career readiness journey.</p>
+        </div>
+
+        <!-- 4 Stat Cards (Panel 4 from reference) -->
+        <div class="row g-4 mb-4">
+          <!-- Skills Card -->
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-teal">
+              <div class="stat-icon-wrapper">
+                <i class="bi bi-cpu"></i>
+              </div>
+              <div>
+                <div class="stat-label">Skills</div>
+                <div class="stat-number" id="stat-skills-count">12</div>
+                <div class="stat-delta" id="stat-skills-delta">+2 this month</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Assessments Card -->
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-amber">
+              <div class="stat-icon-wrapper">
+                <i class="bi bi-clipboard2-check"></i>
+              </div>
+              <div>
+                <div class="stat-label">Assessments</div>
+                <div class="stat-number" id="stat-assessments-count">3</div>
+                <div class="stat-delta" id="stat-assessments-delta">+1 this month</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Projects Card -->
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-purple">
+              <div class="stat-icon-wrapper">
+                <i class="bi bi-folder2-open"></i>
+              </div>
+              <div>
+                <div class="stat-label">Projects</div>
+                <div class="stat-number" id="stat-projects-count">2</div>
+                <div class="stat-delta" id="stat-projects-delta">+1 this month</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Internships Card -->
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-pink">
+              <div class="stat-icon-wrapper">
+                <i class="bi bi-briefcase"></i>
+              </div>
+              <div>
+                <div class="stat-label">Internships</div>
+                <div class="stat-number" id="stat-internships-count">1</div>
+                <div class="stat-delta" id="stat-internships-delta">+0 this month</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Split Row: Progress Dial & Recent Activities (Panel 4 from reference) -->
+        <div class="row g-4">
+          
+          <!-- Your Progress Dial -->
+          <div class="col-lg-5">
+            <div class="portal-card h-100">
+              <div class="portal-card-header">
+                <h5 class="portal-card-title">Your Progress</h5>
+                <a href="gap-analysis.html" class="btn btn-sm btn-forge-outline-dark">View Details</a>
+              </div>
+
+              <div class="gauge-container text-center py-4">
+                <div class="position-relative d-inline-block">
+                  <svg class="gauge-svg" viewBox="0 0 160 160">
+                    <circle class="gauge-bg" cx="80" cy="80" r="65"></circle>
+                    <circle class="gauge-fill" id="progressGaugeCircle" cx="80" cy="80" r="65"
+                      stroke-dasharray="408.4" stroke-dashoffset="130"></circle>
+                    <text x="80" y="80" class="gauge-text" id="progressPercentageText">68%</text>
+                  </svg>
+                </div>
+                <h6 class="fw-bold mt-3 mb-1">Overall Career Readiness</h6>
+                <p class="text-muted small mb-3">Based on your evaluated skills vs required competencies.</p>
+                <a href="roadmap.html" class="btn btn-forge-primary btn-sm px-4">
+                  <span>Continue Roadmap</span>
+                  <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activities List -->
+          <div class="col-lg-7">
+            <div class="portal-card h-100">
+              <div class="portal-card-header">
+                <h5 class="portal-card-title">Recent Activities</h5>
+                <span class="badge bg-light text-muted fw-normal">Live Log</span>
+              </div>
+
+              <div class="activity-list" id="recentActivitiesList">
+                <div class="text-center py-4 text-muted">
+                  <div class="spinner-border spinner-border-sm me-2"></div>
+                  Loading recent activities...
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle & API helper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // Enforce authentication on dashboard
+    const user = requireAuth();
+
+    async function loadDashboard() {
+      if (!user) return;
+
+      // Update welcome text
+      const firstName = user.name ? user.name.split(' ')[0] : 'Student';
+      document.getElementById('welcomeHeading').textContent = `Welcome back, ${firstName}! 👋`;
+      document.getElementById('header-user-role').textContent = user.careerInterest || 'Student';
+
+      try {
+        const data = await apiFetch('/student/dashboard');
+        const stats = data.stats;
+
+        // Populate Stat Cards
+        document.getElementById('stat-skills-count').textContent = stats.skills.count;
+        document.getElementById('stat-skills-delta').textContent = stats.skills.delta;
+
+        document.getElementById('stat-assessments-count').textContent = stats.assessments.count;
+        document.getElementById('stat-assessments-delta').textContent = stats.assessments.delta;
+
+        document.getElementById('stat-projects-count').textContent = stats.projects.count;
+        document.getElementById('stat-projects-delta').textContent = stats.projects.delta;
+
+        document.getElementById('stat-internships-count').textContent = stats.internships.count;
+        document.getElementById('stat-internships-delta').textContent = stats.internships.delta;
+
+        // Animate Progress Dial
+        const progress = stats.overallProgress || 68;
+        document.getElementById('progressPercentageText').textContent = `${progress}%`;
+        const circumference = 2 * Math.PI * 65; // ~408.4
+        const offset = circumference - (progress / 100) * circumference;
+        document.getElementById('progressGaugeCircle').style.strokeDashoffset = offset;
+
+        // Populate Recent Activities
+        const activitiesList = document.getElementById('recentActivitiesList');
+        if (data.recentActivities && data.recentActivities.length > 0) {
+          activitiesList.innerHTML = data.recentActivities.map(act => `
+            <div class="d-flex align-items-center justify-content-between py-3 border-bottom border-light">
+              <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center"
+                     style="width: 40px; height: 40px; background-color: ${act.color}18; color: ${act.color}; font-size: 1.15rem;">
+                  <i class="bi ${act.icon}"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold text-navy small">${act.text}</div>
+                  <div class="text-muted" style="font-size: 0.78rem;">${act.timeAgo}</div>
+                </div>
+              </div>
+              <span class="badge bg-light text-secondary rounded-pill px-2 py-1" style="font-size: 0.72rem;">Verified</span>
+            </div>
+          `).join('');
+        } else {
+          activitiesList.innerHTML = `
+            <div class="text-center py-4 text-muted small">
+              <i class="bi bi-clock-history fs-3 d-block mb-2 text-secondary"></i>
+              No recent activities yet. Start by taking an assessment or adding a project!
+            </div>
+          `;
+        }
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err);
+        showToast('Failed to load live dashboard stats. Using cached data.', 'danger');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadDashboard);
+  </script>
+</body>
+</html>

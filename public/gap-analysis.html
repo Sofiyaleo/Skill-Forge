@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Gap Analysis – SkillForge</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- Dark Navy Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a class="brand-logo text-white" href="dashboard.html">
+          <div class="brand-icon">
+            <i class="bi bi-hammer"></i>
+          </div>
+          <span class="text-white">SkillForge</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main Navigation</div>
+        <a href="dashboard.html" class="sidebar-link">
+          <i class="bi bi-speedometer2"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="sidebar-link">
+          <i class="bi bi-person"></i>
+          <span>My Profile</span>
+        </a>
+        <a href="profile.html#skills" class="sidebar-link">
+          <i class="bi bi-cpu"></i>
+          <span>My Skills</span>
+        </a>
+        <a href="careers.html" class="sidebar-link">
+          <i class="bi bi-compass"></i>
+          <span>Career Explorer</span>
+        </a>
+        <a href="gap-analysis.html" class="sidebar-link active">
+          <i class="bi bi-bar-chart-steps"></i>
+          <span>Skill Gap Analysis</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-link">
+          <i class="bi bi-map"></i>
+          <span>Learning Roadmap</span>
+        </a>
+        <a href="assessments.html" class="sidebar-link">
+          <i class="bi bi-clipboard2-check"></i>
+          <span>Assessments</span>
+        </a>
+        <a href="portfolio.html" class="sidebar-link">
+          <i class="bi bi-folder2"></i>
+          <span>My Projects</span>
+        </a>
+        <a href="portfolio.html#certifications" class="sidebar-link">
+          <i class="bi bi-award"></i>
+          <span>Certifications</span>
+        </a>
+        <a href="portfolio.html#achievements" class="sidebar-link">
+          <i class="bi bi-trophy"></i>
+          <span>Achievements</span>
+        </a>
+        <a href="internships.html" class="sidebar-link">
+          <i class="bi bi-briefcase"></i>
+          <span>Internship Tracker</span>
+        </a>
+        <a href="resume-builder.html" class="sidebar-link">
+          <i class="bi bi-file-earmark-person"></i>
+          <span>Resume Builder</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="javascript:void(0)" onclick="logout()" class="sidebar-link logout-link">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="main-content">
+
+      <!-- Top Header Navbar -->
+      <header class="app-header">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-sm btn-light d-lg-none" id="sidebar-toggle">
+            <i class="bi bi-list fs-5"></i>
+          </button>
+          <div class="app-header-nav d-none d-md-flex">
+            <a href="dashboard.html" class="header-nav-link">Dashboard</a>
+            <a href="careers.html" class="header-nav-link">Careers</a>
+            <a href="gap-analysis.html" class="header-nav-link active">Skill Gap Analysis</a>
+            <a href="roadmap.html" class="header-nav-link">Roadmap</a>
+            <a href="assessments.html" class="header-nav-link">Assessments</a>
+            <a href="portfolio.html" class="header-nav-link">Projects</a>
+            <a href="internships.html" class="header-nav-link">Internships</a>
+            <a href="resume-builder.html" class="header-nav-link">Resume</a>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <div class="user-badge-dropdown" data-bs-toggle="dropdown">
+            <div class="user-avatar" id="header-user-avatar">ST</div>
+            <div class="d-none d-sm-block text-start">
+              <div class="fw-semibold small" id="header-user-name">Student</div>
+              <div class="text-muted" style="font-size: 0.75rem;">Student</div>
+            </div>
+            <i class="bi bi-chevron-down text-muted small ms-1"></i>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+            <li><a class="dropdown-item small" href="profile.html"><i class="bi bi-person me-2"></i>My Profile</a></li>
+            <li><a class="dropdown-item small" href="resume-builder.html"><i class="bi bi-file-earmark me-2"></i>My Resume</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item small text-danger" href="javascript:void(0)" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <!-- Main Gap Analysis Canvas (Matches Panel 7 in reference) -->
+      <main class="portal-container">
+        
+        <div class="portal-title-block">
+          <h2 class="portal-title">Skill Gap Analysis</h2>
+          <p class="portal-subtitle">Evaluate your current skills against industry career requirements to identify learning priorities.</p>
+        </div>
+
+        <!-- Career Selector Bar (Panel 7 in reference) -->
+        <div class="portal-card mb-4">
+          <div class="row align-items-center g-3">
+            <div class="col-md-auto">
+              <label for="careerRoleSelect" class="form-label mb-0 fw-bold text-navy">Select Career:</label>
+            </div>
+            <div class="col-md-5 col-lg-4">
+              <select class="form-select fw-semibold" id="careerRoleSelect">
+                <option value="Web Developer">Web Developer</option>
+                <option value="Data Analyst">Data Analyst</option>
+                <option value="Software Developer">Software Developer</option>
+                <option value="UI/UX Designer">UI/UX Designer</option>
+                <option value="Mobile App Developer">Mobile App Developer</option>
+                <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+              </select>
+            </div>
+            <div class="col-md-auto">
+              <button class="btn btn-forge-primary btn-sm px-4" id="compareBtn" onclick="runAnalysis()">
+                <i class="bi bi-arrow-repeat me-1"></i>
+                <span>Compare</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          
+          <!-- Left: Overall Readiness Gauge & Skills Status (Panel 7 in reference) -->
+          <div class="col-lg-4">
+            <div class="portal-card h-100 text-center">
+              <div class="portal-card-header justify-content-center">
+                <h5 class="portal-card-title">Overall Readiness</h5>
+              </div>
+
+              <!-- 65% Circular Progress Gauge -->
+              <div class="gauge-container py-2">
+                <div class="position-relative d-inline-block">
+                  <svg class="gauge-svg" viewBox="0 0 160 160">
+                    <circle class="gauge-bg" cx="80" cy="80" r="65"></circle>
+                    <circle class="gauge-fill" id="gapGaugeCircle" cx="80" cy="80" r="65"
+                      stroke-dasharray="408.4" stroke-dashoffset="142"></circle>
+                    <text x="80" y="80" class="gauge-text" id="gapReadinessText">65%</text>
+                  </svg>
+                </div>
+                <div class="fw-semibold text-muted small mt-2">Preparedness for <span class="text-navy fw-bold" id="readinessRoleName">Web Developer</span></div>
+                <div class="badge bg-light text-muted border mt-2 px-2 py-1" style="font-size: 0.72rem;">
+                  <i class="bi bi-info-circle me-1 text-primary"></i>Formula: (Matched Skills / Required Skills) &times; 100
+                </div>
+              </div>
+
+              <!-- Skills Status Breakdown Pills (from reference image) -->
+              <div class="text-start mt-4 pt-3 border-top border-light">
+                <div class="small fw-bold text-navy mb-3">Skills Status Breakdown:</div>
+                
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded-3 bg-light">
+                  <span class="small fw-semibold text-success d-flex align-items-center gap-2">
+                    <i class="bi bi-check-circle-fill"></i> Meets Requirement
+                  </span>
+                  <span class="badge bg-success-subtle text-success fw-bold px-2 py-1" id="countMeets">5</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded-3 bg-light">
+                  <span class="small fw-semibold text-warning-emphasis d-flex align-items-center gap-2">
+                    <i class="bi bi-arrow-up-circle-fill text-warning"></i> Needs Improvement
+                  </span>
+                  <span class="badge bg-warning-subtle text-warning-emphasis fw-bold px-2 py-1" id="countImprove">4</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center p-2 rounded-3 bg-light">
+                  <span class="small fw-semibold text-danger d-flex align-items-center gap-2">
+                    <i class="bi bi-x-circle-fill"></i> Missing Skills
+                  </span>
+                  <span class="badge bg-danger-subtle text-danger fw-bold px-2 py-1" id="countMissing">3</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right: Comparison Table & Action (Panel 7 in reference) -->
+          <div class="col-lg-8">
+            <div class="portal-card h-100 d-flex flex-column">
+              <div class="portal-card-header">
+                <h5 class="portal-card-title">Your Skills vs Required Skills</h5>
+                <span class="badge bg-light text-muted fw-normal" id="tableRoleBadge">Role: Web Developer</span>
+              </div>
+
+              <!-- Comparison Table -->
+              <div class="table-responsive flex-grow-1">
+                <table class="table table-forge">
+                  <thead>
+                    <tr>
+                      <th>Skill</th>
+                      <th>Your Level</th>
+                      <th>Required Level</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="gapTableBody">
+                    <tr>
+                      <td colspan="4" class="text-center py-4 text-muted">
+                        <div class="spinner-border spinner-border-sm me-2"></div>
+                        Analyzing skill gaps...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Missing Skills Tags & Roadmap Action (Panel 7 in reference) -->
+              <div class="pt-3 border-top border-light mt-auto">
+                <div class="row align-items-center gy-3">
+                  <div class="col-md-7">
+                    <div class="small fw-semibold text-danger mb-1">Recommended Focus Areas (Missing/Low):</div>
+                    <div id="missingSkillsTagsContainer">
+                      <span class="badge bg-danger-subtle text-danger me-1">React</span>
+                      <span class="badge bg-danger-subtle text-danger me-1">Node.js</span>
+                      <span class="badge bg-danger-subtle text-danger">Git</span>
+                    </div>
+                  </div>
+                  <div class="col-md-5 text-md-end">
+                    <a href="roadmap.html" class="btn btn-forge-primary btn-sm px-3" id="viewRoadmapBtn">
+                      <span>View Learning Roadmap</span>
+                      <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle & API helper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    const user = requireAuth();
+
+    // Check URL parameters for pre-selected role
+    const urlParams = new URLSearchParams(window.location.search);
+    const preselectedRole = urlParams.get('role');
+
+    async function runAnalysis() {
+      const select = document.getElementById('careerRoleSelect');
+      const role = select.value || 'Web Developer';
+      const btn = document.getElementById('compareBtn');
+      btn.disabled = true;
+
+      try {
+        const data = await apiFetch(`/careers/gap-analysis?role=${encodeURIComponent(role)}`);
+        
+        // Update Titles
+        document.getElementById('readinessRoleName').textContent = data.selectedRole;
+        document.getElementById('tableRoleBadge').textContent = `Role: ${data.selectedRole}`;
+        document.getElementById('viewRoadmapBtn').href = `roadmap.html?role=${encodeURIComponent(data.selectedRole)}`;
+
+        // Animate Circular Readiness Gauge (Panel 7 mockup displays ~65%)
+        const readiness = data.overallReadiness;
+        document.getElementById('gapReadinessText').textContent = `${readiness}%`;
+        const circumference = 2 * Math.PI * 65; // ~408.4
+        const offset = circumference - (readiness / 100) * circumference;
+        document.getElementById('gapGaugeCircle').style.strokeDashoffset = offset;
+
+        // Populate Counts
+        document.getElementById('countMeets').textContent = data.counts.meets;
+        document.getElementById('countImprove').textContent = data.counts.improve;
+        document.getElementById('countMissing').textContent = data.counts.missing;
+
+        // Populate Comparison Table
+        const tbody = document.getElementById('gapTableBody');
+        tbody.innerHTML = data.comparisonTable.map(item => {
+          let badgeHtml = '';
+          if (item.status === 'Meets') {
+            badgeHtml = `<span class="badge-status-meets"><i class="bi bi-check-circle-fill"></i> Meets</span>`;
+          } else if (item.status === 'Improve') {
+            badgeHtml = `<span class="badge-status-improve"><i class="bi bi-arrow-up-circle-fill"></i> Improve</span>`;
+          } else {
+            badgeHtml = `<span class="badge-status-missing"><i class="bi bi-x-circle-fill"></i> Missing</span>`;
+          }
+
+          return `
+            <tr>
+              <td class="fw-bold text-navy">${item.name}</td>
+              <td>${item.yourLevel}</td>
+              <td class="text-secondary">${item.requiredLevel}</td>
+              <td>${badgeHtml}</td>
+            </tr>
+          `;
+        }).join('');
+
+        // Populate Missing Skills Badges
+        const tagsContainer = document.getElementById('missingSkillsTagsContainer');
+        if (data.missingSkills && data.missingSkills.length > 0) {
+          tagsContainer.innerHTML = data.missingSkills.map(s => `
+            <span class="badge bg-danger-subtle text-danger border border-danger-subtle me-1 mb-1 fw-bold">${s}</span>
+          `).join('');
+        } else {
+          tagsContainer.innerHTML = `<span class="text-success small fw-semibold">Great job! You have acquired all baseline skills for this role.</span>`;
+        }
+      } catch (err) {
+        showToast('Failed to perform skill gap analysis.', 'danger');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const select = document.getElementById('careerRoleSelect');
+      if (preselectedRole) {
+        select.value = preselectedRole;
+      } else if (user && user.targetCareer) {
+        select.value = user.targetCareer;
+      }
+      runAnalysis();
+    });
+  </script>
+</body>
+</html>
