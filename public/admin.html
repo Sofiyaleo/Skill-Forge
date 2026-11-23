@@ -1103,13 +1103,17 @@
       if (tabKey === 'profile') loadProfileData();
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!adminUser || adminUser.role !== 'admin') return;
+    function initAdminPortal() {
+      if (!adminUser || (adminUser.role || '').toLowerCase() !== 'admin') return;
 
-      document.getElementById('header-user-name').textContent = adminUser.name || 'Admin Faculty';
-      document.getElementById('profDisplayName').textContent = adminUser.name || 'Admin Faculty';
-      document.getElementById('profAdminNameInput').value = adminUser.name || 'Admin Faculty';
-      document.getElementById('profAdminEmailInput').value = adminUser.email || 'admin@skillforge.com';
+      const headerName = document.getElementById('header-user-name');
+      if (headerName) headerName.textContent = adminUser.name || 'Admin Faculty';
+      const profDisp = document.getElementById('profDisplayName');
+      if (profDisp) profDisp.textContent = adminUser.name || 'Admin Faculty';
+      const profNameInput = document.getElementById('profAdminNameInput');
+      if (profNameInput) profNameInput.value = adminUser.name || 'Admin Faculty';
+      const profEmailInput = document.getElementById('profAdminEmailInput');
+      if (profEmailInput) profEmailInput.value = adminUser.email || 'admin@skillforge.com';
 
       const hash = window.location.hash.replace('#', '') || 'dashboard';
       const initialLink = document.getElementById(`menu-${hash}`) || document.getElementById('menu-dashboard');
@@ -1120,77 +1124,102 @@
       if (searchEl) searchEl.addEventListener('input', filterEntranceTable);
       const filterEl = document.getElementById('entranceFilterStatus');
       if (filterEl) filterEl.addEventListener('change', filterEntranceTable);
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAdminPortal);
+    } else {
+      initAdminPortal();
+    }
 
     // ================= 1. ADMIN DASHBOARD =================
     async function loadDashboardData() {
       try {
         const data = await apiFetch('/admin/stats');
         const s = data.stats || {};
-        document.getElementById('dashTotalStudents').textContent = s.totalStudents || 0;
-        document.getElementById('dashTotalSkills').textContent = s.totalSkills || 0;
-        document.getElementById('dashTotalCareers').textContent = s.totalRoles || 0;
-        document.getElementById('dashTotalAssessments').textContent = s.totalAssessments || 0;
-        document.getElementById('dashTotalRoadmaps').textContent = s.totalRoadmaps || 0;
-        document.getElementById('dashRoadmapPct').textContent = `${s.studentProgressPercent || 0}% completion rate`;
+        const elTotalStudents = document.getElementById('dashTotalStudents');
+        if (elTotalStudents) elTotalStudents.textContent = (s.totalStudents !== undefined && s.totalStudents !== null) ? s.totalStudents : 0;
+        const elTotalSkills = document.getElementById('dashTotalSkills');
+        if (elTotalSkills) elTotalSkills.textContent = (s.totalSkills !== undefined && s.totalSkills !== null) ? s.totalSkills : 0;
+        const elTotalCareers = document.getElementById('dashTotalCareers');
+        if (elTotalCareers) elTotalCareers.textContent = (s.totalRoles !== undefined && s.totalRoles !== null) ? s.totalRoles : 0;
+        const elTotalAssessments = document.getElementById('dashTotalAssessments');
+        if (elTotalAssessments) elTotalAssessments.textContent = (s.totalAssessments !== undefined && s.totalAssessments !== null) ? s.totalAssessments : 0;
+        const elTotalRoadmaps = document.getElementById('dashTotalRoadmaps');
+        if (elTotalRoadmaps) elTotalRoadmaps.textContent = (s.totalRoadmaps !== undefined && s.totalRoadmaps !== null) ? s.totalRoadmaps : 0;
+        const elRoadmapPct = document.getElementById('dashRoadmapPct');
+        if (elRoadmapPct) elRoadmapPct.textContent = `${s.studentProgressPercent || 0}% completion rate`;
 
         // Career Distribution
         const distBox = document.getElementById('dashCareerDistributionBox');
-        if (!data.careerDistribution || data.careerDistribution.length === 0) {
-          distBox.innerHTML = '<div class="text-center py-4 text-muted small">No student career selections recorded yet.</div>';
-        } else {
-          distBox.innerHTML = data.careerDistribution.map(cd => {
-            const count = cd.count;
-            const pct = s.totalStudents > 0 ? Math.round((count / s.totalStudents) * 100) : 0;
-            return `
-              <div class="mb-3">
-                <div class="d-flex justify-content-between small fw-bold mb-1">
-                  <span>${cd._id || 'Undecided'}</span>
-                  <span class="text-primary">${count} students (${pct}%)</span>
+        if (distBox) {
+          if (!data.careerDistribution || data.careerDistribution.length === 0) {
+            distBox.innerHTML = '<div class="text-center py-4 text-muted small">No student career selections recorded yet.</div>';
+          } else {
+            distBox.innerHTML = data.careerDistribution.map(cd => {
+              const count = cd.count;
+              const pct = (s.totalStudents && s.totalStudents > 0) ? Math.round((count / s.totalStudents) * 100) : 0;
+              return `
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between small fw-bold mb-1">
+                    <span>${cd._id || 'Undecided'}</span>
+                    <span class="text-primary">${count} students (${pct}%)</span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-primary" style="width: ${pct}%;"></div>
+                  </div>
                 </div>
-                <div class="progress" style="height: 8px;">
-                  <div class="progress-bar bg-primary" style="width: ${pct}%;"></div>
-                </div>
-              </div>
-            `;
-          }).join('');
+              `;
+            }).join('');
+          }
         }
 
         // Recent Student Activities
         const actBox = document.getElementById('dashRecentActivityBox');
-        if (!data.recentActivities || data.recentActivities.length === 0) {
-          actBox.innerHTML = '<div class="text-center py-4 text-muted small">No recent student activities recorded.</div>';
-        } else {
-          actBox.innerHTML = data.recentActivities.map(act => `
-            <div class="d-flex align-items-center gap-3 py-2 border-bottom">
-              <div class="p-2 rounded-circle" style="background-color: #ECFDF5; color: ${act.color || '#059669'};">
-                <i class="bi ${act.icon || 'bi-check-circle'} fs-6"></i>
-              </div>
-              <div class="flex-grow-1">
-                <div class="small fw-semibold text-navy">${act.text}</div>
-                <div class="text-muted" style="font-size: 0.72rem;">${act.studentName} (${act.studentEmail}) • ${new Date(act.createdAt).toLocaleString()}</div>
-              </div>
-            </div>
-          `).join('');
+        if (actBox) {
+          if (!data.recentActivities || data.recentActivities.length === 0) {
+            actBox.innerHTML = '<div class="text-center py-4 text-muted small">No recent student activities recorded.</div>';
+          } else {
+            actBox.innerHTML = data.recentActivities.map(act => {
+              const studentName = act.studentName || (act.user && act.user.name) || 'Student';
+              const studentEmail = act.studentEmail || (act.user && act.user.email) || '';
+              const emailDisplay = studentEmail ? ` (${studentEmail})` : '';
+              const actTime = act.createdAt ? new Date(act.createdAt).toLocaleString() : 'Recently';
+              return `
+                <div class="d-flex align-items-center gap-3 py-2 border-bottom">
+                  <div class="p-2 rounded-circle" style="background-color: #ECFDF5; color: ${act.color || '#059669'};">
+                    <i class="bi ${act.icon || 'bi-check-circle'} fs-6"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="small fw-semibold text-navy">${act.text || 'Student Activity'}</div>
+                    <div class="text-muted" style="font-size: 0.72rem;">${studentName}${emailDisplay} • ${actTime}</div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
         }
 
         // Recent Students
         const tbody = document.getElementById('dashRecentStudentsTable');
-        if (!data.recentStudents || data.recentStudents.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No students registered yet.</td></tr>';
-        } else {
-          tbody.innerHTML = data.recentStudents.map(st => `
-            <tr>
-              <td class="fw-bold text-navy">${st.name}</td>
-              <td class="text-muted small">${st.email}</td>
-              <td class="small">${st.college || '—'}</td>
-              <td><span class="badge bg-light text-navy border">${st.targetCareer || 'Full Stack Developer'}</span></td>
-              <td class="text-muted small">${new Date(st.createdAt).toLocaleDateString()}</td>
-            </tr>
-          `).join('');
+        if (tbody) {
+          if (!data.recentStudents || data.recentStudents.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No students registered yet.</td></tr>';
+          } else {
+            tbody.innerHTML = data.recentStudents.map(st => `
+              <tr>
+                <td class="fw-bold text-navy">${st.name || 'Student'}</td>
+                <td class="text-muted small">${st.email || '—'}</td>
+                <td class="small">${st.college || '—'}</td>
+                <td><span class="badge bg-light text-navy border">${st.targetCareer || 'Full Stack Developer'}</span></td>
+                <td class="text-muted small">${st.createdAt ? new Date(st.createdAt).toLocaleDateString() : '—'}</td>
+              </tr>
+            `).join('');
+          }
         }
         await loadEntranceAssessmentData();
       } catch (err) {
+        console.error('Error loading dashboard data:', err);
         showAdminToast('Failed to load dashboard metrics.', 'danger');
       }
     }
@@ -1320,7 +1349,6 @@
           }).join('');
         }
       }
-    }
     }
 
     function filterEntranceTable() {
@@ -2416,11 +2444,11 @@
         document.getElementById('header-user-name').textContent = res.admin.name;
 
         // Update session user name/email
-        const currentSession = getSession();
-        if (currentSession && currentSession.user) {
-          currentSession.user.name = res.admin.name;
-          currentSession.user.email = res.admin.email;
-          setSession(currentSession.user, currentSession.token);
+        const currentUser = getCurrentUser();
+        if (currentUser) {
+          currentUser.name = res.admin.name;
+          currentUser.email = res.admin.email;
+          setSession(currentUser, getAuthToken());
         }
 
         toggleProfileEdit(false);

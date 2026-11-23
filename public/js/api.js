@@ -10,6 +10,13 @@ const API_BASE_URL = '/api';
 /**
  * Retrieve active user session from LocalStorage
  */
+function getSession() {
+  return {
+    user: getCurrentUser(),
+    token: getAuthToken()
+  };
+}
+
 function getCurrentUser() {
   const userJson = localStorage.getItem('skillforge_user');
   if (!userJson) return null;
@@ -144,13 +151,13 @@ function requireAuth() {
   // If an administrator visits any student page, route them directly to the admin workspace
   const path = window.location.pathname;
   const isStudentPage = !path.includes('admin.html') && !path.includes('login.html') && !path.includes('register.html') && !path.endsWith('/') && !path.endsWith('index.html');
-  if (user.role === 'admin' && isStudentPage) {
+  if ((user.role || '').toLowerCase() === 'admin' && isStudentPage) {
     window.location.href = '/admin.html';
     return null;
   }
 
   // Guard entrance assessment completion: require entrance assessment before accessing student dashboard
-  if (user.role === 'student' && !user.entranceAssessmentCompleted && !path.includes('entrance-assessment.html') && isStudentPage) {
+  if ((user.role || '').toLowerCase() === 'student' && !user.entranceAssessmentCompleted && !path.includes('entrance-assessment.html') && isStudentPage) {
     window.location.href = '/entrance-assessment.html';
     return null;
   }
@@ -167,7 +174,7 @@ function requireAdmin() {
     window.location.href = `/login.html?redirect=${encodeURIComponent(window.location.pathname)}`;
     return null;
   }
-  if (user.role !== 'admin') {
+  if ((user.role || '').toLowerCase() !== 'admin') {
     alert('Access Denied. Administrator privileges required.');
     window.location.href = '/dashboard.html';
     return null;
