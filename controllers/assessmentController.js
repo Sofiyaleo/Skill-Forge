@@ -228,20 +228,21 @@ exports.submitAssessment = async (req, res) => {
     const topicObj = getTopicById(topicKey) || (assessment ? { id: assessment.topic, name: assessment.title, displayName: assessment.title } : null);
 
     let score = 0;
-    const totalQuestions = 5;
     const passingPercentage = assessment ? (assessment.passingPercentage || 60) : 60;
     const assessmentTitle = assessment ? assessment.title : (topicObj ? topicObj.displayName || topicObj.name : 'Skill Assessment');
     const review = [];
     const topicsToImproveSet = new Set();
 
     // Retrieve source questions with correct answers
-    const sourceQuestions = (assessment && assessment.questions && assessment.questions.length >= 5)
-      ? assessment.questions.slice(0, 5)
+    const sourceQuestions = (assessment && assessment.questions && assessment.questions.length > 0)
+      ? assessment.questions
       : (topicObj ? getQuestionsByTopic(topicObj.id, false).slice(0, 5) : []);
 
     if (sourceQuestions.length === 0) {
       return res.status(404).json({ success: false, message: 'Assessment questions not found.' });
     }
+
+    const totalQuestions = sourceQuestions.length;
 
     sourceQuestions.forEach((q, idx) => {
       const qId = q.id || q.questionId || (q._id ? q._id.toString() : `q_${idx}`);
