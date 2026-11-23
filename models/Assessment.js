@@ -13,6 +13,10 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  concept: {
+    type: String,
+    default: ''
+  },
   options: [{
     type: String,
     required: true
