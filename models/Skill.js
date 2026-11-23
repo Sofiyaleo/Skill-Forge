@@ -46,8 +46,8 @@ const skillSchema = new mongoose.Schema(
     proficiency: {
       type: String,
       required: [true, 'Proficiency level is required'],
-      enum: ['Beginner', 'Basic', 'Intermediate', 'Advanced', 'Expert'],
-      default: 'Beginner'
+      enum: ['Beginner', 'Basic', 'Intermediate', 'Advanced', 'Expert', 'Unassessed'],
+      default: 'Unassessed'
     },
     rating: {
       type: Number,
@@ -58,6 +58,16 @@ const skillSchema = new mongoose.Schema(
     isVerified: {
       type: Boolean,
       default: false
+    },
+    verificationScore: {
+      type: Number
+    },
+    verificationDate: {
+      type: Date
+    },
+    verificationAttempts: {
+      type: Number,
+      default: 0
     },
     notes: {
       type: String,
@@ -73,6 +83,7 @@ const skillSchema = new mongoose.Schema(
 
 // Map proficiency string to 1-5 rating & vice versa
 const PROFICIENCY_TO_RATING = {
+  'Unassessed': 1,
   'Beginner': 1,
   'Basic': 2,
   'Intermediate': 3,

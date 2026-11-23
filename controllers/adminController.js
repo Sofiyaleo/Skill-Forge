@@ -24,6 +24,7 @@ const Activity = require('../models/Activity');
 const Project = require('../models/Project');
 const Certification = require('../models/Certification');
 const Achievement = require('../models/Achievement');
+const { normalizeSkillKey } = require('../data/entranceQuestions');
 const { topics, getQuestionsByTopic } = require('../data/questions');
 const { careers } = require('../data/careers');
 
@@ -1134,5 +1135,121 @@ exports.updateAdminProfile = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message || 'Failed to update admin profile.' });
+  }
+};
+
+/**
+ * @desc    Get entrance assessment completion metrics and student-wise verified skills
+ * @route   GET /api/admin/entrance-assessments
+ * @access  Private (Admin Only)
+ */
+exports.getAdminEntranceAssessments = async (req, res) => {
+  try {
+    const students = await User.find({ role: 'student' })
+      .select('-password')
+      .sort({ createdAt: -1 });
+
+    const allEntranceResults = await AssessmentResult.find({ type: 'entrance' }).sort({ createdAt: -1 });
+
+    let completedCount = 0;
+    let totalVerifiedSkills = 0;
+
+    const studentReports = await Promise.all(
+      students.map(async (student) => {
+        const isCompleted = Boolean(student.entranceAssessmentCompleted);
+        if (isCompleted) completedCount++;
+
+        // Fetch skills for this student
+        const dbSkills = await Skill.find({ user: student._id });
+        const embeddedSkills = student.skills || [];
+        const skillMap = new Map();
+
+        embeddedSkills.forEach(s => {
+          if (s && s.name) skillMap.set((s.normalizedName || s.name).toLowerCase(), s);
+        });
+        dbSkills.forEach(s => {
+          if (s && s.name) skillMap.set((s.normalizedName || s.name).toLowerCase(), s);
+        });
+
+        const studentSkills = Array.from(skillMap.values());
+        const studentResults = allEntranceResults.filter(r => r.user.toString() === student._id.toString());
+
+        const verifiedSkills = [];
+        const notVerifiedSkills = [];
+        const studentSkillsList = [];
+
+        studentSkills.forEach(sk => {
+          const skNorm = normalizeSkillKey(sk.normalizedName || sk.name);
+          const match = studentResults.find(r => {
+            const rNorm = normalizeSkillKey(r.skillName || r.topic || r.assessmentTitle);
+            return rNorm === skNorm || (r.skillName && r.skillName.toLowerCase() === sk.name.toLowerCase());
+          });
+
+          const isVer = Boolean(sk.isVerified || (match && match.passed));
+          const score = match ? match.percentage : (sk.verificationScore || (isVer ? 80 : 0));
+          const rawScore = match ? match.score : (sk.verificationScore ? Math.round((sk.verificationScore / 100) * 5) : null);
+          const scoreText = rawScore !== null ? `${rawScore}/5` : (match ? `${match.percentage}%` : 'Unassessed');
+          const identifiedLevel = match?.identifiedLevel || sk.proficiency || (isVer ? 'Intermediate' : 'Unassessed');
+          const status = isVer ? 'VERIFIED' : (match ? 'NOT VERIFIED' : 'UNASSESSED');
+
+          const skillObj = {
+            name: sk.name,
+            score: scoreText,
+            rawScore,
+            percentage: score,
+            identifiedLevel,
+            status,
+            isVerified: isVer
+          };
+
+          studentSkillsList.push(skillObj);
+
+          if (isVer) {
+            verifiedSkills.push(skillObj);
+            totalVerifiedSkills++;
+          } else if (match) {
+            notVerifiedSkills.push(skillObj);
+          }
+        });
+
+        return {
+          id: student._id,
+          name: student.name,
+          email: student.email,
+          targetCareer: student.targetCareer || student.careerInterest || 'Full Stack Developer',
+          assessmentStatus: isCompleted ? 'Completed' : 'Pending',
+          assessmentDate: student.entranceAssessmentDate ? new Date(student.entranceAssessmentDate).toLocaleDateString() : 'Pending',
+          averageScore: (student.entranceAssessmentSummary && student.entranceAssessmentSummary.averageScore) || 
+                        (studentResults.length > 0 ? Math.round(studentResults.reduce((a, b) => a + (b.percentage || 0), 0) / studentResults.length) : 0),
+          allSkills: studentSkillsList,
+          verifiedSkills,
+          notVerifiedSkills,
+          totalAssessed: verifiedSkills.length + notVerifiedSkills.length,
+          attemptsCount: studentResults.length
+        };
+      })
+    );
+
+    const totalStudents = students.length;
+    const incompleteCount = totalStudents - completedCount;
+    const completionRate = totalStudents > 0 ? Math.round((completedCount / totalStudents) * 100) : 0;
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalStudents,
+        completedCount,
+        incompleteCount,
+        completionRate,
+        totalVerifiedSkills
+      },
+      students: studentReports
+    });
+  } catch (error) {
+    console.error('Admin Entrance Assessments Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to retrieve entrance assessment metrics.'
+    });
   }
 };

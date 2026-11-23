@@ -288,8 +288,13 @@
         setSession(response.user, response.token);
         showToast('Login successful! Welcome back.', 'success');
 
-        // Redirect based on verified role
-        const redirectUrl = response.user.role === 'admin' ? 'admin.html' : 'dashboard.html';
+        // Redirect based on verified role and entrance assessment completion
+        let redirectUrl = 'dashboard.html';
+        if (response.user.role === 'admin') {
+          redirectUrl = 'admin.html';
+        } else if (!response.user.entranceAssessmentCompleted) {
+          redirectUrl = 'entrance-assessment.html';
+        }
 
         setTimeout(() => {
           window.location.href = redirectUrl;

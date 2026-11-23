@@ -148,6 +148,12 @@ function requireAuth() {
     window.location.href = '/admin.html';
     return null;
   }
+
+  // Guard entrance assessment completion: require entrance assessment before accessing student dashboard
+  if (user.role === 'student' && !user.entranceAssessmentCompleted && !path.includes('entrance-assessment.html') && isStudentPage) {
+    window.location.href = '/entrance-assessment.html';
+    return null;
+  }
   return user;
 }
 

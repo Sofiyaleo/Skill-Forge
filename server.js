@@ -42,6 +42,7 @@ app.use('/api/assessments', require('./routes/assessmentRoutes'));
 app.use('/api/portfolio', require('./routes/portfolioRoutes'));
 app.use('/api/resume', require('./routes/resumeRoutes'));
 app.use('/api/applications', require('./routes/applicationRoutes'));
+app.use('/api/entrance-assessment', require('./routes/entranceAssessmentRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
 

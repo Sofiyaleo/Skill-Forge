@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Verification Assessment – SkillForge</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .assessment-hero {
+      background: linear-gradient(135deg, #064E3B 0%, #065F46 45%, #047857 100%);
+      color: #FFFFFF;
+      border-radius: 1rem;
+      padding: 2.25rem 2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.25);
+    }
+    .assessment-hero::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .skill-step-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 1rem;
+      border-radius: 50rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: #F3F4F6;
+      color: #374151;
+      border: 1.5px solid #E5E7EB;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .skill-step-chip.active {
+      background: #ECFDF5;
+      color: #065F46;
+      border-color: #059669;
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15);
+    }
+    .skill-step-chip.completed {
+      background: #E0E7FF;
+      color: #3730A3;
+      border-color: #818CF8;
+    }
+    .option-card {
+      border: 2px solid #E5E7EB;
+      background-color: #FFFFFF;
+      border-radius: 0.85rem;
+      padding: 1.15rem 1.25rem;
+      margin-bottom: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+    }
+    .option-card:hover {
+      border-color: #10B981;
+      background-color: #F0FDF4;
+      transform: translateY(-1px);
+    }
+    .option-card.selected {
+      border-color: #059669 !important;
+      background-color: #ECFDF5 !important;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.14) !important;
+    }
+    .option-indicator {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      border-radius: 50%;
+      border: 2px solid #D1D5DB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #6B7280;
+      transition: all 0.2s ease;
+    }
+    .option-card.selected .option-indicator {
+      border-color: #059669;
+      background-color: #059669;
+      color: #FFFFFF;
+    }
+    .question-code-block {
+      background: #111827;
+      color: #F9FAFB;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+      padding: 0.85rem 1.15rem;
+      border-radius: 0.6rem;
+      margin-top: 0.75rem;
+      margin-bottom: 1rem;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .badge-level-advanced {
+      background-color: #ECFDF5;
+      color: #065F46;
+      border: 1.5px solid #059669;
+      padding: 0.35rem 0.85rem;
+      border-radius: 50rem;
+      font-weight: 700;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .badge-level-intermediate {
+      background-color: #EFF6FF;
+      color: #1E40AF;
+      border: 1.5px solid #3B82F6;
+      padding: 0.35rem 0.85rem;
+      border-radius: 50rem;
+      font-weight: 700;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .badge-level-beginner {
+      background-color: #FFFBEB;
+      color: #92400E;
+      border: 1.5px solid #F59E0B;
+      padding: 0.35rem 0.85rem;
+      border-radius: 50rem;
+      font-weight: 700;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .badge-verified-lg {
+      background-color: #ECFDF5;
+      color: #065F46;
+      border: 1.5px solid #059669;
+      padding: 0.4rem 0.85rem;
+      border-radius: 50rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .badge-notverified-lg {
+      background-color: #FEF2F2;
+      color: #991B1B;
+      border: 1.5px solid #EF4444;
+      padding: 0.4rem 0.85rem;
+      border-radius: 50rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <!-- Top Simple Navigation Bar -->
+  <nav class="navbar navbar-expand-lg bg-white border-bottom py-3">
+    <div class="container max-w-1200 px-3 px-md-4">
+      <a class="brand-logo" href="index.html">
+        <div class="brand-icon">
+          <i class="bi bi-hammer"></i>
+        </div>
+        <span>SkillForge</span>
+      </a>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <div class="d-none d-sm-block text-end">
+          <div class="fw-bold small text-navy" id="navStudentName">Student Profile</div>
+          <div class="text-muted" style="font-size: 0.75rem;" id="navCareerInterest">Entrance Assessment</div>
+        </div>
+        <a href="javascript:void(0)" onclick="logout()" class="btn btn-forge-outline-dark btn-sm">
+          <i class="bi bi-box-arrow-left me-1"></i>Logout
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="container py-4 my-auto max-w-1200">
+
+    <!-- Loading State View -->
+    <div id="loadingView" class="text-center py-5">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+      <h5 class="fw-bold text-navy mt-3">Preparing Your Skill Verification Assessment...</h5>
+      <p class="text-muted small">Loading tailored 5-question assessments for each of your claimed skills.</p>
+    </div>
+
+    <!-- Error State View -->
+    <div id="errorView" class="card border-0 shadow-sm rounded-4 p-4 p-md-5 text-center d-none">
+      <div class="feature-icon-bubble bg-danger-subtle text-danger mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.6rem;">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
+      <h4 class="fw-bold text-navy mb-2">Unable to Load Assessment</h4>
+      <p class="text-muted small mb-4" id="errorMessageText">An unexpected error occurred while loading your questions.</p>
+      <div>
+        <button class="btn btn-forge-primary px-4" onclick="initEntranceAssessment()">
+          <i class="bi bi-arrow-clockwise me-1"></i> Try Again
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Assessment View -->
+    <div id="assessmentView" class="d-none">
+
+      <!-- Hero Header Card -->
+      <div class="assessment-hero mb-4">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <span class="badge bg-white text-dark fw-bold px-3 py-1 mb-2">
+              <i class="bi bi-shield-check text-success me-1"></i> Automatic Skill Level Identification
+            </span>
+            <h2 class="fw-bold text-white mb-2">Skill Verification Assessment</h2>
+            <p class="text-white-50 mb-3 small" style="max-width: 650px;">
+              Evaluating your proficiency in the skills you claimed for your target career:
+              <strong class="text-white" id="heroCareerName">Full Stack Developer</strong>.
+              Each skill has exactly 5 progressive questions. Your skill level will be identified automatically.
+            </p>
+            <div class="d-flex align-items-center gap-2 text-white-50 small flex-wrap">
+              <i class="bi bi-info-circle-fill text-warning"></i>
+              <span>Scoring criteria: <strong>0–1 Beginner</strong> &bull; <strong>2–3 Intermediate</strong> &bull; <strong>4–5 Advanced</strong></span>
+            </div>
+          </div>
+          <div class="col-lg-4 mt-3 mt-lg-0 text-lg-end">
+            <div class="p-3 bg-white bg-opacity-10 rounded-3 text-start text-lg-end">
+              <div class="text-white-50 small">Overall Assessment Progress</div>
+              <div class="h3 fw-bold text-white mb-1" id="overallProgressText">0%</div>
+              <div class="progress bg-white bg-opacity-25" style="height: 6px;">
+                <div class="progress-bar bg-warning" id="overallProgressBar" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skill Tabs / Stepper (Assesses each skill separately) -->
+      <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
+        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+          <span class="small fw-bold text-navy text-uppercase letter-spacing-1">
+            <i class="bi bi-layers me-1 text-primary"></i>Assessing Claimed Skills Separately:
+          </span>
+          <span class="badge bg-primary-subtle text-primary fw-semibold" id="currentSkillPositionBadge">Skill 1 of 3</span>
+        </div>
+        <div class="d-flex flex-wrap gap-2" id="skillStepperChips">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Assessment Question Card -->
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+        
+        <!-- Question Header with Skill Title & Progress Bar -->
+        <div class="card-header bg-white border-bottom p-4">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+            <div>
+              <span class="badge bg-light text-secondary border me-2" id="qSkillCategory">Web Development</span>
+              <h5 class="fw-bold text-navy d-inline align-middle mb-0" id="qCurrentSkillTitle">HTML</h5>
+            </div>
+            <div class="text-muted small fw-semibold">
+              <i class="bi bi-question-circle me-1 text-primary"></i>
+              <span id="qIndexText">Question 1 of 5</span>
+            </div>
+          </div>
+
+          <!-- Skill Progress Bar -->
+          <div class="progress mt-2" style="height: 8px;">
+            <div class="progress-bar bg-success" id="skillProgressBar" style="width: 20%;"></div>
+          </div>
+        </div>
+
+        <!-- Question Body (One question at a time) -->
+        <div class="card-body p-4 p-md-5">
+          <h5 class="fw-bold text-navy mb-3 lh-base" id="questionText">Loading question...</h5>
+          
+          <!-- Code snippet box (shown only if question text has code) -->
+          <div id="questionCodeBlock" class="question-code-block d-none"></div>
+
+          <!-- Answer Options (4 options) -->
+          <div id="optionsContainer" class="mt-4">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Navigation Controls Footer -->
+        <div class="card-footer bg-light border-top p-3 p-md-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <button type="button" class="btn btn-outline-secondary px-4" id="btnPrev" onclick="navigateQuestion(-1)" disabled>
+            <i class="bi bi-arrow-left me-1"></i> Previous
+          </button>
+          
+          <div class="d-flex align-items-center gap-2">
+            <span class="text-muted small d-none d-md-inline" id="answeredStatusText">0 of 5 answered</span>
+            <button type="button" class="btn btn-forge-primary px-4" id="btnNext" onclick="navigateQuestion(1)">
+              <span id="btnNextText">Next Question</span> <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Assessment Results View -->
+    <div id="resultsView" class="d-none">
+
+      <!-- Result Banner -->
+      <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 mb-4 text-center bg-white">
+        <div id="resultHeroIconWrapper" class="mb-3">
+          <div class="feature-icon-bubble bg-success-subtle text-success mx-auto" style="width: 70px; height: 70px; font-size: 2rem;">
+            <i class="bi bi-award-fill"></i>
+          </div>
+        </div>
+        <h3 class="fw-bold text-navy mb-1" id="resultHeroTitle">YOUR SKILL ASSESSMENT RESULTS</h3>
+        <p class="text-muted small mb-3" id="resultHeroSubtitle">
+          Proficiency levels have been automatically identified for your claimed skills based on the 5-question assessments.
+        </p>
+
+        <!-- Foundational Knowledge Disclaimer Banner -->
+        <div class="alert alert-info border-0 rounded-3 py-2 px-3 mx-auto small text-start d-flex align-items-start gap-2" style="max-width: 780px;">
+          <i class="bi bi-info-circle-fill fs-5 text-primary flex-shrink-0"></i>
+          <div>
+            <strong>Automated Skill Level Identification:</strong> The proficiency levels below were automatically identified through your 5-question assessment. This represents an estimated foundational proficiency level, not a professional certification.
+          </div>
+        </div>
+
+        <!-- Overall Metrics Row -->
+        <div class="row g-3 justify-content-center mt-2 max-w-900 mx-auto">
+          <div class="col-sm-4">
+            <div class="p-3 bg-light rounded-3">
+              <div class="text-muted small">Target Career</div>
+              <div class="fw-bold text-navy text-truncate" id="resultTargetCareer">Full Stack Developer</div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="p-3 bg-light rounded-3">
+              <div class="text-muted small">Skills Assessed</div>
+              <div class="fw-bold text-primary h4 mb-0" id="resultAssessedCount">0</div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="p-3 bg-light rounded-3">
+              <div class="text-muted small">Overall Average</div>
+              <div class="fw-bold text-success h4 mb-0" id="resultAverageScore">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skill-by-Skill Result Cards -->
+      <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+        <h5 class="fw-bold text-navy mb-0"><i class="bi bi-bar-chart-steps text-primary me-2"></i>Identified Skill Levels & Breakdown:</h5>
+        <div class="d-flex gap-2 small">
+          <span class="badge-level-advanced"><i class="bi bi-star-fill me-1"></i>Advanced (4–5)</span>
+          <span class="badge-level-intermediate"><i class="bi bi-lightning-charge-fill me-1"></i>Intermediate (2–3)</span>
+          <span class="badge-level-beginner"><i class="bi bi-seedling me-1"></i>Beginner (0–1)</span>
+        </div>
+      </div>
+      
+      <div class="row g-4 mb-4" id="skillResultsCardsContainer">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Action Footer -->
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center bg-white">
+        <h5 class="fw-bold text-navy mb-2">Ready to Enter Your Dashboard?</h5>
+        <p class="text-muted small mb-3">
+          Your identified proficiency levels have been recorded in the database and applied to your personalized learning roadmap.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="dashboard.html" class="btn btn-forge-primary px-4 py-2 fw-semibold">
+            <span>Proceed to Student Dashboard</span> <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Final Submission Confirmation Modal -->
+  <div class="modal fade" id="confirmSubmitModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4 p-4">
+        <div class="text-center mb-3">
+          <div class="feature-icon-bubble bg-primary-subtle text-primary mx-auto mb-2" style="width: 55px; height: 55px; font-size: 1.5rem;">
+            <i class="bi bi-clipboard2-check"></i>
+          </div>
+          <h4 class="fw-bold text-navy">Submit Your Assessment?</h4>
+          <p class="text-muted small mb-0" id="confirmModalSummary">
+            You have answered all questions. Would you like to finalize and evaluate your answers now?
+          </p>
+        </div>
+
+        <div id="unansweredWarningBox" class="alert alert-warning py-2 px-3 small d-none">
+          <i class="bi bi-exclamation-triangle-fill me-1"></i>
+          <span id="unansweredWarningText">Warning: You have unselected answers.</span>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end mt-3">
+          <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">
+            Review Questions
+          </button>
+          <button type="button" class="btn btn-forge-primary btn-sm px-4" id="btnFinalSubmit" onclick="executeFinalSubmission()">
+            <span>Yes, Submit Assessment</span> <i class="bi bi-check2-circle ms-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Retake Single Skill Modal -->
+  <div class="modal fade" id="retakeModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header bg-light border-bottom py-3">
+          <div>
+            <h5 class="modal-title fw-bold text-navy mb-0" id="retakeModalTitle">Retake Assessment</h5>
+            <span class="text-muted small" id="retakeModalSubtitle">Answer 5 progressive questions to re-evaluate your skill level</span>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="badge bg-primary-subtle text-primary fw-semibold" id="retakeQCounter">Question 1 of 5</span>
+            <div class="progress flex-grow-1 mx-3" style="height: 6px;">
+              <div class="progress-bar bg-success" id="retakeProgressBar" style="width: 20%;"></div>
+            </div>
+            <span class="text-muted small" id="retakeAnsweredCounter">0 answered</span>
+          </div>
+
+          <h5 class="fw-bold text-navy mb-3" id="retakeQuestionText">Loading...</h5>
+          <div id="retakeCodeBlock" class="question-code-block d-none"></div>
+          <div id="retakeOptionsContainer" class="mt-3"></div>
+        </div>
+        <div class="modal-footer bg-light border-top justify-content-between">
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="btnRetakePrev" onclick="navigateRetake(-1)" disabled>
+            <i class="bi bi-arrow-left me-1"></i> Previous
+          </button>
+          <button type="button" class="btn btn-forge-primary btn-sm px-4" id="btnRetakeNext" onclick="navigateRetake(1)">
+            <span>Next Question</span> <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle & Universal API Client -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // 1. Session and State Management
+    let currentUser = null;
+    let assessmentsData = []; // Array of skill assessments
+    let activeSkillIndex = 0;
+    let activeQuestionIndex = 0;
+    
+    // User Answers Map: { [skillName]: [answerIndex0, answerIndex1, ...] }
+    let userAnswers = {};
+    let isSubmitting = false;
+
+    // Retake state
+    let retakeSkillName = null;
+    let retakeQuestions = [];
+    let retakeAnswers = [];
+    let retakeCurrentQIndex = 0;
+
+    /**
+     * Save progress to backend asynchronously so student can resume
+     */
+    async function saveProgressToServer() {
+      try {
+        const completedSkillNames = [];
+        assessmentsData.forEach(sk => {
+          const ans = userAnswers[sk.skillName] || [];
+          if (ans.filter(a => a !== -1).length === (sk.totalQuestions || 5)) {
+            completedSkillNames.push(sk.skillName);
+          }
+        });
+
+        await apiFetch('/entrance-assessment/progress', {
+          method: 'POST',
+          body: JSON.stringify({
+            currentSkillIndex: activeSkillIndex,
+            savedAnswers: userAnswers,
+            completedSkillNames
+          })
+        });
+      } catch (err) {
+        console.warn('Progress auto-save note:', err.message);
+      }
+    }
+
+    /**
+     * Initialize Entrance Assessment workflow on load
+     */
+    async function initEntranceAssessment() {
+      currentUser = getCurrentUser();
+      if (!currentUser) {
+        window.location.href = '/login.html?redirect=/entrance-assessment.html';
+        return;
+      }
+
+      document.getElementById('navStudentName').textContent = currentUser.name || 'Student';
+      document.getElementById('navCareerInterest').textContent = currentUser.targetCareer || 'Full Stack Developer';
+
+      try {
+        // First verify current status from backend
+        const statusRes = await apiFetch('/entrance-assessment/status');
+        const statusData = statusRes.data;
+
+        // If student has already completed assessment and has past results, offer results view
+        if (statusData.entranceAssessmentCompleted && statusData.pastResultsCount > 0) {
+          renderExistingResults(statusData);
+          return;
+        }
+
+        // Fetch tailored 5-question assessments for claimed skills
+        const qRes = await apiFetch('/entrance-assessment/questions');
+        assessmentsData = qRes.assessments || [];
+
+        if (assessmentsData.length === 0) {
+          throw new Error('No skills found for evaluation. Please contact administrator.');
+        }
+
+        // Initialize empty answer slots
+        assessmentsData.forEach(sk => {
+          userAnswers[sk.skillName] = new Array(sk.totalQuestions || 5).fill(-1);
+        });
+
+        // Resume incomplete assessment if saved progress exists
+        let resumed = false;
+        if (statusData.entranceAssessmentProgress && statusData.entranceAssessmentProgress.savedAnswers) {
+          const saved = statusData.entranceAssessmentProgress.savedAnswers;
+          if (saved && typeof saved === 'object') {
+            assessmentsData.forEach(sk => {
+              if (Array.isArray(saved[sk.skillName]) && saved[sk.skillName].length === (sk.totalQuestions || 5)) {
+                userAnswers[sk.skillName] = [...saved[sk.skillName]];
+                if (saved[sk.skillName].some(a => a !== -1)) {
+                  resumed = true;
+                }
+              }
+            });
+            if (typeof statusData.entranceAssessmentProgress.currentSkillIndex === 'number' &&
+                statusData.entranceAssessmentProgress.currentSkillIndex < assessmentsData.length) {
+              activeSkillIndex = statusData.entranceAssessmentProgress.currentSkillIndex;
+            }
+          }
+        }
+
+        // Set Hero Career Title
+        document.getElementById('heroCareerName').textContent = qRes.targetCareer || currentUser.targetCareer || 'Full Stack Developer';
+
+        // Render UI
+        renderSkillStepper();
+        renderActiveQuestion();
+
+        document.getElementById('loadingView').classList.add('d-none');
+        document.getElementById('errorView').classList.add('d-none');
+        document.getElementById('assessmentView').classList.remove('d-none');
+
+        if (resumed) {
+          showToast('Resumed incomplete assessment. Your previous answers have been restored.', 'info');
+        }
+
+      } catch (err) {
+        console.error('Initialization Error:', err);
+        document.getElementById('loadingView').classList.add('d-none');
+        document.getElementById('errorMessageText').textContent = err.message || 'Failed to connect to assessment server.';
+        document.getElementById('errorView').classList.remove('d-none');
+      }
+    }
+
+    /**
+     * Render the skill stepper chips at top
+     */
+    function renderSkillStepper() {
+      const container = document.getElementById('skillStepperChips');
+      container.innerHTML = assessmentsData.map((sk, idx) => {
+        const isCurrent = idx === activeSkillIndex;
+        const answersForSkill = userAnswers[sk.skillName] || [];
+        const totalQ = sk.totalQuestions || 5;
+        const answeredCount = answersForSkill.filter(a => a !== -1).length;
+        const isComplete = answeredCount === totalQ;
+
+        let chipClass = 'skill-step-chip';
+        if (isCurrent) chipClass += ' active';
+        else if (isComplete) chipClass += ' completed';
+
+        return `
+          <div class="${chipClass}" role="button" onclick="jumpToSkill(${idx})">
+            <span>Assessment ${idx + 1}: <strong>${sk.skillName}</strong></span>
+            <span class="badge ${isCurrent ? 'bg-success text-white' : 'bg-light text-secondary border'} rounded-pill" style="font-size: 0.72rem;">
+              ${answeredCount}/${totalQ}
+            </span>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('currentSkillPositionBadge').textContent = `Skill ${activeSkillIndex + 1} of ${assessmentsData.length}`;
+      updateOverallProgress();
+    }
+
+    /**
+     * Render the active question on screen (exactly 5 questions per skill)
+     */
+    function renderActiveQuestion() {
+      if (assessmentsData.length === 0) return;
+
+      const currentSkill = assessmentsData[activeSkillIndex];
+      const questions = currentSkill.questions;
+      const totalQ = currentSkill.totalQuestions || 5;
+      const q = questions[activeQuestionIndex];
+
+      // Skill header info
+      document.getElementById('qSkillCategory').textContent = currentSkill.category || 'Technical';
+      document.getElementById('qCurrentSkillTitle').textContent = currentSkill.skillName;
+      document.getElementById('qIndexText').textContent = `Question ${activeQuestionIndex + 1} of ${totalQ}`;
+
+      // Skill progress
+      const skillPct = Math.round(((activeQuestionIndex + 1) / totalQ) * 100);
+      document.getElementById('skillProgressBar').style.width = `${skillPct}%`;
+
+      // Question text & code snippet detection
+      const questionParts = q.question.split('\n');
+      if (questionParts.length > 1) {
+        document.getElementById('questionText').textContent = questionParts[0];
+        const codeBlock = document.getElementById('questionCodeBlock');
+        codeBlock.textContent = questionParts.slice(1).join('\n');
+        codeBlock.classList.remove('d-none');
+      } else {
+        document.getElementById('questionText').textContent = q.question;
+        document.getElementById('questionCodeBlock').classList.add('d-none');
+      }
+
+      // Render 4 answer option cards
+      const optionsContainer = document.getElementById('optionsContainer');
+      const selectedAnswer = userAnswers[currentSkill.skillName][activeQuestionIndex];
+
+      const optionLetters = ['A', 'B', 'C', 'D'];
+      optionsContainer.innerHTML = q.options.map((optText, optIdx) => {
+        const isSelected = selectedAnswer === optIdx;
+        return `
+          <div class="option-card ${isSelected ? 'selected' : ''}" onclick="selectAnswer(${optIdx})">
+            <div class="option-indicator">${optionLetters[optIdx] || optIdx + 1}</div>
+            <div class="fw-medium text-navy small flex-grow-1 pt-1">${optText}</div>
+          </div>
+        `;
+      }).join('');
+
+      // Update answered count
+      const answered = userAnswers[currentSkill.skillName].filter(a => a !== -1).length;
+      document.getElementById('answeredStatusText').textContent = `${answered} of ${totalQ} answered`;
+
+      // Update Navigation Buttons
+      const isFirstQ = activeQuestionIndex === 0 && activeSkillIndex === 0;
+      document.getElementById('btnPrev').disabled = isFirstQ;
+
+      const isLastQOfSkill = activeQuestionIndex === totalQ - 1;
+      const isLastSkill = activeSkillIndex === assessmentsData.length - 1;
+
+      const btnNextText = document.getElementById('btnNextText');
+      if (isLastQOfSkill && isLastSkill) {
+        btnNextText.textContent = 'Submit Assessment';
+      } else if (isLastQOfSkill) {
+        btnNextText.textContent = 'Next Skill Assessment';
+      } else {
+        btnNextText.textContent = 'Next Question';
+      }
+
+      renderSkillStepper();
+    }
+
+    /**
+     * Select an answer for the current question
+     */
+    function selectAnswer(optionIndex) {
+      const currentSkill = assessmentsData[activeSkillIndex];
+      userAnswers[currentSkill.skillName][activeQuestionIndex] = optionIndex;
+      renderActiveQuestion();
+      saveProgressToServer();
+    }
+
+    /**
+     * Jump directly to another skill
+     */
+    function jumpToSkill(index) {
+      if (index >= 0 && index < assessmentsData.length) {
+        activeSkillIndex = index;
+        activeQuestionIndex = 0;
+        renderActiveQuestion();
+        saveProgressToServer();
+      }
+    }
+
+    /**
+     * Navigate Previous / Next
+     */
+    function navigateQuestion(delta) {
+      const currentSkill = assessmentsData[activeSkillIndex];
+      const totalQ = currentSkill.totalQuestions || 5;
+
+      if (delta === 1) {
+        // Next
+        if (activeQuestionIndex < totalQ - 1) {
+          activeQuestionIndex++;
+          renderActiveQuestion();
+          saveProgressToServer();
+        } else if (activeSkillIndex < assessmentsData.length - 1) {
+          // Move to next skill
+          activeSkillIndex++;
+          activeQuestionIndex = 0;
+          renderActiveQuestion();
+          saveProgressToServer();
+        } else {
+          // Reached end of all skills -> Prompt Final Submission
+          promptSubmitConfirmation();
+        }
+      } else if (delta === -1) {
+        // Previous
+        if (activeQuestionIndex > 0) {
+          activeQuestionIndex--;
+          renderActiveQuestion();
+          saveProgressToServer();
+        } else if (activeSkillIndex > 0) {
+          activeSkillIndex--;
+          activeQuestionIndex = (assessmentsData[activeSkillIndex].totalQuestions || 5) - 1;
+          renderActiveQuestion();
+          saveProgressToServer();
+        }
+      }
+    }
+
+    /**
+     * Update Overall Progress
+     */
+    function updateOverallProgress() {
+      let totalQ = 0;
+      let totalAnswered = 0;
+
+      assessmentsData.forEach(sk => {
+        const count = sk.totalQuestions || 5;
+        totalQ += count;
+        const answered = (userAnswers[sk.skillName] || []).filter(a => a !== -1).length;
+        totalAnswered += answered;
+      });
+
+      const pct = totalQ > 0 ? Math.round((totalAnswered / totalQ) * 100) : 0;
+      document.getElementById('overallProgressText').textContent = `${pct}%`;
+      document.getElementById('overallProgressBar').style.width = `${pct}%`;
+    }
+
+    /**
+     * Confirmation Modal before final submit
+     */
+    function promptSubmitConfirmation() {
+      let totalQ = 0;
+      let totalAnswered = 0;
+
+      assessmentsData.forEach(sk => {
+        const count = sk.totalQuestions || 5;
+        totalQ += count;
+        const answered = (userAnswers[sk.skillName] || []).filter(a => a !== -1).length;
+        totalAnswered += answered;
+      });
+
+      const unanswered = totalQ - totalAnswered;
+      const warningBox = document.getElementById('unansweredWarningBox');
+      const warningText = document.getElementById('unansweredWarningText');
+
+      if (unanswered > 0) {
+        warningText.textContent = `You have ${unanswered} unanswered question(s). Unanswered questions will receive 0 points.`;
+        warningBox.classList.remove('d-none');
+      } else {
+        warningBox.classList.add('d-none');
+      }
+
+      document.getElementById('confirmModalSummary').textContent =
+        `You have answered ${totalAnswered} of ${totalQ} questions across all ${assessmentsData.length} skills. Submit for automatic skill level identification?`;
+
+      const modalEl = document.getElementById('confirmSubmitModal');
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+    }
+
+    /**
+     * Execute Final Assessment Submission to server
+     */
+    async function executeFinalSubmission() {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      const submitBtn = document.getElementById('btnFinalSubmit');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Evaluating answers on server...';
+
+      try {
+        const payload = { submissions: userAnswers };
+        const response = await apiFetch('/entrance-assessment/submit', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        // Hide confirmation modal
+        const modalEl = document.getElementById('confirmSubmitModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+
+        // Update local session
+        currentUser.entranceAssessmentCompleted = true;
+        setSession(currentUser);
+
+        showToast('Assessment evaluated successfully! Skill levels identified.', 'success');
+        renderResultsView(response.summary, response.results);
+
+      } catch (err) {
+        console.error('Submission Error:', err);
+        showToast(err.message || 'Submission failed. Please try again.', 'danger');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Yes, Submit Assessment</span> <i class="bi bi-check2-circle ms-1"></i>';
+        isSubmitting = false;
+      }
+    }
+
+    /**
+     * Render Results View (Requirements 3 & 5)
+     */
+    function renderResultsView(summary, results) {
+      document.getElementById('assessmentView').classList.add('d-none');
+      document.getElementById('resultsView').classList.remove('d-none');
+
+      document.getElementById('resultTargetCareer').textContent = currentUser.targetCareer || 'Full Stack Developer';
+      document.getElementById('resultAssessedCount').textContent = results.length;
+      document.getElementById('resultAverageScore').textContent = `${summary.averageScore || 0}%`;
+
+      const heroTitle = document.getElementById('resultHeroTitle');
+      const heroSubtitle = document.getElementById('resultHeroSubtitle');
+
+      heroTitle.textContent = 'YOUR SKILL ASSESSMENT RESULTS';
+      heroSubtitle.textContent = 'Your proficiency levels have been automatically identified through this 5-question assessment.';
+
+      // Render cards per skill
+      const container = document.getElementById('skillResultsCardsContainer');
+      container.innerHTML = results.map(r => {
+        const level = r.identifiedLevel || (r.score >= 4 ? 'Advanced' : (r.score >= 2 ? 'Intermediate' : 'Beginner'));
+        let badgeClass = 'badge-level-beginner';
+        let badgeIcon = 'bi-seedling';
+        let levelColor = '#D97706';
+        let progressBg = 'bg-warning';
+
+        if (level === 'Advanced') {
+          badgeClass = 'badge-level-advanced';
+          badgeIcon = 'bi-star-fill';
+          levelColor = '#059669';
+          progressBg = 'bg-success';
+        } else if (level === 'Intermediate') {
+          badgeClass = 'badge-level-intermediate';
+          badgeIcon = 'bi-lightning-charge-fill';
+          levelColor = '#2563EB';
+          progressBg = 'bg-primary';
+        }
+
+        const totalQ = r.totalQuestions || 5;
+        const pct = r.percentage !== undefined ? r.percentage : Math.round((r.score / totalQ) * 100);
+
+        return `
+          <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-white d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                  <h5 class="fw-bold text-navy mb-0">${r.skillName}</h5>
+                  <span class="text-muted small">5 Progressive Questions</span>
+                </div>
+                <span class="${badgeClass}">
+                  <i class="bi ${badgeIcon} me-1"></i>${level}
+                </span>
+              </div>
+
+              <div class="p-3 bg-light rounded-3 my-2 text-center">
+                <div class="text-muted small">Score & Identified Level</div>
+                <div class="h3 fw-bold text-navy mb-1">
+                  ${r.score} / ${totalQ}
+                </div>
+                <div class="fw-bold" style="font-size: 0.95rem; color: ${levelColor};">
+                  Level: ${level}
+                </div>
+                <div class="progress mt-2" style="height: 6px;">
+                  <div class="progress-bar ${progressBg}" style="width: ${pct}%;"></div>
+                </div>
+              </div>
+
+              <p class="text-muted small mb-3 flex-grow-1">
+                Proficiency automatically evaluated based on your answers:
+                <strong>${r.score} of ${totalQ} correct (${pct}%)</strong>.
+              </p>
+
+              <div class="mt-auto pt-2">
+                <button type="button" class="btn btn-outline-primary btn-sm w-100 py-2" onclick="openRetakeModal('${r.skillName}')">
+                  <i class="bi bi-arrow-repeat me-1"></i> Retake ${r.skillName} Assessment
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /**
+     * Render past results if student already took entrance assessment
+     */
+    function renderExistingResults(statusData) {
+      document.getElementById('loadingView').classList.add('d-none');
+      const summary = {
+        totalSkillsAssessed: statusData.skills.length,
+        verifiedSkillsCount: statusData.skills.filter(s => s.isVerified).length,
+        averageScore: (statusData.entranceAssessmentSummary && statusData.entranceAssessmentSummary.averageScore) || 75
+      };
+
+      const results = statusData.skills.map(s => {
+        const matchingPast = (statusData.pastResults || []).find(p => p.skillName.toLowerCase() === s.name.toLowerCase());
+        const score = matchingPast ? matchingPast.score : (s.verificationScore ? Math.round((s.verificationScore / 100) * 5) : 4);
+        const level = matchingPast?.identifiedLevel || s.proficiency || (score >= 4 ? 'Advanced' : (score >= 2 ? 'Intermediate' : 'Beginner'));
+        return {
+          skillName: s.name,
+          score: score,
+          totalQuestions: matchingPast ? matchingPast.totalQuestions : 5,
+          percentage: matchingPast ? matchingPast.percentage : Math.round((score / 5) * 100),
+          identifiedLevel: level,
+          passed: s.isVerified || score >= 2,
+          verificationStatus: s.isVerified ? 'VERIFIED' : 'NOT VERIFIED'
+        };
+      });
+
+      renderResultsView(summary, results);
+    }
+
+    /**
+     * Retake single skill
+     */
+    async function openRetakeModal(skillName) {
+      retakeSkillName = skillName;
+      document.getElementById('retakeModalTitle').textContent = `Retake ${skillName} Assessment`;
+      
+      try {
+        const qData = await apiFetch(`/entrance-assessment/questions`);
+        const targetSkill = qData.assessments.find(a => a.skillName.toLowerCase() === skillName.toLowerCase());
+        
+        if (!targetSkill) {
+          throw new Error('Could not find questions for this skill.');
+        }
+
+        retakeQuestions = targetSkill.questions;
+        retakeAnswers = new Array(retakeQuestions.length).fill(-1);
+        retakeCurrentQIndex = 0;
+
+        renderRetakeQuestion();
+
+        const modalEl = document.getElementById('retakeModal');
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+
+      } catch (err) {
+        showToast('Failed to load retake questions.', 'danger');
+      }
+    }
+
+    function renderRetakeQuestion() {
+      const q = retakeQuestions[retakeCurrentQIndex];
+      const totalQ = retakeQuestions.length || 5;
+      document.getElementById('retakeQCounter').textContent = `Question ${retakeCurrentQIndex + 1} of ${totalQ}`;
+      
+      const pct = Math.round(((retakeCurrentQIndex + 1) / totalQ) * 100);
+      document.getElementById('retakeProgressBar').style.width = `${pct}%`;
+
+      const answered = retakeAnswers.filter(a => a !== -1).length;
+      document.getElementById('retakeAnsweredCounter').textContent = `${answered} answered`;
+
+      // Question text & code
+      const questionParts = q.question.split('\n');
+      if (questionParts.length > 1) {
+        document.getElementById('retakeQuestionText').textContent = questionParts[0];
+        const codeBlock = document.getElementById('retakeCodeBlock');
+        codeBlock.textContent = questionParts.slice(1).join('\n');
+        codeBlock.classList.remove('d-none');
+      } else {
+        document.getElementById('retakeQuestionText').textContent = q.question;
+        document.getElementById('retakeCodeBlock').classList.add('d-none');
+      }
+
+      const selected = retakeAnswers[retakeCurrentQIndex];
+      const optionLetters = ['A', 'B', 'C', 'D'];
+      const container = document.getElementById('retakeOptionsContainer');
+
+      container.innerHTML = q.options.map((optText, optIdx) => {
+        const isSelected = selected === optIdx;
+        return `
+          <div class="option-card ${isSelected ? 'selected' : ''}" onclick="selectRetakeAnswer(${optIdx})">
+            <div class="option-indicator">${optionLetters[optIdx] || optIdx + 1}</div>
+            <div class="fw-medium text-navy small flex-grow-1 pt-1">${optText}</div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('btnRetakePrev').disabled = retakeCurrentQIndex === 0;
+      const isLast = retakeCurrentQIndex === totalQ - 1;
+      document.getElementById('btnRetakeNext').innerHTML = isLast ? '<span>Submit Retake</span> <i class="bi bi-check2-circle ms-1"></i>' : '<span>Next Question</span> <i class="bi bi-arrow-right ms-1"></i>';
+    }
+
+    function selectRetakeAnswer(idx) {
+      retakeAnswers[retakeCurrentQIndex] = idx;
+      renderRetakeQuestion();
+    }
+
+    function navigateRetake(delta) {
+      if (delta === 1) {
+        if (retakeCurrentQIndex < retakeQuestions.length - 1) {
+          retakeCurrentQIndex++;
+          renderRetakeQuestion();
+        } else {
+          submitRetakeAssessment();
+        }
+      } else if (delta === -1 && retakeCurrentQIndex > 0) {
+        retakeCurrentQIndex--;
+        renderRetakeQuestion();
+      }
+    }
+
+    async function submitRetakeAssessment() {
+      const nextBtn = document.getElementById('btnRetakeNext');
+      nextBtn.disabled = true;
+      nextBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Evaluating...';
+
+      try {
+        const response = await apiFetch(`/entrance-assessment/retake/${encodeURIComponent(retakeSkillName)}`, {
+          method: 'POST',
+          body: JSON.stringify({ answers: retakeAnswers })
+        });
+
+        const modalEl = document.getElementById('retakeModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+
+        showToast(response.message, 'success');
+
+        // Reload status to refresh UI
+        setTimeout(() => {
+          initEntranceAssessment();
+        }, 1000);
+
+      } catch (err) {
+        showToast(err.message || 'Failed to submit retake.', 'danger');
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = '<span>Submit Retake</span> <i class="bi bi-check2-circle ms-1"></i>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initEntranceAssessment();
+    });
+  </script>
+</body>
+</html>

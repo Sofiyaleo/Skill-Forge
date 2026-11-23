@@ -236,6 +236,97 @@
           </div>
         </div>
 
+        <!-- My Skill Levels & Verified Skills Section (Requirements 6 & 7) -->
+        <div class="portal-card mb-4" id="verifiedSkillsSectionCard">
+          <div class="portal-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <h5 class="portal-card-title mb-0">
+                  <i class="bi bi-patch-check-fill text-success me-1"></i> My Skill Levels
+                </h5>
+                <span class="badge bg-success-subtle text-success small" id="verifiedCareerBadge">Career Path: Full Stack Developer</span>
+              </div>
+              <span class="text-muted small">Proficiency levels automatically identified through skill assessments (Advanced, Intermediate, Beginner, or Unassessed)</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#assessmentHistoryModal">
+                <i class="bi bi-clock-history me-1"></i> Assessment History
+              </button>
+              <a href="entrance-assessment.html" class="btn btn-sm btn-outline-primary" id="btnEntranceAssessmentShortcut">
+                <i class="bi bi-shield-check me-1"></i> Entrance Assessment
+              </a>
+              <a href="assessments.html" class="btn btn-sm btn-forge-primary">
+                <i class="bi bi-plus-lg me-1"></i> Take Quizzes
+              </a>
+            </div>
+          </div>
+
+          <!-- My Skill Levels Cards Grid (Prompt Requirement 6) -->
+          <div class="p-3 bg-light rounded-3 mb-3 border border-light">
+            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+              <span class="fw-bold text-navy small text-uppercase letter-spacing-1">
+                <i class="bi bi-layers-half text-primary me-1"></i> Automatically Identified Skill Levels
+              </span>
+              <div class="d-flex gap-2" style="font-size: 0.72rem;">
+                <span class="badge bg-success-subtle text-success"><i class="bi bi-star-fill me-1"></i>Advanced (4–5/5)</span>
+                <span class="badge bg-primary-subtle text-primary"><i class="bi bi-lightning-charge-fill me-1"></i>Intermediate (2–3/5)</span>
+                <span class="badge bg-warning-subtle text-warning-emphasis"><i class="bi bi-seedling me-1"></i>Beginner (0–1/5)</span>
+                <span class="badge bg-light text-muted border"><i class="bi bi-dash-circle me-1"></i>Unassessed</span>
+              </div>
+            </div>
+            <div class="row g-2" id="mySkillLevelsCardsContainer">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <!-- Column 1: Verified Skills -->
+            <div class="col-md-5">
+              <div class="p-3 bg-light rounded-3 h-100 border border-light">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h6 class="fw-bold text-success small mb-0">
+                    <i class="bi bi-check-circle-fill me-1"></i> Verified Skills (<span id="verifiedSkillsCountSpan">0</span>)
+                  </h6>
+                  <span class="badge bg-success text-white" style="font-size: 0.7rem;">&ge; 60% Verified</span>
+                </div>
+                <div id="verifiedSkillsListContainer" class="d-flex flex-column gap-2 mt-2">
+                  <div class="text-muted small py-2">Loading verified skills...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 2: Not Yet Verified Skills -->
+            <div class="col-md-4">
+              <div class="p-3 bg-light rounded-3 h-100 border border-light">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h6 class="fw-bold text-warning-emphasis small mb-0">
+                    <i class="bi bi-exclamation-circle-fill text-warning me-1"></i> Not Yet Verified (<span id="notVerifiedSkillsCountSpan">0</span>)
+                  </h6>
+                  <span class="badge bg-warning-subtle text-warning-emphasis" style="font-size: 0.7rem;">&lt; 60% Score</span>
+                </div>
+                <div id="notVerifiedSkillsListContainer" class="d-flex flex-column gap-2 mt-2">
+                  <div class="text-muted small py-2">Loading unverified skills...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 3: Unassessed Skills in Inventory -->
+            <div class="col-md-3">
+              <div class="p-3 bg-light rounded-3 h-100 border border-light">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h6 class="fw-bold text-secondary small mb-0">
+                    <i class="bi bi-dash-circle me-1"></i> Unassessed (<span id="unassessedSkillsCountSpan">0</span>)
+                  </h6>
+                  <span class="badge bg-light text-muted border" style="font-size: 0.7rem;">Pending</span>
+                </div>
+                <div id="unassessedSkillsListContainer" class="d-flex flex-wrap gap-1 mt-2">
+                  <div class="text-muted small py-2">No unassessed skills</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Row 1: Skill Proficiency Horizontal Bar Chart & Career Readiness Visual -->
         <div class="row g-4 mb-4">
           
@@ -512,6 +603,40 @@
     </div>
   </div>
 
+  <!-- Assessment History Modal (Prompt Requirement 7) -->
+  <div class="modal fade" id="assessmentHistoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-light border-bottom py-3">
+          <h5 class="modal-title fw-bold text-navy">
+            <i class="bi bi-clock-history text-primary me-2"></i>Assessment History & Attempts
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr class="small text-muted text-uppercase">
+                  <th>Skill / Topic</th>
+                  <th>Type</th>
+                  <th>Attempt</th>
+                  <th>Score</th>
+                  <th>Percentage</th>
+                  <th>Verification Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="assessmentHistoryTableBody" class="small">
+                <tr><td colspan="7" class="text-center py-4 text-muted">No assessment history recorded.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap 5 JS Bundle & API helper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/api.js"></script>
@@ -526,6 +651,12 @@
 
     async function loadDashboard() {
       if (!user) return;
+
+      // Route Guard: enforce entrance assessment completion for students
+      if (user.role === 'student' && !user.entranceAssessmentCompleted) {
+        window.location.href = 'entrance-assessment.html';
+        return;
+      }
 
       const firstName = user.name ? user.name.split(' ')[0] : 'Student';
       document.getElementById('welcomeHeading').textContent = `Welcome back, ${firstName}! 👋`;
@@ -561,27 +692,215 @@
         document.getElementById('badgeImprove').textContent = stats.readiness.needsImprovementCount || 0;
         document.getElementById('badgeMissing').textContent = stats.readiness.missingCount || 0;
 
-        // 3. Render Skill Proficiency Horizontal Bar Chart
+        // 3. Render Verified Skills Section (Prompt Requirement 7)
+        if (data.verifiedSkillsSection) {
+          renderVerifiedSkillsSection(data.verifiedSkillsSection);
+        }
+
+        // 4. Render Skill Proficiency Horizontal Bar Chart
         renderSkillsChart(data.skillsList || []);
 
-        // 4. Render Career Readiness Doughnut Chart
+        // 5. Render Career Readiness Doughnut Chart
         renderReadinessChart(stats.readiness);
 
-        // 5. Render Roadmap Progress Doughnut Chart
+        // 6. Render Roadmap Progress Doughnut Chart
         renderRoadmapChart(stats.roadmap, data.roadmapBreakdown);
 
-        // 6. Render Assessment Performance History Chart
+        // 7. Render Assessment Performance History Chart
         renderAssessmentChart(data.assessmentHistory || []);
 
-        // 7. Render Showcase items
+        // 8. Render Showcase items
         renderShowcaseItems(data.recentProjects, data.recentCertifications, data.recentAchievements);
 
-        // 8. Render Activities
+        // 9. Render Activities
         renderActivities(data.recentActivities);
 
       } catch (err) {
         console.error('Failed to load dashboard data:', err);
         showToast('Failed to load dashboard data.', 'danger');
+      }
+    }
+
+    // Render Verified Skills & My Skill Levels Section (Requirements 6 & 7)
+    function renderVerifiedSkillsSection(sec) {
+      if (!sec) return;
+
+      document.getElementById('verifiedCareerBadge').textContent = `Career Path: ${sec.targetCareer || 'Full Stack Developer'}`;
+
+      const verified = sec.verifiedSkills || [];
+      const notVerified = sec.notVerifiedSkills || [];
+      const unassessed = sec.unassessedSkills || [];
+      const history = sec.history || [];
+
+      document.getElementById('verifiedSkillsCountSpan').textContent = verified.length;
+      document.getElementById('notVerifiedSkillsCountSpan').textContent = notVerified.length;
+      document.getElementById('unassessedSkillsCountSpan').textContent = unassessed.length;
+
+      // 0. Render My Skill Levels Cards (Prompt Requirement 6)
+      const mySkillLevelsContainer = document.getElementById('mySkillLevelsCardsContainer');
+      const allLevels = sec.mySkillLevels && sec.mySkillLevels.length > 0
+        ? sec.mySkillLevels
+        : [
+            ...verified.map(v => ({ ...v, identifiedLevel: v.identifiedLevel || 'Intermediate', scoreText: v.scoreText || 'Verified', completionStatus: 'Completed' })),
+            ...notVerified.map(nv => ({ ...nv, identifiedLevel: nv.identifiedLevel || 'Beginner', scoreText: nv.scoreText || '0/5', completionStatus: 'Completed' })),
+            ...unassessed.map(u => ({ ...u, identifiedLevel: 'Unassessed', scoreText: 'Unassessed', completionStatus: 'Unassessed' }))
+          ];
+
+      if (mySkillLevelsContainer) {
+        if (allLevels.length > 0) {
+          mySkillLevelsContainer.innerHTML = allLevels.map(s => {
+            const level = s.identifiedLevel || (s.isVerified ? 'Intermediate' : 'Unassessed');
+            let badgeHtml = '';
+            let barColor = 'bg-secondary';
+            let barWidth = '0%';
+            let scoreDisplay = s.scoreText || (s.score !== null && s.score !== undefined ? `${s.score}/5` : 'Unassessed');
+
+            if (level === 'Advanced') {
+              badgeHtml = '<span class="badge bg-success-subtle text-success fw-bold px-2 py-1"><i class="bi bi-star-fill text-success me-1"></i>Advanced</span>';
+              barColor = 'bg-success';
+              barWidth = `${Math.max(s.percentage || 0, 85)}%`;
+            } else if (level === 'Intermediate') {
+              badgeHtml = '<span class="badge bg-primary-subtle text-primary fw-bold px-2 py-1"><i class="bi bi-lightning-charge-fill text-primary me-1"></i>Intermediate</span>';
+              barColor = 'bg-primary';
+              barWidth = `${Math.max(s.percentage || 0, 55)}%`;
+            } else if (level === 'Beginner') {
+              badgeHtml = '<span class="badge bg-warning-subtle text-warning-emphasis fw-bold px-2 py-1"><i class="bi bi-seedling me-1"></i>Beginner</span>';
+              barColor = 'bg-warning';
+              barWidth = `${Math.max(s.percentage || 0, 25)}%`;
+            } else {
+              badgeHtml = '<span class="badge bg-light text-muted border px-2 py-1"><i class="bi bi-dash-circle me-1"></i>Unassessed</span>';
+              barColor = 'bg-secondary';
+              barWidth = '5%';
+            }
+
+            const isDone = s.completionStatus === 'Completed' || s.isVerified;
+
+            return `
+              <div class="col-md-6 col-lg-4">
+                <div class="p-3 rounded-3 bg-white border border-light shadow-2xs h-100 d-flex flex-column justify-content-between">
+                  <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="fw-bold text-navy">${s.name}</span>
+                    ${badgeHtml}
+                  </div>
+                  <div class="d-flex align-items-center justify-content-between small text-muted mb-1">
+                    <span>Score: <strong class="text-navy">${scoreDisplay}</strong></span>
+                    <span class="badge ${isDone ? 'bg-success-subtle text-success' : 'bg-light text-muted border'}" style="font-size: 0.68rem;">
+                      ${isDone ? 'Assessed' : 'Unassessed'}
+                    </span>
+                  </div>
+                  <div class="progress mt-1" style="height: 5px;">
+                    <div class="progress-bar ${barColor}" style="width: ${barWidth};"></div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          mySkillLevelsContainer.innerHTML = `
+            <div class="col-12 text-center text-muted small py-3">
+              No skills reported yet. Add skills to your profile to assess them.
+            </div>
+          `;
+        }
+      }
+
+      // 1. Verified Skills Container
+      const vContainer = document.getElementById('verifiedSkillsListContainer');
+      if (verified.length > 0) {
+        vContainer.innerHTML = verified.map(s => `
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-2 bg-white border border-light shadow-2xs">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-patch-check-fill text-success fs-5"></i>
+              <div>
+                <span class="fw-bold text-navy small">${s.name}</span>
+                <span class="text-muted" style="font-size: 0.72rem;"> &bull; ${s.scoreText || (s.score ? `${s.score}/5` : 'Verified')}</span>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-success-subtle text-success fw-bold">${s.identifiedLevel || 'Verified'}</span>
+              <span class="badge bg-success text-white small" style="font-size: 0.68rem;">VERIFIED</span>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        vContainer.innerHTML = `
+          <div class="text-center text-muted small py-3">
+            <i class="bi bi-info-circle d-block mb-1 text-secondary"></i>
+            No skills verified yet. Take an entrance assessment to verify foundational competence.
+          </div>
+        `;
+      }
+
+      // 2. Not Yet Verified Skills Container
+      const nvContainer = document.getElementById('notVerifiedSkillsListContainer');
+      if (notVerified.length > 0) {
+        nvContainer.innerHTML = notVerified.map(s => `
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-2 bg-white border border-light shadow-2xs">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-x-circle-fill text-danger fs-5"></i>
+              <div>
+                <span class="fw-bold text-navy small">${s.name}</span>
+                <span class="text-muted" style="font-size: 0.72rem;"> &bull; ${s.scoreText || `${s.score || 0}/5`}</span>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-warning-subtle text-warning-emphasis" style="font-size: 0.68rem;">${s.identifiedLevel || 'Beginner'}</span>
+              <a href="entrance-assessment.html" class="btn btn-sm btn-outline-primary py-0 px-2 small" style="font-size: 0.75rem;">
+                <i class="bi bi-arrow-repeat"></i> Retake
+              </a>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        nvContainer.innerHTML = `
+          <div class="text-center text-muted small py-3">
+            <i class="bi bi-check2-all text-success d-block mb-1"></i>
+            All assessed skills have been verified!
+          </div>
+        `;
+      }
+
+      // 3. Unassessed Skills Container
+      const uContainer = document.getElementById('unassessedSkillsListContainer');
+      if (unassessed.length > 0) {
+        uContainer.innerHTML = unassessed.map(s => `
+          <span class="badge bg-white text-dark border p-2 mb-1 d-inline-flex align-items-center gap-1" style="font-size: 0.78rem;">
+            <span>${s.name}</span>
+            <span class="badge bg-light text-muted border py-0 px-1" style="font-size: 0.65rem;">Unassessed</span>
+            <a href="entrance-assessment.html" class="text-primary ms-1" title="Take entrance assessment to evaluate"><i class="bi bi-arrow-up-right"></i></a>
+          </span>
+        `).join('');
+      } else {
+        uContainer.innerHTML = `
+          <div class="text-muted small py-2">All skills assessed.</div>
+        `;
+      }
+
+      // 4. Assessment History Modal Table
+      const historyTable = document.getElementById('assessmentHistoryTableBody');
+      if (history.length > 0) {
+        historyTable.innerHTML = history.map(h => {
+          const isPass = h.passed;
+          const statusBadge = isPass
+            ? '<span class="badge bg-success-subtle text-success"><i class="bi bi-patch-check-fill me-1"></i>VERIFIED</span>'
+            : '<span class="badge bg-danger-subtle text-danger"><i class="bi bi-x-circle-fill me-1"></i>NOT VERIFIED</span>';
+          
+          return `
+            <tr>
+              <td class="fw-semibold text-navy">${h.title}</td>
+              <td><span class="badge bg-light text-secondary border">${h.type === 'entrance' ? 'Entrance' : 'Quiz'}</span></td>
+              <td>#${h.attemptNumber || 1}</td>
+              <td>${h.score}/${h.totalQuestions}</td>
+              <td class="fw-bold ${isPass ? 'text-success' : 'text-danger'}">${h.percentage}%</td>
+              <td>${statusBadge}</td>
+              <td class="text-muted">${h.date}</td>
+            </tr>
+          `;
+        }).join('');
+      } else {
+        historyTable.innerHTML = `
+          <tr><td colspan="7" class="text-center py-4 text-muted">No assessment history recorded.</td></tr>
+        `;
       }
     }
 
