@@ -136,7 +136,7 @@
         <!-- 1. Welcome Message & Student Name -->
         <div class="portal-title-block d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
           <div>
-            <h2 class="portal-title" id="welcomeHeading">Welcome back, Student! 👋</h2>
+            <h2 class="portal-title" id="welcomeHeading">Welcome, Student! 👋</h2>
             <p class="portal-subtitle mb-0" id="welcomeSubtitle">Target Career Track: <strong class="text-primary" id="targetCareerBadge">Full Stack Developer</strong></p>
           </div>
           <div class="d-flex gap-2">
@@ -658,8 +658,8 @@
         return;
       }
 
-      const firstName = user.name ? user.name.split(' ')[0] : 'Student';
-      document.getElementById('welcomeHeading').textContent = `Welcome back, ${firstName}! 👋`;
+      const studentName = user.name || 'Student';
+      document.getElementById('welcomeHeading').textContent = `Welcome, ${studentName}! 👋`;
       document.getElementById('header-user-role').textContent = user.targetCareer || user.careerInterest || 'Student';
 
       try {

@@ -287,7 +287,7 @@ exports.login = async (req, res) => {
       }
     }
 
-    sendTokenResponse(user, 200, res, `Welcome back, ${user.name}!`);
+    sendTokenResponse(user, 200, res, `Welcome, ${user.name}!`);
   } catch (error) {
     console.error('Login Error:', error);
     res.status(500).json({

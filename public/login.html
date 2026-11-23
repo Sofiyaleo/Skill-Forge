@@ -40,7 +40,7 @@
             <!-- Left Form Column -->
             <div class="col-md-7 p-4 p-lg-5 bg-white">
               <div class="mb-4">
-                <h3 class="fw-bold text-navy mb-1">Welcome Back!</h3>
+                <h3 class="fw-bold text-navy mb-1">Welcome!</h3>
                 <p class="text-muted small">Login to your SkillForge account</p>
               </div>
 
@@ -286,7 +286,7 @@
 
         // Save session
         setSession(response.user, response.token);
-        showToast('Login successful! Welcome back.', 'success');
+        showToast(response.message || `Welcome, ${response.user.name || 'Student'}!`, 'success');
 
         // Redirect based on verified role and entrance assessment completion
         let redirectUrl = 'dashboard.html';
