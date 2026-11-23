@@ -75,9 +75,7 @@ const assessmentResultSchema = new mongoose.Schema(
       type: Number,
       default: 1
     },
-<<<<<<< HEAD
-=======
-    classification: {
+      classification: {
       type: String,
       enum: ['Strong Foundation', 'Developing', 'Needs Improvement', 'Unassessed'],
       default: 'Unassessed'
@@ -93,7 +91,7 @@ const assessmentResultSchema = new mongoose.Schema(
     topicsToImprove: [{
       type: String
     }],
->>>>>>> f2e0bca (Improved skill improvement practice assessments)
+
     answers: [{
       type: mongoose.Schema.Types.Mixed
     }],
