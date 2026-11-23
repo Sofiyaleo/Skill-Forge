@@ -32,7 +32,8 @@ const {
   deleteRoadmap,
   getAdminReports,
   getAdminProfile,
-  updateAdminProfile
+  updateAdminProfile,
+  getAdminEntranceAssessments
 } = require('../controllers/adminController');
 const { protect, adminOnly } = require('../middleware/authMiddleware');
 
@@ -80,5 +81,8 @@ router.get('/reports', getAdminReports);
 // 8. Admin Profile Management
 router.get('/profile', getAdminProfile);
 router.put('/profile', updateAdminProfile);
+
+// 9. Entrance Assessment Oversight (Prompt Requirement 9)
+router.get('/entrance-assessments', getAdminEntranceAssessments);
 
 module.exports = router;

@@ -50,6 +50,10 @@
           <i class="bi bi-clipboard2-check"></i>
           <span>Manage Assessments</span>
         </a>
+        <a href="#entrance" class="sidebar-link" id="menu-entrance" onclick="switchAdminTab('entrance', this)">
+          <i class="bi bi-shield-check"></i>
+          <span>Entrance Assessments</span>
+        </a>
         <a href="#roadmaps" class="sidebar-link" id="menu-roadmaps" onclick="switchAdminTab('roadmaps', this)">
           <i class="bi bi-map"></i>
           <span>Manage Learning Roadmaps</span>
@@ -217,6 +221,149 @@
                 </thead>
                 <tbody id="dashRecentStudentsTable">
                   <tr><td colspan="5" class="text-center py-4 text-muted">Loading students...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Student Entrance Assessment & Skill Verification Overview (Prompt Requirement 9) -->
+          <div class="portal-card mt-4" id="dashEntranceAssessmentCard">
+            <div class="portal-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <div>
+                <h5 class="portal-card-title mb-0">
+                  <i class="bi bi-shield-check text-success me-2"></i>Student Entrance Assessment & Skill Verification
+                </h5>
+                <span class="text-muted small">Tracking first-time registration assessments, verified skills (&ge;60%), and incomplete evaluations</span>
+              </div>
+              <button class="btn btn-sm btn-outline-primary" onclick="switchAdminTab('entrance', document.getElementById('menu-entrance'))">
+                Full Assessment Oversight &rarr;
+              </button>
+            </div>
+
+            <!-- Mini Summary Metrics -->
+            <div class="row g-3 p-3 bg-light border-bottom">
+              <div class="col-sm-3 col-6">
+                <div class="text-muted small">Completed Assessments</div>
+                <div class="h5 fw-bold text-success mb-0" id="dashEntranceCompletedCount">0</div>
+              </div>
+              <div class="col-sm-3 col-6">
+                <div class="text-muted small">Pending Assessments</div>
+                <div class="h5 fw-bold text-warning-emphasis mb-0" id="dashEntrancePendingCount">0</div>
+              </div>
+              <div class="col-sm-3 col-6">
+                <div class="text-muted small">Total Verified Skills</div>
+                <div class="h5 fw-bold text-primary mb-0" id="dashEntranceTotalSkillsCount">0</div>
+              </div>
+              <div class="col-sm-3 col-6">
+                <div class="text-muted small">Verification Rate</div>
+                <div class="h5 fw-bold text-navy mb-0" id="dashEntrancePassRate">0%</div>
+              </div>
+            </div>
+
+            <!-- Students Verification Table -->
+            <div class="table-responsive">
+              <table class="table table-forge mb-0 align-middle">
+                <thead>
+                  <tr>
+                    <th>Student</th>
+                    <th>Target Career</th>
+                    <th>Assessment Status</th>
+                    <th>Verified Skills (&ge;60%)</th>
+                    <th>Not Yet Verified (&lt;60%)</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="dashEntranceStudentsTable">
+                  <tr><td colspan="6" class="text-center py-4 text-muted">Loading entrance assessments...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SECTION: ENTRANCE ASSESSMENT OVERSIGHT (Prompt Requirement 9) ================= -->
+        <section id="section-entrance" class="admin-tab-pane d-none">
+          <div class="portal-title-block d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <h2 class="portal-title">Student Entrance Assessments & Skill Verification</h2>
+              <p class="portal-subtitle">Monitor student entrance verification status, individual verified skills, evaluation scores, and retake attempts.</p>
+            </div>
+            <span class="badge bg-success text-white px-3 py-2 fw-bold" id="entranceTotalBadge">0 Evaluated</span>
+          </div>
+
+          <!-- Top Metric Cards -->
+          <div class="row g-4 mb-4">
+            <div class="col-sm-6 col-xl-3">
+              <div class="stat-card stat-teal">
+                <div class="stat-icon-wrapper"><i class="bi bi-people"></i></div>
+                <div>
+                  <div class="stat-label">Total Students</div>
+                  <div class="stat-number" id="entranceCardTotalStudents">0</div>
+                  <div class="stat-delta">Registered accounts</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+              <div class="stat-card stat-purple">
+                <div class="stat-icon-wrapper"><i class="bi bi-check-circle"></i></div>
+                <div>
+                  <div class="stat-label">Assessments Completed</div>
+                  <div class="stat-number" id="entranceCardCompleted">0</div>
+                  <div class="stat-delta text-success">Finished initial evaluation</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+              <div class="stat-card stat-amber">
+                <div class="stat-icon-wrapper"><i class="bi bi-clock"></i></div>
+                <div>
+                  <div class="stat-label">Incomplete / Pending</div>
+                  <div class="stat-number" id="entranceCardPending">0</div>
+                  <div class="stat-delta text-warning">Awaiting completion</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+              <div class="stat-card stat-pink">
+                <div class="stat-icon-wrapper"><i class="bi bi-patch-check"></i></div>
+                <div>
+                  <div class="stat-label">Verified Skills Count</div>
+                  <div class="stat-number" id="entranceCardVerifiedSkills">0</div>
+                  <div class="stat-delta" id="entranceCardRate">0% pass rate</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Students Table Card -->
+          <div class="portal-card">
+            <div class="portal-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <h5 class="portal-card-title mb-0">Student-Wise Skill Verification Roster</h5>
+              <div class="d-flex align-items-center gap-2">
+                <input type="text" class="form-control form-control-sm" id="entranceSearchInput" placeholder="Search by name, email, career..." style="max-width: 250px;">
+                <select class="form-select form-select-sm" id="entranceFilterStatus" style="max-width: 150px;">
+                  <option value="all">All Statuses</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Pending">Pending</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-forge mb-0 align-middle">
+                <thead>
+                  <tr>
+                    <th>Student Name & Email</th>
+                    <th>Target Career Path</th>
+                    <th>Assessment Status</th>
+                    <th>Verified Skills (&ge;60%)</th>
+                    <th>Skills Not Yet Verified (&lt;60%)</th>
+                    <th>Avg. Score</th>
+                    <th>Date / Attempts</th>
+                  </tr>
+                </thead>
+                <tbody id="entranceFullTableBody">
+                  <tr><td colspan="7" class="text-center py-4 text-muted">Loading entrance assessments...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -942,11 +1089,15 @@
       if (sidebar) sidebar.classList.remove('show');
 
       // Refresh specific tab data
-      if (tabKey === 'dashboard') loadDashboardData();
+      if (tabKey === 'dashboard') {
+        loadDashboardData();
+        loadEntranceAssessmentData();
+      }
       if (tabKey === 'students') loadStudentsData();
       if (tabKey === 'skills') loadSkillsData();
       if (tabKey === 'careers') loadCareersData();
       if (tabKey === 'assessments') loadAssessmentsData();
+      if (tabKey === 'entrance') loadEntranceAssessmentData();
       if (tabKey === 'roadmaps') loadRoadmapsData();
       if (tabKey === 'reports') loadReportsData();
       if (tabKey === 'profile') loadProfileData();
@@ -963,6 +1114,12 @@
       const hash = window.location.hash.replace('#', '') || 'dashboard';
       const initialLink = document.getElementById(`menu-${hash}`) || document.getElementById('menu-dashboard');
       switchAdminTab(hash, initialLink);
+
+      // Entrance Assessment filters
+      const searchEl = document.getElementById('entranceSearchInput');
+      if (searchEl) searchEl.addEventListener('input', filterEntranceTable);
+      const filterEl = document.getElementById('entranceFilterStatus');
+      if (filterEl) filterEl.addEventListener('change', filterEntranceTable);
     });
 
     // ================= 1. ADMIN DASHBOARD =================
@@ -1032,9 +1189,158 @@
             </tr>
           `).join('');
         }
+        await loadEntranceAssessmentData();
       } catch (err) {
         showAdminToast('Failed to load dashboard metrics.', 'danger');
       }
+    }
+
+    // ================= ENTRANCE ASSESSMENT OVERSIGHT (Prompt Requirement 9) =================
+    let allEntranceStudentsCache = [];
+
+    async function loadEntranceAssessmentData() {
+      try {
+        const res = await apiFetch('/admin/entrance-assessments');
+        const stats = res.stats || {};
+        const students = res.students || [];
+        allEntranceStudentsCache = students;
+
+        // Populate Mini Metrics on Dashboard
+        const dashComp = document.getElementById('dashEntranceCompletedCount');
+        if (dashComp) dashComp.textContent = stats.completedCount || 0;
+        const dashPend = document.getElementById('dashEntrancePendingCount');
+        if (dashPend) dashPend.textContent = stats.incompleteCount || 0;
+        const dashSkills = document.getElementById('dashEntranceTotalSkillsCount');
+        if (dashSkills) dashSkills.textContent = stats.totalVerifiedSkills || 0;
+        const dashRate = document.getElementById('dashEntrancePassRate');
+        if (dashRate) dashRate.textContent = `${stats.completionRate || 0}%`;
+
+        // Populate Dedicated Tab Metric Cards
+        const cardTot = document.getElementById('entranceCardTotalStudents');
+        if (cardTot) cardTot.textContent = stats.totalStudents || 0;
+        const cardComp = document.getElementById('entranceCardCompleted');
+        if (cardComp) cardComp.textContent = stats.completedCount || 0;
+        const cardPend = document.getElementById('entranceCardPending');
+        if (cardPend) cardPend.textContent = stats.incompleteCount || 0;
+        const cardSkills = document.getElementById('entranceCardVerifiedSkills');
+        if (cardSkills) cardSkills.textContent = stats.totalVerifiedSkills || 0;
+        const cardRate = document.getElementById('entranceCardRate');
+        if (cardRate) cardRate.textContent = `${stats.completionRate || 0}% completion rate`;
+        const badge = document.getElementById('entranceTotalBadge');
+        if (badge) badge.textContent = `${stats.completedCount || 0} of ${stats.totalStudents || 0} Completed`;
+
+        // Render Tables
+        renderEntranceTables(students);
+
+      } catch (err) {
+        console.error('Failed to load entrance assessment data:', err);
+      }
+    }
+
+    function renderEntranceTables(students) {
+      // Helper function to build skill level badge
+      const buildSkillBadge = (sk) => {
+        const lvl = sk.identifiedLevel || (sk.isVerified ? 'Intermediate' : 'Beginner');
+        const scoreStr = sk.score || (sk.rawScore !== null && sk.rawScore !== undefined ? `${sk.rawScore}/5` : `${sk.percentage}%`);
+        if (lvl === 'Advanced') {
+          return `<span class="badge bg-success text-white me-1 mb-1" style="font-size: 0.72rem;"><i class="bi bi-star-fill me-1"></i>${sk.name}: ${scoreStr} (${lvl})</span>`;
+        } else if (lvl === 'Intermediate') {
+          return `<span class="badge bg-primary text-white me-1 mb-1" style="font-size: 0.72rem;"><i class="bi bi-lightning-charge-fill me-1"></i>${sk.name}: ${scoreStr} (${lvl})</span>`;
+        } else if (lvl === 'Beginner') {
+          return `<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle me-1 mb-1" style="font-size: 0.72rem;"><i class="bi bi-seedling me-1"></i>${sk.name}: ${scoreStr} (${lvl})</span>`;
+        } else {
+          return `<span class="badge bg-light text-muted border me-1 mb-1" style="font-size: 0.72rem;">${sk.name}: Unassessed</span>`;
+        }
+      };
+
+      // 1. Dashboard Mini Table (First 5)
+      const dashTable = document.getElementById('dashEntranceStudentsTable');
+      if (dashTable) {
+        if (!students || students.length === 0) {
+          dashTable.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No entrance assessments recorded yet.</td></tr>`;
+        } else {
+          dashTable.innerHTML = students.slice(0, 5).map(s => {
+            const isComp = s.assessmentStatus === 'Completed';
+            const statusBadge = isComp
+              ? '<span class="badge bg-success-subtle text-success fw-semibold"><i class="bi bi-check-circle me-1"></i>Completed</span>'
+              : '<span class="badge bg-warning-subtle text-warning-emphasis fw-semibold"><i class="bi bi-clock me-1"></i>Pending</span>';
+
+            const verifiedChips = (s.verifiedSkills || []).map(buildSkillBadge).join('') || '<span class="text-muted small">None</span>';
+            const notVerifiedChips = (s.notVerifiedSkills || []).map(buildSkillBadge).join('') || '<span class="text-muted small">None</span>';
+
+            return `
+              <tr>
+                <td>
+                  <div class="fw-semibold text-navy small">${s.name}</div>
+                  <div class="text-muted" style="font-size: 0.72rem;">${s.email}</div>
+                </td>
+                <td class="small text-navy">${s.targetCareer}</td>
+                <td>${statusBadge}</td>
+                <td><div class="d-flex flex-wrap">${verifiedChips}</div></td>
+                <td><div class="d-flex flex-wrap">${notVerifiedChips}</div></td>
+                <td class="text-muted small">${s.assessmentDate}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      // 2. Full Dedicated Tab Table
+      const fullTable = document.getElementById('entranceFullTableBody');
+      if (fullTable) {
+        if (!students || students.length === 0) {
+          fullTable.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">No students found.</td></tr>`;
+        } else {
+          fullTable.innerHTML = students.map(s => {
+            const isComp = s.assessmentStatus === 'Completed';
+            const statusBadge = isComp
+              ? '<span class="badge bg-success-subtle text-success fw-semibold"><i class="bi bi-check-circle me-1"></i>Completed</span>'
+              : '<span class="badge bg-warning-subtle text-warning-emphasis fw-semibold"><i class="bi bi-clock me-1"></i>Pending</span>';
+
+            const verifiedChips = (s.verifiedSkills || []).map(buildSkillBadge).join('') || '<span class="text-muted small">No verified skills</span>';
+            const notVerifiedChips = (s.notVerifiedSkills || []).map(buildSkillBadge).join('') || '<span class="text-muted small">None</span>';
+
+            return `
+              <tr>
+                <td>
+                  <div class="fw-bold text-navy small">${s.name}</div>
+                  <div class="text-muted" style="font-size: 0.72rem;">${s.email}</div>
+                </td>
+                <td class="small fw-semibold text-navy">${s.targetCareer}</td>
+                <td>${statusBadge}</td>
+                <td><div class="d-flex flex-wrap">${verifiedChips}</div></td>
+                <td><div class="d-flex flex-wrap">${notVerifiedChips}</div></td>
+                <td><span class="fw-bold ${s.averageScore >= 60 ? 'text-success' : 'text-primary'}">${s.averageScore}%</span></td>
+                <td>
+                  <div class="small text-muted">${s.assessmentDate}</div>
+                  <div class="text-secondary" style="font-size: 0.7rem;">Attempts: ${s.attemptsCount || 0}</div>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+    }
+    }
+
+    function filterEntranceTable() {
+      const searchInput = document.getElementById('entranceSearchInput');
+      const filterSelect = document.getElementById('entranceFilterStatus');
+      const q = searchInput ? searchInput.value.toLowerCase().trim() : '';
+      const filter = filterSelect ? filterSelect.value : 'all';
+
+      let filtered = allEntranceStudentsCache;
+      if (filter !== 'all') {
+        filtered = filtered.filter(s => s.assessmentStatus === filter);
+      }
+      if (q) {
+        filtered = filtered.filter(s =>
+          s.name.toLowerCase().includes(q) ||
+          s.email.toLowerCase().includes(q) ||
+          s.targetCareer.toLowerCase().includes(q)
+        );
+      }
+      renderEntranceTables(filtered);
     }
 
     // ================= 2. MANAGE STUDENTS =================

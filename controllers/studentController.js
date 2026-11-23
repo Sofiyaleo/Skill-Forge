@@ -17,6 +17,7 @@ const Achievement = require('../models/Achievement');
 const { getCareerById, careers } = require('../data/careers');
 const { calculateSkillGap } = require('../services/skillGapService');
 const { generateUserRoadmap } = require('../services/roadmapService');
+const { normalizeSkillKey } = require('../data/entranceQuestions');
 
 /**
  * @desc    Get dashboard metrics, progress gauge, and recent activities
@@ -59,14 +60,83 @@ exports.getDashboardStats = async (req, res) => {
     const career = getCareerById(targetRoleTitle) || careers[0];
     const gap = calculateSkillGap(career, allStudentSkills);
 
-    // 4. Fetch Recent Assessment Results for Performance Chart
-    const recentAssessments = await AssessmentResult.find({ user: userId })
-      .sort({ createdAt: -1 })
-      .limit(6);
+    // 4. Fetch Recent Assessment Results for Performance Chart & Verified Skills
+    const allUserAssessments = await AssessmentResult.find({ user: userId }).sort({ createdAt: -1 });
+    const recentAssessments = allUserAssessments.slice(0, 6);
     
     const avgScore = recentAssessments.length > 0
       ? Math.round(recentAssessments.reduce((acc, curr) => acc + (curr.percentage || 0), 0) / recentAssessments.length)
       : 0;
+
+    // Build My Skill Levels Breakdown (Skill name, score out of 5, identified level, completion status)
+    const mySkillLevels = [];
+    const verifiedSkillsList = [];
+    const notVerifiedSkillsList = [];
+    const unassessedSkillsList = [];
+
+    allStudentSkills.forEach(s => {
+      const sName = s.name.trim();
+      const sNorm = normalizeSkillKey(s.normalizedName || sName);
+      const matchingRes = allUserAssessments.find(a => {
+        const aNorm = normalizeSkillKey(a.skillName || a.topic || a.assessmentTitle);
+        return aNorm === sNorm || (a.skillName && a.skillName.toLowerCase() === s.name.toLowerCase());
+      });
+
+      const scorePct = matchingRes ? matchingRes.percentage : (s.verificationScore || 0);
+      const isVer = Boolean(s.isVerified || (matchingRes && matchingRes.passed));
+      const score = matchingRes ? matchingRes.score : (s.verificationScore ? Math.round((s.verificationScore / 100) * 5) : null);
+      const identifiedLevel = matchingRes
+        ? (matchingRes.identifiedLevel || (matchingRes.passed ? (matchingRes.score >= 4 ? 'Advanced' : 'Intermediate') : 'Beginner'))
+        : (s.proficiency && s.proficiency !== 'Unassessed' ? s.proficiency : 'Unassessed');
+      const completionStatus = matchingRes ? 'Completed' : (s.isVerified ? 'Completed' : 'Unassessed');
+
+      mySkillLevels.push({
+        name: sName,
+        category: s.category || 'General',
+        score: score,
+        totalQuestions: matchingRes ? matchingRes.totalQuestions : 5,
+        scoreText: score !== null ? `${score}/5` : 'Unassessed',
+        percentage: scorePct,
+        identifiedLevel,
+        isVerified: isVer,
+        completionStatus,
+        assessmentDate: matchingRes ? matchingRes.createdAt : (s.verificationDate || null),
+        canRetake: !isVer || identifiedLevel !== 'Advanced'
+      });
+
+      if (isVer) {
+        verifiedSkillsList.push({
+          name: sName,
+          category: s.category || 'General',
+          percentage: scorePct || 80,
+          score: score,
+          scoreText: score !== null ? `${score}/5` : 'Verified',
+          identifiedLevel,
+          isVerified: true
+        });
+      } else if (matchingRes) {
+        notVerifiedSkillsList.push({
+          name: sName,
+          category: s.category || 'General',
+          percentage: scorePct,
+          score: score,
+          scoreText: score !== null ? `${score}/5` : '0/5',
+          identifiedLevel,
+          isVerified: false,
+          canRetake: true
+        });
+      } else {
+        unassessedSkillsList.push({
+          name: sName,
+          category: s.category || 'General',
+          identifiedLevel: 'Unassessed',
+          score: null,
+          scoreText: 'Unassessed',
+          isVerified: false,
+          canRetake: false
+        });
+      }
+    });
 
     // 5. Fetch Recent Showcase Items
     const recentProjects = await Project.find({ user: userId }).sort({ createdAt: -1 }).limit(3);
@@ -136,7 +206,7 @@ exports.getDashboardStats = async (req, res) => {
       skillsList: allStudentSkills.map(s => ({
         name: s.name,
         category: s.category || 'General',
-        proficiency: s.proficiency || 'Intermediate',
+        proficiency: s.proficiency || 'Unassessed',
         rating: s.rating || (s.proficiency === 'Expert' ? 5 : s.proficiency === 'Advanced' ? 4 : s.proficiency === 'Intermediate' ? 3 : s.proficiency === 'Basic' ? 2 : 1)
       })),
       roadmapBreakdown: {
@@ -162,6 +232,27 @@ exports.getDashboardStats = async (req, res) => {
         needsImprovementSkills: gap.needsImprovementSkills,
         missingSkills: gap.missingSkills,
         suggestedNextSteps: gap.suggestedNextSteps
+      },
+      verifiedSkillsSection: {
+        targetCareer: targetRoleTitle,
+        entranceCompleted: Boolean(user.entranceAssessmentCompleted),
+        entranceSummary: user.entranceAssessmentSummary || null,
+        mySkillLevels,
+        verifiedSkills: verifiedSkillsList,
+        notVerifiedSkills: notVerifiedSkillsList,
+        unassessedSkills: unassessedSkillsList,
+        history: allUserAssessments.slice(0, 8).map(a => ({
+          title: a.skillName || a.assessmentTitle || a.topic,
+          score: a.score,
+          totalQuestions: a.totalQuestions,
+          percentage: a.percentage,
+          identifiedLevel: a.identifiedLevel || (a.passed ? 'Intermediate' : 'Beginner'),
+          passed: a.passed,
+          verificationStatus: a.verificationStatus || (a.passed ? 'VERIFIED' : 'NOT VERIFIED'),
+          type: a.type || 'regular',
+          attemptNumber: a.attemptNumber || 1,
+          date: new Date(a.createdAt).toLocaleDateString()
+        }))
       },
       recentActivities: formattedActivities
     });
@@ -378,6 +469,7 @@ exports.addSkill = async (req, res) => {
     const normKey = cleanName.toLowerCase();
 
     const PROFICIENCY_RANKS = {
+      'Unassessed': 1,
       'Beginner': 1,
       'Basic': 2,
       'Intermediate': 3,
@@ -392,8 +484,8 @@ exports.addSkill = async (req, res) => {
       5: 'Expert'
     };
 
-    const finalProf = proficiency || (rating ? RATING_TO_PROF[rating] : 'Intermediate') || 'Intermediate';
-    const finalRating = PROFICIENCY_RANKS[finalProf] || Number(rating) || 3;
+    const finalProf = proficiency || (rating ? RATING_TO_PROF[rating] : 'Unassessed') || 'Unassessed';
+    const finalRating = PROFICIENCY_RANKS[finalProf] || Number(rating) || 1;
     const finalCategory = category || 'Programming';
 
     // Check duplicate in Skill collection

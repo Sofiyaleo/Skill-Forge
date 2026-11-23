@@ -21,10 +21,20 @@ const assessmentResultSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
+    skillName: {
+      type: String,
+      trim: true
+    },
+    type: {
+      type: String,
+      enum: ['entrance', 'regular'],
+      default: 'regular',
+      index: true
+    },
     assessmentTitle: {
       type: String,
       default: function() {
-        return this.topic || 'Skill Assessment';
+        return this.skillName || this.topic || 'Skill Assessment';
       }
     },
     score: {
@@ -35,13 +45,35 @@ const assessmentResultSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
+    correctAnswersCount: {
+      type: Number,
+      default: 0
+    },
     percentage: {
       type: Number,
       required: true
     },
+    passingThreshold: {
+      type: Number,
+      default: 60
+    },
     passed: {
       type: Boolean,
       default: false
+    },
+    verificationStatus: {
+      type: String,
+      enum: ['VERIFIED', 'NOT VERIFIED'],
+      default: 'NOT VERIFIED'
+    },
+    identifiedLevel: {
+      type: String,
+      enum: ['Beginner', 'Intermediate', 'Advanced', 'Unassessed'],
+      default: 'Beginner'
+    },
+    attemptNumber: {
+      type: Number,
+      default: 1
     },
     answers: [{
       type: mongoose.Schema.Types.Mixed

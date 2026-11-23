@@ -53,7 +53,9 @@ const sendTokenResponse = (user, statusCode, res, message = 'Success') => {
         phone: user.phone || '',
         location: user.location || '',
         bio: user.bio || '',
-        skillsCount: user.skills ? user.skills.length : 0
+        skillsCount: user.skills ? user.skills.length : 0,
+        entranceAssessmentCompleted: Boolean(user.entranceAssessmentCompleted),
+        entranceAssessmentStatus: user.entranceAssessmentStatus || 'not_started'
       }
     });
 };

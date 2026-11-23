@@ -43,8 +43,8 @@ const skillSchema = new mongoose.Schema({
   },
   proficiency: {
     type: String,
-    enum: ['Beginner', 'Basic', 'Intermediate', 'Advanced', 'Expert'],
-    default: 'Intermediate'
+    enum: ['Beginner', 'Basic', 'Intermediate', 'Advanced', 'Expert', 'Unassessed'],
+    default: 'Unassessed'
   },
   rating: {
     type: Number,
@@ -172,6 +172,29 @@ const userSchema = new mongoose.Schema(
       enum: ['modern', 'minimal', 'classic'],
       default: 'modern'
     },
+    // Entrance Assessment & Skill Verification fields
+    entranceAssessmentCompleted: {
+      type: Boolean,
+      default: false
+    },
+    entranceAssessmentStatus: {
+      type: String,
+      enum: ['not_started', 'in_progress', 'completed'],
+      default: 'not_started'
+    },
+    entranceAssessmentDate: {
+      type: Date
+    },
+    entranceAssessmentSummary: {
+      totalSkillsAssessed: { type: Number, default: 0 },
+      verifiedSkillsCount: { type: Number, default: 0 },
+      averageScore: { type: Number, default: 0 }
+    },
+    entranceAssessmentProgress: {
+      completedSkillNames: [{ type: String }],
+      currentSkillIndex: { type: Number, default: 0 },
+      savedAnswers: { type: mongoose.Schema.Types.Mixed, default: {} }
+    },
     skills: [skillSchema]
   },
   {
@@ -214,6 +237,7 @@ userSchema.pre('save', async function (next) {
 
   // Sync skill ratings & proficiencies
   const PROFICIENCY_MAP = {
+    'Unassessed': 1,
     'Beginner': 1,
     'Basic': 2,
     'Intermediate': 3,
