@@ -330,22 +330,36 @@ exports.submitAssessment = async (req, res) => {
     }
 
     // Persist assessment result in MongoDB
-    const result = await AssessmentResult.create({
-      user: req.user.id,
-      assessment: assessment ? assessment._id : undefined,
-      topic: topicKey,
-      assessmentTitle,
-      score,
-      totalQuestions,
-      percentage,
-      passed,
-      status: passed ? 'VERIFIED' : 'NOT VERIFIED',
-      classification,
-      encouragingFeedback,
-      recommendation,
-      topicsToImprove,
-      answers: review
-    });
+  const result = await AssessmentResult.create({
+    user: req.user.id,
+    assessment: assessment ? assessment._id : undefined,
+
+    topic: topicKey,
+    skillName,
+    type: 'regular',
+    assessmentTitle,
+
+    score,
+    totalQuestions,
+    correctAnswersCount: score,
+    percentage,
+    passingThreshold: passingPercentage,
+    passed,
+
+    verificationStatus: passed ? 'VERIFIED' : 'NOT VERIFIED',
+
+    identifiedLevel: score >= 4
+      ? 'Advanced'
+      : score >= 2
+        ? 'Intermediate'
+        : 'Beginner',
+
+    classification,
+    encouragingFeedback,
+    recommendation,
+    topicsToImprove,
+    answers: review
+});
 
     // If passed (score >= 60%), update student profile skill verification
     if (passed) {
@@ -416,10 +430,15 @@ exports.getMyResults = async (req, res) => {
   try {
     const results = await AssessmentResult.find({
       user: req.user.id,
+      type: { $ne: 'entrance' },
       isEntranceAssessment: { $ne: true }
     }).sort({ completedAt: -1 });
 
-    res.status(200).json({ success: true, count: results.length, results });
+    res.status(200).json({ 
+      success: true, 
+      count: results.length, 
+      results 
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to retrieve assessment results.' });
   }
