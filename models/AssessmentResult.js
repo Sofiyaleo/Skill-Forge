@@ -63,7 +63,7 @@ const assessmentResultSchema = new mongoose.Schema(
     },
     verificationStatus: {
       type: String,
-      enum: ['VERIFIED', 'NOT VERIFIED'],
+      enum: ['VERIFIED', 'NOT VERIFIED', 'PRACTICE_COMPLETED'],
       default: 'NOT VERIFIED'
     },
     identifiedLevel: {
@@ -75,6 +75,25 @@ const assessmentResultSchema = new mongoose.Schema(
       type: Number,
       default: 1
     },
+<<<<<<< HEAD
+=======
+    classification: {
+      type: String,
+      enum: ['Strong Foundation', 'Developing', 'Needs Improvement', 'Unassessed'],
+      default: 'Unassessed'
+    },
+    recommendation: {
+      type: String,
+      default: ''
+    },
+    encouragingFeedback: {
+      type: String,
+      default: ''
+    },
+    topicsToImprove: [{
+      type: String
+    }],
+>>>>>>> f2e0bca (Improved skill improvement practice assessments)
     answers: [{
       type: mongoose.Schema.Types.Mixed
     }],
