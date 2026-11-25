@@ -17,14 +17,17 @@
     .practice-option-card {
       border: 1.5px solid #E5E7EB;
       border-radius: 0.85rem;
-      padding: 0.9rem 1.15rem;
+      padding: 0.95rem 1.15rem;
       margin-bottom: 0.75rem;
       cursor: pointer;
       background-color: #FFFFFF;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       align-items: flex-start;
-      gap: 0.85rem;
+      gap: 0.95rem;
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 52px;
       user-select: none;
     }
     .practice-option-card:hover {
@@ -50,7 +53,7 @@
       font-weight: 700;
       font-size: 0.85rem;
       flex-shrink: 0;
-      margin-top: 1px;
+      margin-top: 2px;
       transition: all 0.2s ease;
     }
     .practice-option-card.selected .option-letter-badge {
@@ -61,12 +64,14 @@
       flex: 1 1 auto;
       min-width: 0;
       word-break: break-word;
-      overflow-wrap: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
       color: #1F2937 !important;
       font-size: 0.95rem;
-      line-height: 1.5;
+      line-height: 1.55;
       font-weight: 500;
       display: block;
+      padding-right: 0.5rem;
     }
     .practice-option-card.selected .option-text-wrapper {
       color: #065F46 !important;
@@ -74,8 +79,9 @@
     }
     .option-radio-icon {
       flex-shrink: 0;
-      margin-top: 4px;
-      font-size: 1.1rem;
+      margin-left: auto;
+      margin-top: 5px;
+      font-size: 1.15rem;
     }
     .practice-step-pill {
       width: 28px;
@@ -102,6 +108,21 @@
       border-color: #10B981;
       color: #059669;
     }
+    .code-pill {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background-color: #F1F5F9;
+      color: #0F172A;
+      padding: 0.15rem 0.35rem;
+      border-radius: 0.35rem;
+      font-size: 0.9em;
+      border: 1px solid #E2E8F0;
+      word-break: break-word;
+    }
+    .practice-option-card.selected .code-pill {
+      background-color: #D1FAE5;
+      color: #065F46;
+      border-color: #A7F3D0;
+    }
     .review-question-card {
       border: 1.5px solid #E5E7EB;
       border-radius: 0.85rem;
@@ -114,6 +135,24 @@
     }
     .review-question-card.incorrect {
       border-left: 5px solid #F59E0B !important;
+    }
+    .review-option-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      margin-bottom: 0.35rem;
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.85rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .review-option-row .review-opt-badge {
+      flex-shrink: 0;
+      margin-left: auto;
+      margin-top: 1px;
+      font-size: 0.75rem;
+      white-space: nowrap;
     }
     .explanation-callout {
       background-color: #F8FAFC;
@@ -131,10 +170,26 @@
     }
     @media (max-width: 576px) {
       .practice-option-card {
-        padding: 0.75rem 0.9rem;
+        padding: 0.75rem 0.85rem;
+        gap: 0.65rem;
+      }
+      .option-letter-badge {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        font-size: 0.8rem;
       }
       .option-text-wrapper {
         font-size: 0.88rem;
+        line-height: 1.45;
+      }
+      .review-option-row {
+        flex-wrap: wrap;
+        padding: 0.55rem 0.7rem;
+      }
+      .review-option-row .review-opt-badge {
+        margin-left: 24px;
+        margin-top: 4px;
       }
     }
   </style>
@@ -302,6 +357,9 @@
                     <option value="Programming">Programming</option>
                     <option value="Core CS">Core CS</option>
                     <option value="Tools and Platforms">Tools and Platforms</option>
+                    <option value="Data & Analytics">Data & Analytics</option>
+                    <option value="Design">Design</option>
+                    <option value="Security">Security</option>
                   </select>
                 </div>
               </div>
@@ -548,9 +606,9 @@
     function getOptionText(opt) {
       if (opt === null || opt === undefined) return '';
       if (typeof opt === 'object') {
-        return String(opt.text || opt.option || opt.optionText || opt.choice || opt.value || opt.label || JSON.stringify(opt));
+        return String(opt.text || opt.option || opt.optionText || opt.choice || opt.value || opt.label || opt.name || opt.title || opt.ans || opt.answer || JSON.stringify(opt)).trim();
       }
-      return String(opt);
+      return String(opt).trim();
     }
 
     /**
@@ -568,6 +626,15 @@
         .replace(/'/g, '&#039;');
     }
 
+    /**
+     * Safely formats text and highlights inline backtick code snippets
+     */
+    function formatCodeSnippets(value) {
+      if (value === null || value === undefined) return '';
+      const safe = escapeHtml(value);
+      return safe.replace(/`([^`]+)`/g, '<code class="code-pill">$1</code>');
+    }
+
     let allAssessmentsCache = [];
     let activeQuiz = null;
     let currentQuestionIndex = 0;
@@ -577,13 +644,72 @@
     let timeRemaining = 0;
 
     /**
+     * Dynamically populate category dropdown to guarantee all active assessment domains are present
+     */
+    function populateCategoryDropdown(tests) {
+      const select = document.getElementById('categoryFilter');
+      if (!select) return;
+      const currentVal = select.value || 'All';
+      const standardCats = ['Frontend', 'Backend', 'Database', 'Programming', 'Core CS', 'Tools and Platforms', 'Data & Analytics', 'Design', 'Security'];
+      const testCats = Array.from(new Set(tests.map(t => t.skillCategory).filter(Boolean)));
+      const mergedCats = Array.from(new Set([...standardCats, ...testCats]));
+
+      let html = '<option value="All">All Categories</option>';
+      mergedCats.forEach(cat => {
+        const isSel = (cat === currentVal);
+        html += `<option value="${escapeHtml(cat)}" ${isSel ? 'selected' : ''}>${escapeHtml(cat)}</option>`;
+      });
+      select.innerHTML = html;
+      if (mergedCats.includes(currentVal)) {
+        select.value = currentVal;
+      }
+    }
+
+    /**
+     * Check URL query parameters (e.g. ?category=Frontend, ?topic=html, ?skill=React, ?career=Data+Analyst)
+     */
+    function handleUrlParameters() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetCategory = urlParams.get('category');
+      const targetTopic = urlParams.get('topic') || urlParams.get('test') || urlParams.get('id');
+      const targetSkill = urlParams.get('skill');
+      const targetCareer = urlParams.get('career') || urlParams.get('role');
+
+      if (targetCategory) {
+        const catSelect = document.getElementById('categoryFilter');
+        if (catSelect) catSelect.value = targetCategory;
+      }
+
+      if (targetSkill) {
+        const searchInput = document.getElementById('testSearchInput');
+        if (searchInput) searchInput.value = targetSkill;
+      }
+
+      filterAssessments();
+
+      if (targetTopic && allAssessmentsCache.length > 0) {
+        const needle = targetTopic.toLowerCase().trim();
+        const matchingTest = allAssessmentsCache.find(t =>
+          (t._id && t._id.toString() === needle) ||
+          (t.topic && t.topic.toLowerCase() === needle) ||
+          (t.title && t.title.toLowerCase().includes(needle))
+        );
+        if (matchingTest) {
+          startQuiz(matchingTest._id);
+        }
+      }
+    }
+
+    /**
      * Load Available Assessments from Backend
      */
     async function loadAssessments() {
       try {
         const data = await apiFetch('/assessments');
         allAssessmentsCache = data.assessments || [];
-        renderAssessments(allAssessmentsCache);
+        populateCategoryDropdown(allAssessmentsCache);
+        handleUrlParameters();
+        filterAssessments();
       } catch (err) {
         showToast('Failed to load assessments.', 'danger');
       }
@@ -604,7 +730,8 @@
         filtered = filtered.filter(t =>
           (t.title && t.title.toLowerCase().includes(q)) ||
           (t.topic && t.topic.toLowerCase().includes(q)) ||
-          (t.description && t.description.toLowerCase().includes(q))
+          (t.description && t.description.toLowerCase().includes(q)) ||
+          (t.skillCategory && t.skillCategory.toLowerCase().includes(q))
         );
       }
       renderAssessments(filtered);
@@ -630,13 +757,13 @@
                   <i class="bi ${test.icon || 'bi-code-slash'}"></i>
                 </div>
                 <div class="min-w-0">
-                  <h5 class="fw-bold text-navy mb-0 text-truncate" style="font-size: 1.05rem;" title="${test.title}">${test.title}</h5>
-                  <span class="badge bg-light text-muted border small mt-1">${test.skillCategory || 'Technical'}</span>
+                  <h5 class="fw-bold text-navy mb-0 text-truncate" style="font-size: 1.05rem;" title="${escapeHtml(test.title)}">${escapeHtml(test.title)}</h5>
+                  <span class="badge bg-light text-muted border small mt-1">${escapeHtml(test.skillCategory || 'Technical')}</span>
                 </div>
               </div>
 
               <p class="text-muted small mb-3 flex-grow-1" style="font-size: 0.83rem; line-height: 1.45;">
-                ${test.description || 'Improve your skill readiness with 5 multiple-choice questions.'}
+                ${escapeHtml(test.description || 'Improve your skill readiness with 5 multiple-choice questions.')}
               </p>
 
               <div class="d-flex justify-content-between align-items-center text-muted small mb-3 pt-2 border-top" style="font-size: 0.78rem;">
@@ -663,7 +790,10 @@
         const data = await apiFetch(`/assessments/${testId}`);
         activeQuiz = data.assessment;
         currentQuestionIndex = 0;
-        // Exactly 5 questions
+        // Exactly 5 questions strictly enforced
+        if (activeQuiz && activeQuiz.questions) {
+          activeQuiz.questions = activeQuiz.questions.slice(0, 5);
+        }
         const total = activeQuiz.questions ? Math.min(activeQuiz.questions.length, 5) : 5;
         userAnswers = new Array(total).fill(null);
 
@@ -743,13 +873,16 @@
         ? q.options 
         : ((q.choices && q.choices.length > 0) ? q.choices : (q.answers || []));
 
+      const rawQText = q.questionText || q.question || '';
+      const formattedQText = formatCodeSnippets(rawQText);
+
       container.innerHTML = `
         <div class="mb-3">
           <span class="badge bg-light text-secondary border small mb-2 text-uppercase fw-semibold">
             <i class="bi bi-tag me-1"></i>${escapeHtml(q.concept || activeQuiz.title || 'Technical Skill')}
           </span>
           <h5 class="fw-bold text-navy lh-base mb-0" style="font-size: 1.15rem; word-break: break-word; color: #0F172A;">
-            ${currentQuestionIndex + 1}. ${escapeHtml(q.questionText || q.question || '')}
+            ${currentQuestionIndex + 1}. ${formattedQText}
           </h5>
         </div>
 
@@ -757,7 +890,7 @@
           ${rawOptions.map((opt, idx) => {
             const isSelected = selectedIndex === idx;
             const optText = getOptionText(opt);
-            const safeOptHtml = escapeHtml(optText);
+            const formattedOptHtml = formatCodeSnippets(optText);
             return `
               <div class="practice-option-card ${isSelected ? 'selected' : ''}" 
                    onclick="selectOption(${idx})"
@@ -767,7 +900,7 @@
                    onkeydown="if(event.key==='Enter'||event.key===' '){selectOption(${idx});event.preventDefault();}">
                 <div class="option-letter-badge">${letters[idx]}</div>
                 <div class="option-text-wrapper">
-                  ${safeOptHtml}
+                  ${formattedOptHtml}
                 </div>
                 <i class="bi ${isSelected ? 'bi-check-circle-fill text-success' : 'bi-circle text-muted'} option-radio-icon"></i>
               </div>
@@ -844,8 +977,8 @@
           const qOpts = (qObj.options || qObj.choices || qObj.answers || []);
           const rawOpt = qOpts[ans];
           const optStr = getOptionText(rawOpt);
-          const preview = optStr ? ` • ${optStr.length > 25 ? optStr.substring(0, 22) + '...' : optStr}` : '';
-          ansDisplay = `<span class="small text-success fw-bold">Option ${letters[ans]} <span class="text-muted fw-normal">(${escapeHtml(preview)})</span></span>`;
+          const preview = optStr ? (optStr.length > 28 ? optStr.substring(0, 25) + '...' : optStr) : '';
+          ansDisplay = `<span class="small text-success fw-bold">Option ${letters[ans]}${preview ? ` <span class="text-muted fw-normal">• ${escapeHtml(preview)}</span>` : ''}</span>`;
         }
 
         summaryRows += `
@@ -973,32 +1106,32 @@
             </div>
 
             <h6 class="fw-bold text-navy mb-3 lh-base" style="font-size: 0.95rem; color: #0F172A;">
-              ${escapeHtml(r.questionText)}
+              ${formatCodeSnippets(r.questionText)}
             </h6>
 
             <!-- Options Breakdown -->
-            <div class="d-flex flex-column gap-2 mb-3">
+            <div class="d-flex flex-column gap-1 mb-3">
               ${rawOpts.map((opt, optIdx) => {
                 const wasSelected = r.userSelected === optIdx;
                 const wasCorrect = (r.correctIndex === optIdx) || (r.correctOptionIndex === optIdx);
                 const optText = getOptionText(opt);
-                const safeOptHtml = escapeHtml(optText);
+                const formattedOptHtml = formatCodeSnippets(optText);
 
                 let optStyle = 'border: 1px solid #E5E7EB; background: #FFFFFF; color: #1F2937;';
                 let iconHtml = '';
 
                 if (wasCorrect) {
                   optStyle = 'border: 1.5px solid #10B981; background: #ECFDF5; color: #065F46; font-weight: 600;';
-                  iconHtml = '<span class="badge bg-success ms-auto small"><i class="bi bi-check-lg me-1"></i>Correct Answer</span>';
+                  iconHtml = '<span class="badge bg-success review-opt-badge"><i class="bi bi-check-lg me-1"></i>Correct Answer</span>';
                 } else if (wasSelected && !wasCorrect) {
                   optStyle = 'border: 1.5px solid #EF4444; background: #FEF2F2; color: #991B1B; font-weight: 600;';
-                  iconHtml = '<span class="badge bg-danger ms-auto small"><i class="bi bi-x-lg me-1"></i>Your Choice</span>';
+                  iconHtml = '<span class="badge bg-danger review-opt-badge"><i class="bi bi-x-lg me-1"></i>Your Choice</span>';
                 }
 
                 return `
-                  <div class="p-2 px-3 rounded-3 d-flex align-items-center gap-2 small" style="${optStyle}">
-                    <span class="fw-bold" style="min-width: 22px;">${letters[optIdx]}.</span>
-                    <span class="flex-grow-1" style="word-break: break-word;">${safeOptHtml}</span>
+                  <div class="review-option-row" style="${optStyle}">
+                    <span class="fw-bold flex-shrink-0" style="min-width: 22px; margin-top: 1px;">${letters[optIdx]}.</span>
+                    <span class="flex-grow-1" style="word-break: break-word; overflow-wrap: anywhere; line-height: 1.5;">${formattedOptHtml}</span>
                     ${iconHtml}
                   </div>
                 `;
@@ -1008,8 +1141,8 @@
             <!-- Explanation Callout -->
             <div class="explanation-callout">
               <strong><i class="bi bi-info-circle me-1 text-primary"></i>Why this is correct:</strong>
-              <div class="mt-1" style="word-break: break-word;">
-                ${escapeHtml(r.explanation || 'Review core syntax and official documentation.')}
+              <div class="mt-1" style="word-break: break-word; line-height: 1.5;">
+                ${formatCodeSnippets(r.explanation || 'Review core syntax and official documentation.')}
               </div>
             </div>
           </div>

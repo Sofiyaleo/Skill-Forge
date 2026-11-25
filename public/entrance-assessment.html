@@ -389,6 +389,9 @@
           <a href="dashboard.html" class="btn btn-forge-primary px-4 py-2 fw-semibold">
             <span>Proceed to Student Dashboard</span> <i class="bi bi-arrow-right ms-1"></i>
           </a>
+          <a href="profile.html" class="btn btn-outline-secondary px-4 py-2 fw-semibold">
+            <i class="bi bi-person me-1"></i> View Profile
+          </a>
         </div>
       </div>
 
@@ -519,22 +522,32 @@
         return;
       }
 
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetSkillParam = urlParams.get('skill');
+      const isSingleSkillVerification = Boolean(targetSkillParam && targetSkillParam.trim());
+
       document.getElementById('navStudentName').textContent = currentUser.name || 'Student';
-      document.getElementById('navCareerInterest').textContent = currentUser.targetCareer || 'Full Stack Developer';
+      document.getElementById('navCareerInterest').textContent = isSingleSkillVerification
+        ? `Verifying Skill: ${targetSkillParam.trim()}`
+        : (currentUser.targetCareer || 'Full Stack Developer');
 
       try {
         // First verify current status from backend
         const statusRes = await apiFetch('/entrance-assessment/status');
         const statusData = statusRes.data;
 
-        // If student has already completed assessment and has past results, offer results view
-        if (statusData.entranceAssessmentCompleted && statusData.pastResultsCount > 0) {
+        // If not in single-skill mode, and student has already completed assessment, offer results view
+        if (!isSingleSkillVerification && statusData.entranceAssessmentCompleted && statusData.pastResultsCount > 0) {
           renderExistingResults(statusData);
           return;
         }
 
-        // Fetch tailored 5-question assessments for claimed skills
-        const qRes = await apiFetch('/entrance-assessment/questions');
+        // Fetch tailored 5-question assessments: either for specific skill or claimed skills
+        const questionsEndpoint = isSingleSkillVerification
+          ? `/entrance-assessment/questions?skill=${encodeURIComponent(targetSkillParam.trim())}`
+          : '/entrance-assessment/questions';
+
+        const qRes = await apiFetch(questionsEndpoint);
         assessmentsData = qRes.assessments || [];
 
         if (assessmentsData.length === 0) {
@@ -542,13 +555,14 @@
         }
 
         // Initialize empty answer slots
+        userAnswers = {};
         assessmentsData.forEach(sk => {
           userAnswers[sk.skillName] = new Array(sk.totalQuestions || 5).fill(-1);
         });
 
-        // Resume incomplete assessment if saved progress exists
+        // Resume incomplete assessment if saved progress exists (only in full assessment mode)
         let resumed = false;
-        if (statusData.entranceAssessmentProgress && statusData.entranceAssessmentProgress.savedAnswers) {
+        if (!isSingleSkillVerification && statusData.entranceAssessmentProgress && statusData.entranceAssessmentProgress.savedAnswers) {
           const saved = statusData.entranceAssessmentProgress.savedAnswers;
           if (saved && typeof saved === 'object') {
             assessmentsData.forEach(sk => {
@@ -567,7 +581,9 @@
         }
 
         // Set Hero Career Title
-        document.getElementById('heroCareerName').textContent = qRes.targetCareer || currentUser.targetCareer || 'Full Stack Developer';
+        document.getElementById('heroCareerName').textContent = isSingleSkillVerification
+          ? `${targetSkillParam.trim()} (Newly Added Skill)`
+          : (qRes.targetCareer || currentUser.targetCareer || 'Full Stack Developer');
 
         // Render UI
         renderSkillStepper();
@@ -579,6 +595,8 @@
 
         if (resumed) {
           showToast('Resumed incomplete assessment. Your previous answers have been restored.', 'info');
+        } else if (isSingleSkillVerification) {
+          showToast(`Initiated skill verification assessment for ${targetSkillParam.trim()}. Complete all 5 questions to determine your level.`, 'info');
         }
 
       } catch (err) {
@@ -960,8 +978,9 @@
       document.getElementById('retakeModalTitle').textContent = `Retake ${skillName} Assessment`;
       
       try {
-        const qData = await apiFetch(`/entrance-assessment/questions`);
-        const targetSkill = qData.assessments.find(a => a.skillName.toLowerCase() === skillName.toLowerCase());
+        const qData = await apiFetch(`/entrance-assessment/questions?skill=${encodeURIComponent(skillName)}`);
+        const targetSkill = (qData.assessments && qData.assessments[0]) ||
+          (qData.assessments || []).find(a => a.skillName.toLowerCase() === skillName.toLowerCase());
         
         if (!targetSkill) {
           throw new Error('Could not find questions for this skill.');

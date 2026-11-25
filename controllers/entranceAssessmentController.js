@@ -150,6 +150,42 @@ exports.getAssessmentQuestions = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Student account not found.' });
     }
 
+    // Support single-skill verification mode when ?skill=SkillName is provided
+    const requestedSkill = req.query.skill ? decodeURIComponent(req.query.skill).trim() : null;
+    if (requestedSkill) {
+      const dbSkill = await Skill.findOne({
+        user: userId,
+        $or: [
+          { name: new RegExp(`^${requestedSkill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') },
+          { normalizedName: requestedSkill.toLowerCase() }
+        ]
+      });
+      const userSkill = (user.skills || []).find(
+        s => s.name && s.name.toLowerCase() === requestedSkill.toLowerCase()
+      );
+
+      const qData = getQuestionsForSkill(requestedSkill, true);
+      const singleAssessment = {
+        skillName: (dbSkill && dbSkill.name) || (userSkill && userSkill.name) || requestedSkill,
+        normalizedKey: qData.normalizedKey,
+        category: (dbSkill && dbSkill.category) || (userSkill && userSkill.category) || qData.category,
+        description: qData.description,
+        isVerified: dbSkill ? Boolean(dbSkill.isVerified) : false,
+        proficiency: (dbSkill && dbSkill.proficiency) || 'Unassessed',
+        totalQuestions: qData.totalQuestions || 5,
+        questions: qData.questions
+      };
+
+      return res.status(200).json({
+        success: true,
+        isSingleSkillVerification: true,
+        targetSkill: singleAssessment.skillName,
+        targetCareer: user.targetCareer || user.careerInterest || 'Full Stack Developer',
+        totalSkills: 1,
+        assessments: [singleAssessment]
+      });
+    }
+
     // Consolidate student's claimed skills
     const dbSkills = await Skill.find({ user: userId });
     const userSkills = user.skills || [];
@@ -375,14 +411,19 @@ exports.submitAssessment = async (req, res) => {
     }
 
     // Update User model entrance assessment status
+    const allStudentSkills = await Skill.find({ user: userId });
+    const verifiedDbCount = allStudentSkills.filter(s => s.isVerified).length;
     const averageScore = totalPossible > 0 ? Math.round((totalScore / totalPossible) * 100) : 0;
+
     user.entranceAssessmentCompleted = true;
     user.entranceAssessmentStatus = 'completed';
-    user.entranceAssessmentDate = new Date();
+    user.entranceAssessmentDate = user.entranceAssessmentDate || new Date();
     user.entranceAssessmentSummary = {
-      totalSkillsAssessed: results.length,
-      verifiedSkillsCount: verifiedCount,
-      averageScore
+      totalSkillsAssessed: allStudentSkills.length > 0 ? allStudentSkills.length : results.length,
+      verifiedSkillsCount: verifiedDbCount,
+      averageScore: user.entranceAssessmentSummary && user.entranceAssessmentSummary.averageScore
+        ? Math.round((user.entranceAssessmentSummary.averageScore + averageScore) / 2)
+        : averageScore
     };
     user.entranceAssessmentProgress = {
       completedSkillNames: submissionEntries.map(e => e.skillName),
@@ -393,9 +434,13 @@ exports.submitAssessment = async (req, res) => {
     await user.save();
 
     // Log Activity
+    const activityText = results.length === 1
+      ? `Completed Entrance Skill Verification for ${results[0].skillName}: Level identified as ${results[0].identifiedLevel} (${results[0].score}/5)`
+      : `Completed Entrance Assessment: Skill levels identified for ${results.length} skills (${verifiedCount} verified)`;
+
     await Activity.create({
       user: userId,
-      text: `Completed Entrance Assessment: Skill levels identified for ${results.length} skills (${verifiedCount} verified)`,
+      text: activityText,
       icon: verifiedCount > 0 ? 'bi-patch-check-fill' : 'bi-clipboard-check',
       color: verifiedCount > 0 ? '#10B981' : '#F59E0B'
     });
@@ -450,11 +495,12 @@ exports.retakeSkillAssessment = async (req, res) => {
     const normKey = normalizeSkillKey(skillName);
 
     // Calculate attempt number
+    const escapedName = skillName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const prevAttempts = await AssessmentResult.countDocuments({
       user: userId,
       type: 'entrance',
       $or: [
-        { skillName: new RegExp(`^${skillName}$`, 'i') },
+        { skillName: new RegExp(`^${escapedName}$`, 'i') },
         { topic: normKey }
       ]
     });
@@ -465,7 +511,9 @@ exports.retakeSkillAssessment = async (req, res) => {
       user: userId,
       skillName: evalResult.skillName,
       topic: evalResult.normalizedKey,
-      assessmentTitle: `${evalResult.skillName} Entrance Verification (Retake #${attemptNumber})`,
+      assessmentTitle: attemptNumber > 1
+        ? `${evalResult.skillName} Entrance Verification (Attempt #${attemptNumber})`
+        : `${evalResult.skillName} Entrance Skill Verification`,
       type: 'entrance',
       score: evalResult.score,
       totalQuestions: evalResult.totalQuestions,
@@ -485,7 +533,7 @@ exports.retakeSkillAssessment = async (req, res) => {
     // Update skill on user
     const skillLower = evalResult.skillName.toLowerCase();
     const existingIdx = user.skills.findIndex(
-      s => s.name.toLowerCase() === skillLower || s.name.toLowerCase().includes(normKey)
+      s => s.name && (s.name.toLowerCase() === skillLower || s.name.toLowerCase().includes(normKey))
     );
 
     if (existingIdx > -1) {
@@ -494,6 +542,17 @@ exports.retakeSkillAssessment = async (req, res) => {
       user.skills[existingIdx].rating = rating;
       user.skills[existingIdx].verificationScore = evalResult.percentage;
       user.skills[existingIdx].verificationDate = new Date();
+    } else {
+      user.skills.push({
+        name: evalResult.skillName,
+        normalizedName: evalResult.normalizedKey,
+        category: evalResult.category,
+        proficiency: evalResult.identifiedLevel,
+        rating,
+        isVerified: evalResult.passed,
+        verificationScore: evalResult.percentage,
+        verificationDate: new Date()
+      });
     }
 
     // Update Skill collection
@@ -501,7 +560,7 @@ exports.retakeSkillAssessment = async (req, res) => {
       {
         user: userId,
         $or: [
-          { name: new RegExp(`^${evalResult.skillName}$`, 'i') },
+          { name: new RegExp(`^${escapedName}$`, 'i') },
           { normalizedName: evalResult.normalizedKey }
         ]
       },
@@ -517,17 +576,27 @@ exports.retakeSkillAssessment = async (req, res) => {
       }
     );
 
+    // Ensure entranceAssessmentCompleted flag is true
+    user.entranceAssessmentCompleted = true;
+    user.entranceAssessmentStatus = 'completed';
+    user.entranceAssessmentDate = user.entranceAssessmentDate || new Date();
+
     // Recalculate summary stats
-    const verifiedDbCount = await Skill.countDocuments({ user: userId, isVerified: true });
-    if (user.entranceAssessmentSummary) {
-      user.entranceAssessmentSummary.verifiedSkillsCount = verifiedDbCount;
-    }
+    const allStudentSkills = await Skill.find({ user: userId });
+    const verifiedDbCount = allStudentSkills.filter(s => s.isVerified).length;
+    user.entranceAssessmentSummary = {
+      totalSkillsAssessed: allStudentSkills.length,
+      verifiedSkillsCount: verifiedDbCount,
+      averageScore: user.entranceAssessmentSummary && user.entranceAssessmentSummary.averageScore
+        ? Math.round((user.entranceAssessmentSummary.averageScore + evalResult.percentage) / 2)
+        : evalResult.percentage
+    };
     await user.save();
 
     // Log Activity
     await Activity.create({
       user: userId,
-      text: `Retook assessment for ${evalResult.skillName}: Level identified as ${evalResult.identifiedLevel} (${evalResult.score}/5)`,
+      text: `Completed Entrance Verification for ${evalResult.skillName}: Level identified as ${evalResult.identifiedLevel} (${evalResult.score}/5)`,
       icon: evalResult.passed ? 'bi-patch-check-fill' : 'bi-arrow-clockwise',
       color: evalResult.passed ? '#10B981' : '#3B82F6'
     });
@@ -555,3 +624,10 @@ exports.retakeSkillAssessment = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error while processing retake.' });
   }
 };
+
+/**
+ * @desc    Verify a single newly added skill (alias to retakeSkillAssessment)
+ * @route   POST /api/entrance-assessment/verify/:skillName
+ * @access  Private (Student)
+ */
+exports.verifySingleSkill = exports.retakeSkillAssessment;

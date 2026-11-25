@@ -18,14 +18,19 @@ const { topics, getTopicById, getQuestionsByTopic, scoreQuiz } = require('../dat
 async function syncAssessmentCatalog() {
   try {
     for (const t of topics) {
-      const existing = await Assessment.findOne({ topic: t.id });
+      let existing = await Assessment.findOne({
+        $or: [
+          { topic: t.id },
+          { title: t.displayName || t.name }
+        ]
+      });
       const tQuestions = getQuestionsByTopic(t.id, false);
       const mappedQuestions = tQuestions.map((q, idx) => ({
         questionId: q.id || `q_${t.id}_${idx}`,
         questionText: q.question,
         concept: q.concept || t.name,
-        options: (q.options || []).map(opt => (typeof opt === 'object' && opt !== null ? (opt.text || opt.option || JSON.stringify(opt)) : String(opt))),
-        correctOptionIndex: q.correctIndex,
+        options: (q.options || []).map(opt => (typeof opt === 'object' && opt !== null ? String(opt.text || opt.option || opt.optionText || opt.choice || opt.value || opt.label || JSON.stringify(opt)).trim() : String(opt).trim())),
+        correctOptionIndex: typeof q.correctIndex === 'number' ? q.correctIndex : (typeof q.correctOptionIndex === 'number' ? q.correctOptionIndex : 0),
         explanation: q.explanation || ''
       }));
 
@@ -44,6 +49,7 @@ async function syncAssessmentCatalog() {
         });
       } else {
         // Keep practice assessment questions, metadata and options fresh and clean
+        existing.topic = t.id;
         existing.questions = mappedQuestions;
         if (t.displayName || t.name) existing.title = t.displayName || t.name;
         if (t.skillCategory) existing.skillCategory = t.skillCategory;
@@ -114,16 +120,22 @@ exports.getAssessmentById = async (req, res) => {
     const topicKey = assessment ? assessment.topic : idOrTopic.toLowerCase();
     const topicObj = getTopicById(topicKey);
 
-    // If assessment found in DB with questions
-    if (assessment && assessment.questions && assessment.questions.length >= 5) {
+    // Validate that DB assessment questions have exactly 4 valid non-empty options per question
+    const dbHasValidQuestions = assessment && Array.isArray(assessment.questions) && assessment.questions.length >= 5 && assessment.questions.slice(0, 5).every(q => {
+      const opts = q.options || q.choices || q.answers;
+      return Array.isArray(opts) && opts.length === 4 && opts.every(o => o !== null && o !== undefined && String(o).trim() !== '');
+    });
+
+    // If assessment found in DB with complete, verified questions
+    if (dbHasValidQuestions) {
       const safeQuestions = assessment.questions.slice(0, 5).map((q, idx) => {
         const rawOpts = q.options || q.choices || q.answers || [];
         const cleanOptions = rawOpts.map(opt => {
           if (opt === null || opt === undefined) return '';
           if (typeof opt === 'object') {
-            return opt.text || opt.option || opt.optionText || opt.choice || opt.value || opt.label || JSON.stringify(opt);
+            return String(opt.text || opt.option || opt.optionText || opt.choice || opt.value || opt.label || JSON.stringify(opt)).trim();
           }
-          return String(opt);
+          return String(opt).trim();
         });
 
         const qId = q.questionId || (q._id ? q._id.toString() : `q_${idx}`);
@@ -156,9 +168,60 @@ exports.getAssessmentById = async (req, res) => {
       });
     }
 
-    // Fallback to static questions
+    // Self-healing: If DB questions were malformed or empty, or assessment was not yet created
     if (topicObj) {
-      const sanitizedQuestions = getQuestionsByTopic(topicObj.id, true).slice(0, 5);
+      const staticQuestions = getQuestionsByTopic(topicObj.id, false).slice(0, 5);
+      const mappedQuestions = staticQuestions.map((q, idx) => ({
+        questionId: q.id || `q_${topicObj.id}_${idx}`,
+        questionText: q.question,
+        concept: q.concept || topicObj.name,
+        options: (q.options || []).map(opt => (typeof opt === 'object' && opt !== null ? String(opt.text || opt.option || opt.optionText || opt.choice || opt.value || opt.label || JSON.stringify(opt)).trim() : String(opt).trim())),
+        correctOptionIndex: typeof q.correctIndex === 'number' ? q.correctIndex : 0,
+        explanation: q.explanation || ''
+      }));
+
+      // Persist or fix in MongoDB
+      if (assessment) {
+        assessment.questions = mappedQuestions;
+        if (!assessment.topic) assessment.topic = topicObj.id;
+        if (topicObj.skillCategory) assessment.skillCategory = topicObj.skillCategory;
+        await assessment.save().catch(() => {});
+      } else {
+        assessment = await Assessment.create({
+          topic: topicObj.id,
+          title: topicObj.displayName || topicObj.name,
+          skillCategory: topicObj.skillCategory || 'Technical',
+          difficulty: 'Beginner',
+          icon: topicObj.icon || 'bi-code-slash',
+          badgeColor: topicObj.badgeColor || '#059669',
+          description: topicObj.description || `Practice assessment to improve skills in ${topicObj.name}.`,
+          durationMinutes: topicObj.estimatedMinutes || 6,
+          passingPercentage: 60,
+          questions: mappedQuestions
+        }).catch(() => null);
+      }
+
+      const safeQuestions = staticQuestions.map((q, idx) => {
+        const rawOpts = q.options || [];
+        const cleanOptions = rawOpts.map(opt => {
+          if (opt === null || opt === undefined) return '';
+          if (typeof opt === 'object') {
+            return String(opt.text || opt.option || opt.optionText || opt.choice || opt.value || opt.label || JSON.stringify(opt)).trim();
+          }
+          return String(opt).trim();
+        });
+        const qId = q.id || `q_${idx}`;
+        return {
+          _id: qId,
+          questionId: qId,
+          questionText: q.question,
+          concept: q.concept || topicObj.name,
+          options: cleanOptions,
+          choices: cleanOptions,
+          answers: cleanOptions
+        };
+      });
+
       return res.status(200).json({
         success: true,
         assessment: {
@@ -169,26 +232,7 @@ exports.getAssessmentById = async (req, res) => {
           difficulty: 'Beginner',
           durationMinutes: topicObj.estimatedMinutes || 6,
           passingPercentage: 60,
-          questions: sanitizedQuestions.map((q, idx) => {
-            const rawOpts = q.options || q.choices || q.answers || [];
-            const cleanOptions = rawOpts.map(opt => {
-              if (opt === null || opt === undefined) return '';
-              if (typeof opt === 'object') {
-                return opt.text || opt.option || opt.optionText || opt.choice || opt.value || opt.label || JSON.stringify(opt);
-              }
-              return String(opt);
-            });
-            const qId = q.id || `q_${idx}`;
-            return {
-              _id: qId,
-              questionId: qId,
-              questionText: q.question,
-              concept: q.concept || topicObj.name,
-              options: cleanOptions,
-              choices: cleanOptions,
-              answers: cleanOptions
-            };
-          })
+          questions: safeQuestions
         }
       });
     }
@@ -276,9 +320,9 @@ exports.submitAssessment = async (req, res) => {
       const cleanOptions = rawOpts.map(opt => {
         if (opt === null || opt === undefined) return '';
         if (typeof opt === 'object') {
-          return opt.text || opt.option || opt.optionText || opt.choice || opt.value || opt.label || JSON.stringify(opt);
+          return String(opt.text || opt.option || opt.optionText || opt.choice || opt.value || opt.label || JSON.stringify(opt)).trim();
         }
-        return String(opt);
+        return String(opt).trim();
       });
 
       const selectedOptText = (userVal >= 0 && userVal < cleanOptions.length) ? cleanOptions[userVal] : 'No answer selected';

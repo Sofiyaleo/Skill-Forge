@@ -11,7 +11,8 @@ const {
   getAssessmentQuestions,
   saveAssessmentProgress,
   submitAssessment,
-  retakeSkillAssessment
+  retakeSkillAssessment,
+  verifySingleSkill
 } = require('../controllers/entranceAssessmentController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -22,6 +23,7 @@ router.get('/status', getAssessmentStatus);
 router.get('/questions', getAssessmentQuestions);
 router.post('/progress', saveAssessmentProgress);
 router.post('/submit', submitAssessment);
+router.post('/verify/:skillName', verifySingleSkill);
 router.post('/retake/:skillName', retakeSkillAssessment);
 
 module.exports = router;
