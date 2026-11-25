@@ -203,18 +203,20 @@ async function runPracticeAssessmentTests() {
     // -----------------------------------------------------------------
     console.log('\nTest 5: Preserving Entrance Assessment Architecture');
     const entranceQuestions = require('../data/entranceQuestions');
-    assert(entranceQuestions.ENTRANCE_QUESTION_BANK != null, 'Entrance question bank is intact and unaffected');
-    assert(typeof entranceQuestions.evaluateSkillAnswers === 'function', 'Entrance evaluation engine is intact');
+    assert((entranceQuestions.entranceQuestionBank != null || entranceQuestions.ENTRANCE_QUESTION_BANK != null), 'Entrance question bank is intact and unaffected');
+    assert((typeof entranceQuestions.evaluateSkillSubmission === 'function' || typeof entranceQuestions.evaluateSkillAnswers === 'function'), 'Entrance evaluation engine is intact');
 
     console.log('\n========================================================');
     console.log(`  PRACTICE ASSESSMENT TEST RESULTS: ${passedTests} PASSED, ${failedTests} FAILED`);
     console.log('========================================================');
 
     if (server) server.close();
+    await mongoose.disconnect();
     process.exit(failedTests > 0 ? 1 : 0);
   } catch (err) {
     console.error('Test Execution Error:', err);
     if (server) server.close();
+    await mongoose.disconnect();
     process.exit(1);
   }
 }

@@ -308,6 +308,10 @@
         </div>
         <form id="addSkillForm">
           <div class="modal-body">
+            <div class="alert alert-info border-0 rounded-3 py-2 px-3 small mb-3 bg-info-subtle text-info-emphasis">
+              <i class="bi bi-shield-check me-1"></i>
+              <strong>Skill Verification:</strong> Newly added skills require a 5-question Entrance Verification Assessment to automatically determine and verify your proficiency level.
+            </div>
             <div class="mb-3">
               <label class="form-label small fw-semibold text-secondary">Skill Name <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="modalSkillName" placeholder="e.g. React, Node.js, Python, SQL, Docker" required>
@@ -326,21 +330,11 @@
                 <option value="Other">Other</option>
               </select>
             </div>
-            <div class="mb-3">
-              <label class="form-label small fw-semibold text-secondary">Proficiency Level</label>
-              <select class="form-select" id="modalSkillProficiency">
-                <option value="Beginner">Beginner (Level 1/5)</option>
-                <option value="Basic">Basic (Level 2/5)</option>
-                <option value="Intermediate" selected>Intermediate (Level 3/5)</option>
-                <option value="Advanced">Advanced (Level 4/5)</option>
-                <option value="Expert">Expert (Level 5/5)</option>
-              </select>
-            </div>
           </div>
           <div class="modal-footer border-top border-light">
             <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
             <button type="submit" class="btn btn-forge-primary btn-sm px-3">
-              <span>Save Skill</span>
+              <span>Add & Verify Skill</span> <i class="bi bi-arrow-right ms-1"></i>
             </button>
           </div>
         </form>
@@ -467,14 +461,22 @@
 
       container.innerHTML = filtered.map(s => {
         const prof = s.proficiency || (['Beginner','Basic','Intermediate','Advanced','Expert'][(s.rating || 3) - 1]);
-        const profBadgeClass = prof === 'Expert' || prof === 'Advanced' ? 'bg-success-subtle text-success' : (prof === 'Intermediate' ? 'bg-primary-subtle text-primary' : 'bg-warning-subtle text-warning-emphasis');
+        const profBadgeClass = prof === 'Expert' || prof === 'Advanced' ? 'bg-success-subtle text-success' : (prof === 'Intermediate' ? 'bg-primary-subtle text-primary' : (prof === 'Unassessed' ? 'bg-light text-muted border' : 'bg-warning-subtle text-warning-emphasis'));
+
+        const verifyBadge = s.isVerified
+          ? '<span class="badge bg-success-subtle text-success small" title="Verified via skill assessment"><i class="bi bi-patch-check-fill me-1"></i>Verified</span>'
+          : '<span class="badge bg-light text-muted border small"><i class="bi bi-dash-circle me-1"></i>Unverified</span>';
+
+        const verifyActionBtn = !s.isVerified
+          ? `<a href="entrance-assessment.html?skill=${encodeURIComponent(s.name)}" class="btn btn-sm btn-outline-success py-1 px-2 small ms-1" title="Take entrance assessment to verify ${s.name}"><i class="bi bi-shield-check me-1"></i>Verify</a>`
+          : '';
 
         return `
           <div class="d-flex align-items-center justify-content-between p-3 mb-2 rounded-3 bg-light border border-light">
             <div>
               <div class="d-flex align-items-center gap-2">
                 <span class="fw-bold text-navy small">${s.name}</span>
-                ${s.isVerified ? '<span class="badge bg-success-subtle text-success small" title="Verified via skill assessment"><i class="bi bi-patch-check-fill me-1"></i>Verified</span>' : ''}
+                ${verifyBadge}
               </div>
               <div class="d-flex align-items-center gap-2 mt-1">
                 <span class="badge bg-white text-muted border small">${s.category || 'Programming'}</span>
@@ -483,6 +485,7 @@
             </div>
 
             <div class="d-flex align-items-center gap-1">
+              ${verifyActionBtn}
               <button class="btn btn-sm btn-light text-primary" title="Edit proficiency" onclick="openEditSkillModal('${s._id}')">
                 <i class="bi bi-pencil"></i>
               </button>
@@ -550,18 +553,27 @@
       e.preventDefault();
       const name = document.getElementById('modalSkillName').value.trim();
       const category = document.getElementById('modalSkillCategory').value;
-      const proficiency = document.getElementById('modalSkillProficiency').value;
 
       try {
         const response = await apiFetch('/student/skills', {
           method: 'POST',
-          body: JSON.stringify({ name, category, proficiency })
+          body: JSON.stringify({ name, category })
         });
 
-        showToast(response.message || 'Skill added successfully.', 'success');
-        bootstrap.Modal.getInstance(document.getElementById('addSkillModal')).hide();
+        const modalEl = document.getElementById('addSkillModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
         document.getElementById('addSkillForm').reset();
-        loadProfile();
+
+        if (response.verificationUrl) {
+          showToast(`Skill '${name}' added! Redirecting to Entrance Skill Verification...`, 'info');
+          setTimeout(() => {
+            window.location.href = response.verificationUrl;
+          }, 800);
+        } else {
+          showToast(response.message || 'Skill added successfully.', 'success');
+          loadProfile();
+        }
       } catch (err) {
         showToast(err.message || 'Failed to add skill.', 'danger');
       }

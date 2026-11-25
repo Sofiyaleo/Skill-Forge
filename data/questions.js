@@ -137,6 +137,39 @@ const topics = [
     description: 'Evaluate your understanding of C++ memory management, pointers, references, classes, and standard template library (STL).',
     questionCount: 5,
     estimatedMinutes: 6
+  },
+  {
+    id: 'data-analysis',
+    name: 'Data Analysis',
+    displayName: 'Data Analysis & Statistics',
+    skillCategory: 'Data & Analytics',
+    icon: 'bi-graph-up-arrow',
+    badgeColor: '#0284C7',
+    description: 'Test your understanding of data analysis techniques, statistics, data cleaning, correlation, and data visualization best practices.',
+    questionCount: 5,
+    estimatedMinutes: 6
+  },
+  {
+    id: 'ui-ux',
+    name: 'UI/UX Design',
+    displayName: 'UI/UX Design & Prototyping',
+    skillCategory: 'Design',
+    icon: 'bi-palette',
+    badgeColor: '#EC4899',
+    description: 'Evaluate your knowledge of user research, wireframing, usability heuristics, visual hierarchy, and prototyping principles.',
+    questionCount: 5,
+    estimatedMinutes: 6
+  },
+  {
+    id: 'cybersecurity',
+    name: 'Cybersecurity',
+    displayName: 'Cybersecurity & Network Defense',
+    skillCategory: 'Security',
+    icon: 'bi-shield-lock',
+    badgeColor: '#DC2626',
+    description: 'Assess core security principles including CIA triad, common web vulnerabilities (OWASP Top 10), authentication, and network defense.',
+    questionCount: 5,
+    estimatedMinutes: 6
   }
 ];
 
@@ -893,6 +926,237 @@ const questions = [
     ],
     correctIndex: 1,
     explanation: 'References are aliases that must be bound to an object upon declaration and cannot be null, whereas pointers can be null and repointed.'
+  },
+
+  // ==================== DATA ANALYSIS QUESTIONS ====================
+  {
+    id: 'da_1',
+    topicId: 'data-analysis',
+    topicName: 'Data Analysis',
+    concept: 'Data Cleaning',
+    question: 'What is the primary objective of data cleaning (data scrubbing) before conducting exploratory data analysis?',
+    options: [
+      'To transform all continuous numeric data into categorical labels',
+      'To identify and correct errors, duplicate rows, missing values, and inconsistencies in the dataset',
+      'To compress the data files to save hard drive storage space',
+      'To automatically generate predictive machine learning models'
+    ],
+    correctIndex: 1,
+    explanation: 'Data cleaning aims to improve dataset quality by handling missing data, eliminating duplicates, fixing data type mismatches, and correcting inconsistencies.'
+  },
+  {
+    id: 'da_2',
+    topicId: 'data-analysis',
+    topicName: 'Data Analysis',
+    concept: 'Measures of Central Tendency',
+    question: 'When analyzing a dataset containing significant positive skew and extreme outliers (such as income distribution), which measure of central tendency is generally most representative?',
+    options: [
+      'Mean (arithmetic average)',
+      'Median (middle value)',
+      'Mode (most frequent value)',
+      'Midrange ((max + min) / 2)'
+    ],
+    correctIndex: 1,
+    explanation: 'The median is robust against extreme values and outliers because it depends on the ranked order rather than the magnitude of extreme values, unlike the arithmetic mean.'
+  },
+  {
+    id: 'da_3',
+    topicId: 'data-analysis',
+    topicName: 'Data Analysis',
+    concept: 'Statistical Correlation',
+    question: 'What does a Pearson correlation coefficient of -0.85 between two numeric variables indicate?',
+    options: [
+      'A weak negative linear relationship',
+      'A strong negative linear relationship',
+      'No relationship between the variables',
+      'A strong positive non-linear relationship'
+    ],
+    correctIndex: 1,
+    explanation: 'A Pearson correlation value between -1.0 and -0.7 indicates a strong inverse (negative) linear association, meaning that as one variable increases, the other tends to decrease proportionally.'
+  },
+  {
+    id: 'da_4',
+    topicId: 'data-analysis',
+    topicName: 'Data Analysis',
+    concept: 'Data Visualization',
+    question: 'Which chart type is best suited for visualizing the frequency distribution and spread of a single continuous quantitative variable?',
+    options: [
+      'Pie chart',
+      'Histogram',
+      'Scatter plot',
+      'Stacked bar chart'
+    ],
+    correctIndex: 1,
+    explanation: 'Histograms group continuous data into consecutive, non-overlapping bins along the horizontal axis, displaying the count of observations in each bin to reveal distribution shape and skewness.'
+  },
+  {
+    id: 'da_5',
+    topicId: 'data-analysis',
+    topicName: 'Data Analysis',
+    concept: 'Data Aggregation',
+    question: 'In business analytics and data processing, what is the purpose of the "GROUP BY" operation?',
+    options: [
+      'To sort table records in descending chronological sequence',
+      'To partition data into distinct subsets based on common key values and compute summary metrics (SUM, AVG, COUNT) for each subset',
+      'To permanently merge two separate relational database tables',
+      'To encrypt sensitive personal records before export'
+    ],
+    correctIndex: 1,
+    explanation: 'GROUP BY collapses rows that share identical values in specified columns into summary rows, enabling calculation of aggregate metrics such as totals, averages, or counts for each group.'
+  },
+
+  // ==================== UI/UX DESIGN QUESTIONS ====================
+  {
+    id: 'uiux_1',
+    topicId: 'ui-ux',
+    topicName: 'UI/UX Design',
+    concept: 'User Research',
+    question: 'What is the primary purpose of conducting qualitative user interviews during the discovery phase of a UI/UX project?',
+    options: [
+      'To generate statistical sample sizes for quantitative validation',
+      'To uncover user motivations, pain points, mental models, and underlying behavioral needs',
+      'To determine final production CSS typography and color codes',
+      'To write backend database schemas and API endpoints'
+    ],
+    correctIndex: 1,
+    explanation: 'Qualitative user research helps designers empathize with real users by discovering their thoughts, goals, frustration points, and operational context before designing solutions.'
+  },
+  {
+    id: 'uiux_2',
+    topicId: 'ui-ux',
+    topicName: 'UI/UX Design',
+    concept: 'Usability Heuristics',
+    question: 'According to Jakob Nielsen\'s Usability Heuristics, what does the heuristic "Visibility of System Status" require?',
+    options: [
+      'The application must display its open-source license agreement on every page',
+      'The system should always keep users informed about what is happening through timely and appropriate feedback',
+      'All database server CPU load metrics must be visible to the end user',
+      'The interface should never display modal popup dialogs'
+    ],
+    correctIndex: 1,
+    explanation: 'Visibility of system status ensures users feel in control by providing clear progress indicators, spinners, confirmation messages, and status badges within reasonable time.'
+  },
+  {
+    id: 'uiux_3',
+    topicId: 'ui-ux',
+    topicName: 'UI/UX Design',
+    concept: 'Visual Hierarchy',
+    question: 'Which design technique is most effective for establishing strong visual hierarchy on a content-heavy webpage?',
+    options: [
+      'Applying the exact same font size and weight to all headings, body text, and links',
+      'Using contrasting font weights, size scales, intentional whitespace, and selective color accents to guide the user\'s eye',
+      'Filling every pixel of available whitespace with icons and animated banners',
+      'Using blinking text and vibrant neon backgrounds for every card'
+    ],
+    correctIndex: 1,
+    explanation: 'Visual hierarchy organizes elements in order of importance through typographic scale, contrast, proximity, and whitespace, allowing users to scan and digest information effortlessly.'
+  },
+  {
+    id: 'uiux_4',
+    topicId: 'ui-ux',
+    topicName: 'UI/UX Design',
+    concept: 'Wireframing & Prototyping',
+    question: 'What distinguishes a low-fidelity wireframe from a high-fidelity prototype?',
+    options: [
+      'Low-fidelity wireframes focus on structural layout and content flow without detailed graphics, while high-fidelity prototypes simulate near-final visual styling and interactive behaviors',
+      'Low-fidelity wireframes are written in C++, while high-fidelity prototypes use HTML',
+      'Low-fidelity wireframes can only be viewed on mobile devices',
+      'High-fidelity prototypes do not allow user interaction or testing'
+    ],
+    correctIndex: 0,
+    explanation: 'Low-fidelity wireframes use simple grayscale shapes to map layouts and user flows rapidly, while high-fidelity prototypes feature realistic typography, colors, assets, and clickable interactions.'
+  },
+  {
+    id: 'uiux_5',
+    topicId: 'ui-ux',
+    topicName: 'UI/UX Design',
+    concept: 'Accessibility in Design',
+    question: 'Under Web Content Accessibility Guidelines (WCAG 2.1 AA), what is the minimum required color contrast ratio for normal body text against its background?',
+    options: [
+      '2.0:1',
+      '3.0:1',
+      '4.5:1',
+      '7.0:1'
+    ],
+    correctIndex: 2,
+    explanation: 'WCAG 2.1 Level AA requires a contrast ratio of at least 4.5:1 for standard body text (below 18pt or 14pt bold) to ensure readability for users with moderate visual impairments.'
+  },
+
+  // ==================== CYBERSECURITY QUESTIONS ====================
+  {
+    id: 'sec_1',
+    topicId: 'cybersecurity',
+    topicName: 'Cybersecurity',
+    concept: 'CIA Triad',
+    question: 'Which three foundational pillars constitute the CIA Triad of information security?',
+    options: [
+      'Control, Identification, and Authorization',
+      'Confidentiality, Integrity, and Availability',
+      'Cryptography, Inspection, and Authentication',
+      'Compliance, Isolation, and Auditing'
+    ],
+    correctIndex: 1,
+    explanation: 'The CIA triad (Confidentiality, Integrity, Availability) represents the core security model: keeping data private, ensuring data is accurate and untampered, and guaranteeing authorized access.'
+  },
+  {
+    id: 'sec_2',
+    topicId: 'cybersecurity',
+    topicName: 'Cybersecurity',
+    concept: 'Web Application Security',
+    question: 'Which security vulnerability occurs when untrusted user input is directly concatenated into a dynamic SQL query without parameterization or escaping?',
+    options: [
+      'Cross-Site Scripting (XSS)',
+      'SQL Injection (SQLi)',
+      'Cross-Site Request Forgery (CSRF)',
+      'Denial of Service (DoS)'
+    ],
+    correctIndex: 1,
+    explanation: 'SQL Injection occurs when user-supplied input is interpreted as SQL commands, allowing attackers to bypass authentication, read sensitive records, or delete database tables.'
+  },
+  {
+    id: 'sec_3',
+    topicId: 'cybersecurity',
+    topicName: 'Cybersecurity',
+    concept: 'Authentication & Passwords',
+    question: 'Why is hashing passwords using a salted, slow algorithm (such as bcrypt or Argon2) superior to storing them encrypted with reversible AES or single-pass MD5/SHA256?',
+    options: [
+      'Salted slow hashes make precomputed rainbow table lookups and brute-force GPU cracking computationally prohibitive while avoiding key management vulnerabilities',
+      'Bcrypt compresses passwords to 8 bits to save database memory',
+      'MD5 and SHA256 can decrypt user passwords automatically upon login',
+      'Salted hashes allow system administrators to view plaintext passwords in emergency situations'
+    ],
+    correctIndex: 0,
+    explanation: 'Salting prevents rainbow table attacks by making each hash unique, and high work factors (key stretching) drastically increase the computational cost of brute-force and dictionary attacks.'
+  },
+  {
+    id: 'sec_4',
+    topicId: 'cybersecurity',
+    topicName: 'Cybersecurity',
+    concept: 'Cross-Site Scripting (XSS)',
+    question: 'What is the primary mechanism used to mitigate Stored and Reflected Cross-Site Scripting (XSS) in modern web applications?',
+    options: [
+      'Using HTTPS on all public network endpoints',
+      'Context-aware output encoding (HTML escaping) and strict Content Security Policy (CSP) headers',
+      'Restricting database read privileges for the application user',
+      'Disabling all JavaScript cookies across the entire domain'
+    ],
+    correctIndex: 1,
+    explanation: 'Properly escaping user data before injecting into HTML contexts prevents browsers from executing attacker-controlled scripts, while CSP restricts the sources from which scripts can execute.'
+  },
+  {
+    id: 'sec_5',
+    topicId: 'cybersecurity',
+    topicName: 'Cybersecurity',
+    concept: 'Network Security',
+    question: 'What is the main role of a Stateful Inspection Firewall in network defense?',
+    options: [
+      'To scan local source code files for syntax errors during compile time',
+      'To monitor active network connection states (TCP handshakes, UDP streams) and filter packets based on predefined security rules and session context',
+      'To generate SSL/TLS digital certificates for public domain names',
+      'To automatically defragment physical hard drives on server nodes'
+    ],
+    correctIndex: 1,
+    explanation: 'Stateful inspection firewalls track the state of network connections and distinguish legitimate packets for active connections from unauthorized or spoofed incoming traffic.'
   }
 ];
 
