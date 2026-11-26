@@ -9,6 +9,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- html2pdf.js for 1-Click High-Fidelity PDF Download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <!-- Custom Design System -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -127,27 +129,50 @@
       <!-- Main Resume Builder Canvas -->
       <main class="portal-container">
         
+        <!-- Page Title & Top Actions Bar -->
         <div class="portal-title-block d-flex justify-content-between align-items-center flex-wrap gap-3 btn-no-print mb-4">
           <div>
             <h2 class="portal-title mb-1">Professional Resume Builder</h2>
-            <p class="portal-subtitle mb-0">Generate polished, ATS-compliant resumes with real education, skills, projects, and achievements.</p>
+            <p class="portal-subtitle mb-0">Generate, customize, live-preview, and download your ATS-compliant resume with verified skills, projects, and education.</p>
           </div>
-          <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-forge-primary btn-sm px-3" onclick="saveResumeSettings()">
-              <i class="bi bi-save me-1"></i> Save Changes
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <button class="btn btn-outline-primary btn-sm px-3" onclick="saveResumeSettings()" id="btnSaveResume">
+              <i class="bi bi-check2 me-1"></i> Save Changes
             </button>
-            <button class="btn btn-outline-dark btn-sm px-3" onclick="window.print()">
-              <i class="bi bi-printer me-1"></i> Print / Save as PDF
+            <button class="btn btn-outline-dark btn-sm px-3" onclick="openFullscreenPreview()" id="btnSeeResume">
+              <i class="bi bi-eye me-1"></i> See Resume
+            </button>
+            <button class="btn btn-outline-secondary btn-sm px-3" onclick="window.print()" id="btnPrintResume">
+              <i class="bi bi-printer me-1"></i> Print / PDF
+            </button>
+            <button class="btn btn-forge-primary btn-sm px-3 fw-bold shadow-sm" onclick="downloadPDF()" id="btnDownloadPDF">
+              <i class="bi bi-download me-1"></i> Download PDF
             </button>
           </div>
         </div>
 
-        <div class="row g-4">
+        <!-- Mobile/Tablet Toggle Switcher between Form and Live Preview -->
+        <div class="d-lg-none btn-no-print mb-3" id="viewModeTabsContainer">
+          <ul class="nav nav-pills nav-fill bg-white p-1 rounded-3 border shadow-sm" id="viewModeTabs">
+            <li class="nav-item">
+              <button class="nav-link active py-2 fw-semibold small" id="tabBtnEditor" onclick="switchMobileView('editor')">
+                <i class="bi bi-pencil-square me-1"></i> 1. Customize Details
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link py-2 fw-semibold small" id="tabBtnPreview" onclick="switchMobileView('preview')">
+                <i class="bi bi-file-earmark-text me-1"></i> 2. See Live Resume
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="row g-4" id="resumeBuilderRow">
           
           <!-- Left Column: Controls & Form Customizer (Hidden on Print) -->
-          <div class="col-lg-5 btn-no-print">
+          <div class="col-lg-5 btn-no-print" id="resumeEditorCol">
             
-            <!-- 1. Template Switcher (Section 6I) -->
+            <!-- 1. Template Switcher -->
             <div class="portal-card mb-4">
               <h6 class="fw-bold text-navy mb-2"><i class="bi bi-palette me-1 text-primary"></i> Resume Style Template</h6>
               <div class="d-flex gap-2">
@@ -163,65 +188,87 @@
               </div>
             </div>
 
-            <!-- 2. Personal & Professional Details (Section 6A & 6B) -->
+            <!-- 2. Personal & Contact Details -->
             <div class="portal-card mb-4">
               <h6 class="fw-bold text-navy mb-3"><i class="bi bi-person-lines-fill me-1 text-primary"></i> Contact & Header Details</h6>
               
               <div class="row g-2 mb-3">
                 <div class="col-sm-6">
                   <label class="form-label small fw-semibold text-secondary">Full Name</label>
-                  <input type="text" class="form-control form-control-sm" id="resumeName" oninput="updateLivePreview()">
+                  <input type="text" class="form-control form-control-sm" id="resumeName" placeholder="e.g. Rohan Sharma" oninput="updateLivePreview()">
                 </div>
                 <div class="col-sm-6">
                   <label class="form-label small fw-semibold text-secondary">Target Role Title</label>
-                  <input type="text" class="form-control form-control-sm" id="resumeTitle" oninput="updateLivePreview()">
+                  <input type="text" class="form-control form-control-sm" id="resumeTitle" placeholder="e.g. Full Stack Developer" oninput="updateLivePreview()">
                 </div>
               </div>
 
               <div class="row g-2 mb-3">
                 <div class="col-sm-6">
                   <label class="form-label small fw-semibold text-secondary">Professional Email</label>
-                  <input type="email" class="form-control form-control-sm" id="resumeEmail" oninput="updateLivePreview()">
+                  <input type="email" class="form-control form-control-sm" id="resumeEmail" placeholder="student@example.com" oninput="updateLivePreview()">
                 </div>
                 <div class="col-sm-6">
                   <label class="form-label small fw-semibold text-secondary">Phone Number</label>
-                  <input type="text" class="form-control form-control-sm" id="resumePhone" oninput="updateLivePreview()">
+                  <input type="text" class="form-control form-control-sm" id="resumePhone" placeholder="+91 98765 43210" oninput="updateLivePreview()">
+                </div>
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-12">
+                  <label class="form-label small fw-semibold text-secondary">Location (City, Country)</label>
+                  <input type="text" class="form-control form-control-sm" id="resumeLocation" placeholder="e.g. Bangalore, India" oninput="updateLivePreview()">
                 </div>
               </div>
 
               <div class="row g-2 mb-3">
                 <div class="col-sm-6">
-                  <label class="form-label small fw-semibold text-secondary">Location (City, Country)</label>
-                  <input type="text" class="form-control form-control-sm" id="resumeLocation" oninput="updateLivePreview()">
+                  <label class="form-label small fw-semibold text-secondary">LinkedIn Profile URL</label>
+                  <input type="url" class="form-control form-control-sm" id="resumeLinkedin" placeholder="https://linkedin.com/in/username" oninput="updateLivePreview()">
                 </div>
                 <div class="col-sm-6">
-                  <label class="form-label small fw-semibold text-secondary">Graduation Year</label>
-                  <input type="text" class="form-control form-control-sm" id="resumeGradYear" placeholder="e.g. 2026" oninput="updateLivePreview()">
+                  <label class="form-label small fw-semibold text-secondary">GitHub / Portfolio URL</label>
+                  <input type="url" class="form-control form-control-sm" id="resumeGithub" placeholder="https://github.com/username" oninput="updateLivePreview()">
                 </div>
               </div>
 
-              <div class="mb-3">
-                <label class="form-label small fw-semibold text-secondary">LinkedIn Profile URL</label>
-                <input type="url" class="form-control form-control-sm" id="resumeLinkedin" placeholder="https://linkedin.com/in/username" oninput="updateLivePreview()">
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label small fw-semibold text-secondary">GitHub / Portfolio URL</label>
-                <input type="url" class="form-control form-control-sm" id="resumeGithub" placeholder="https://github.com/username" oninput="updateLivePreview()">
-              </div>
-
-              <div class="mb-3">
+              <div class="mb-1">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                   <label class="form-label small fw-semibold text-secondary mb-0">Professional Summary</label>
                   <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none" style="font-size: 0.75rem;" onclick="generateDraftSummary()">
                     <i class="bi bi-magic me-1"></i>Suggest Draft
                   </button>
                 </div>
-                <textarea class="form-control form-control-sm" id="resumeSummary" rows="3" oninput="updateLivePreview()"></textarea>
+                <textarea class="form-control form-control-sm" id="resumeSummary" rows="3" placeholder="Brief summary of your technical background, core skills, and career goals..." oninput="updateLivePreview()"></textarea>
               </div>
             </div>
 
-            <!-- 3. Section Toggles (Section 6J) -->
+            <!-- 3. Education & Academic Background -->
+            <div class="portal-card mb-4">
+              <h6 class="fw-bold text-navy mb-3"><i class="bi bi-mortarboard me-1 text-primary"></i> Education & Academic Background</h6>
+              <div class="row g-2 mb-3">
+                <div class="col-sm-6">
+                  <label class="form-label small fw-semibold text-secondary">Degree / Qualification</label>
+                  <input type="text" class="form-control form-control-sm" id="resumeDegree" placeholder="e.g. B.Tech, MCA, B.Sc" oninput="updateLivePreview()">
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label small fw-semibold text-secondary">Department / Stream</label>
+                  <input type="text" class="form-control form-control-sm" id="resumeDepartment" placeholder="e.g. Computer Science & Eng" oninput="updateLivePreview()">
+                </div>
+              </div>
+              <div class="row g-2 mb-2">
+                <div class="col-sm-8">
+                  <label class="form-label small fw-semibold text-secondary">College / University</label>
+                  <input type="text" class="form-control form-control-sm" id="resumeCollege" placeholder="e.g. National Institute of Technology" oninput="updateLivePreview()">
+                </div>
+                <div class="col-sm-4">
+                  <label class="form-label small fw-semibold text-secondary">Graduation Year</label>
+                  <input type="text" class="form-control form-control-sm" id="resumeGradYear" placeholder="e.g. 2026" oninput="updateLivePreview()">
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Section Visibility Toggles -->
             <div class="portal-card mb-4">
               <h6 class="fw-bold text-navy mb-2"><i class="bi bi-toggles me-1 text-primary"></i> Include Resume Sections</h6>
               <div class="d-flex flex-column gap-2 small">
@@ -252,21 +299,31 @@
               </div>
             </div>
 
-            <div class="p-3 bg-light rounded-3 text-muted small">
+            <div class="p-3 bg-light rounded-3 text-muted small border">
               <i class="bi bi-info-circle-fill text-primary me-1"></i>
-              Skills, projects, certifications, and achievements are retrieved from your real database records.
+              Skills, projects, certifications, and achievements are dynamically loaded from your SkillForge database and reflect real progress.
             </div>
 
           </div>
 
-          <!-- Right Column: Live A4 Printable Document Preview (Section 6I & 6J) -->
-          <div class="col-lg-7">
+          <!-- Right Column: Live A4 Printable Document Preview -->
+          <div class="col-lg-7" id="resumePreviewCol">
+            
+            <!-- Quick View Top Banner (visible on screen only) -->
+            <div class="d-flex justify-content-between align-items-center mb-2 px-1 btn-no-print">
+              <span class="small text-muted fw-semibold"><i class="bi bi-eye me-1"></i> Live Document Preview (A4 Format)</span>
+              <button class="btn btn-sm btn-link text-decoration-none p-0 small" onclick="openFullscreenPreview()">
+                <i class="bi bi-arrows-fullscreen me-1"></i> Open Fullscreen
+              </button>
+            </div>
+
+            <!-- The Printable Resume Document -->
             <div class="resume-paper resume-template-modern" id="printableResumeArea">
               
               <!-- Header Bar -->
               <div class="resume-header pb-3 mb-3">
-                <div class="d-flex justify-content-between align-items-start">
-                  <div>
+                <div class="d-flex justify-content-between align-items-start w-100">
+                  <div class="flex-grow-1">
                     <h1 class="resume-name h3 mb-1" id="previewName">Student Name</h1>
                     <div class="resume-role-title fw-bold mb-2" id="previewTitle">Full Stack Developer</div>
                     
@@ -282,58 +339,58 @@
                     </div>
                   </div>
 
-                  <div class="user-avatar d-none d-sm-flex" style="width: 55px; height: 55px; font-size: 1.25rem;" id="previewAvatar">
+                  <div class="user-avatar d-none d-sm-flex" style="width: 50px; height: 50px; font-size: 1.15rem; flex-shrink: 0;" id="previewAvatar">
                     ST
                   </div>
                 </div>
               </div>
 
               <!-- Summary Section -->
-              <div class="mb-3" id="sectionSummaryArea">
+              <div class="mb-3 resume-section-item" id="sectionSummaryArea">
                 <div class="resume-section-title">Professional Summary</div>
                 <p class="text-secondary small mb-0" id="previewSummary" style="line-height: 1.6;">
-                  Motivated computer science student dedicated to modern software engineering and web application development.
+                  Motivated computer science student dedicated to modern software engineering, clean code architecture, and web application development.
                 </p>
               </div>
 
-              <!-- Education Section (Section 6C) -->
-              <div class="mb-3" id="sectionEducationArea">
+              <!-- Education Section -->
+              <div class="mb-3 resume-section-item" id="sectionEducationArea">
                 <div class="resume-section-title">Education</div>
-                <div class="d-flex justify-content-between align-items-baseline">
+                <div class="d-flex justify-content-between align-items-baseline flex-wrap gap-1">
                   <div>
-                    <div class="fw-bold text-navy small" id="previewDegree">B.Tech / MCA in Computer Science</div>
-                    <div class="text-secondary small" id="previewCollege">ABC College of Engineering & Technology</div>
+                    <div class="fw-bold text-navy small" id="previewDegree">B.Tech in Computer Science & Engineering</div>
+                    <div class="text-secondary small" id="previewCollege">National Institute of Technology</div>
                   </div>
-                  <div class="text-secondary small" id="previewGraduation">Expected: 2026</div>
+                  <div class="text-secondary small fw-semibold" id="previewGraduation">Expected: 2026</div>
                 </div>
               </div>
 
-              <!-- Skills Section (Section 6D) -->
-              <div class="mb-3" id="sectionSkillsArea">
+              <!-- Skills Section -->
+              <div class="mb-3 resume-section-item" id="sectionSkillsArea">
                 <div class="resume-section-title">Technical Skills</div>
                 <div id="previewSkillsList" class="d-flex flex-wrap gap-1">
                   <!-- Skill badges -->
                 </div>
               </div>
 
-              <!-- Projects Section (Section 6E) -->
-              <div class="mb-3" id="sectionProjectsArea">
+              <!-- Projects Section -->
+              <div class="mb-3 resume-section-item" id="sectionProjectsArea">
                 <div class="resume-section-title">Featured Projects</div>
                 <div id="previewProjectsList">
                   <!-- Project cards -->
                 </div>
               </div>
 
-              <!-- Certifications Section (Section 6F) -->
-              <div class="mb-3" id="sectionCertsArea">
+              <!-- Certifications Section -->
+              <div class="mb-3 resume-section-item" id="sectionCertsArea">
                 <div class="resume-section-title">Certifications</div>
                 <div id="previewCertsList">
                   <!-- Cert items -->
                 </div>
               </div>
 
-              <!-- Achievements Section (Section 6G) -->
-              <div class="mb-3" id="sectionAchievementsArea">
+              <!-- Achievements Section -->
+              <div class="mb-3 resume-section-item" id="sectionAchievementsArea">
                 <div class="resume-section-title">Achievements & Honors</div>
                 <div id="previewAchievementsList">
                   <!-- Achievement items -->
@@ -350,6 +407,40 @@
     </div>
   </div>
 
+  <!-- Fullscreen Modal Preview for Seamless A4 Review -->
+  <div class="modal fade modal-resume-preview btn-no-print" id="resumeViewModal" tabindex="-1" aria-labelledby="resumeViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-white border-bottom py-3 px-4">
+          <div class="d-flex align-items-center gap-2">
+            <h5 class="modal-title fw-bold text-navy mb-0" id="resumeViewModalLabel">
+              <i class="bi bi-file-earmark-person text-primary me-2"></i>Full Resume Preview
+            </h5>
+            <span class="badge bg-light text-navy border ms-2" id="modalTemplateBadge">Modern Executive</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.print()">
+              <i class="bi bi-printer me-1"></i> Print
+            </button>
+            <button type="button" class="btn btn-sm btn-success fw-semibold" onclick="downloadPDF()">
+              <i class="bi bi-download me-1"></i> Download PDF
+            </button>
+            <button type="button" class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+        <div class="modal-body" id="modalResumeBody">
+          <div id="modalResumeContainer"></div>
+        </div>
+        <div class="modal-footer bg-white border-top py-2 px-4 justify-content-between">
+          <div class="text-muted small">
+            <i class="bi bi-check-circle-fill text-success me-1"></i> ATS-friendly format ready for job applications.
+          </div>
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap 5 JS Bundle & API helper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/api.js"></script>
@@ -357,24 +448,31 @@
     const user = requireAuth();
     let resumeData = null;
     let selectedTemplate = 'modern';
+    let bsPreviewModal = null;
 
     async function loadResume() {
       try {
         const data = await apiFetch('/resume/data');
-        resumeData = data.resume;
+        resumeData = data.resume || {};
 
         const info = resumeData.personalInfo || {};
         const academic = resumeData.academic || {};
 
+        // Populate contact & personal details
         document.getElementById('resumeName').value = info.name || '';
         document.getElementById('resumeTitle').value = info.targetCareer || info.careerInterest || 'Full Stack Developer';
         document.getElementById('resumeEmail').value = info.email || '';
         document.getElementById('resumePhone').value = info.phone || '';
         document.getElementById('resumeLocation').value = info.location || '';
-        document.getElementById('resumeGradYear').value = info.graduationYear || academic.graduationYear || '';
         document.getElementById('resumeLinkedin').value = info.linkedinUrl || '';
         document.getElementById('resumeGithub').value = info.githubUrl || info.portfolioUrl || '';
         document.getElementById('resumeSummary').value = info.professionalSummary || info.bio || '';
+
+        // Populate education fields
+        document.getElementById('resumeDegree').value = academic.degree || '';
+        document.getElementById('resumeDepartment').value = academic.department || '';
+        document.getElementById('resumeCollege').value = academic.college || '';
+        document.getElementById('resumeGradYear').value = info.graduationYear || academic.graduationYear || '';
 
         // Template preference
         if (info.resumeTemplate) {
@@ -393,20 +491,35 @@
     function selectTemplate(tpl) {
       selectedTemplate = tpl;
       const paper = document.getElementById('printableResumeArea');
-      paper.className = `resume-paper resume-template-${tpl}`;
+      if (paper) {
+        paper.className = `resume-paper resume-template-${tpl}`;
+      }
 
       document.querySelectorAll('.template-btn').forEach(btn => btn.classList.remove('active'));
       const activeBtn = document.getElementById(`btn-tpl-${tpl}`);
       if (activeBtn) activeBtn.classList.add('active');
+
+      const modalBadge = document.getElementById('modalTemplateBadge');
+      if (modalBadge) {
+        const names = { modern: 'Modern Executive', minimal: 'Clean Minimalist', classic: 'Tech Classic' };
+        modalBadge.textContent = names[tpl] || 'Modern Executive';
+      }
+
+      // If modal is currently open, keep it in sync
+      const modalClone = document.querySelector('#modalResumeContainer .resume-paper');
+      if (modalClone) {
+        modalClone.className = `resume-paper resume-template-${tpl}`;
+      }
     }
 
     // Auto-generate professional summary draft
     function generateDraftSummary() {
       const career = document.getElementById('resumeTitle').value.trim() || 'Software Engineer';
-      const name = document.getElementById('resumeName').value.trim() || 'Student';
-      const academic = (resumeData && resumeData.academic) ? resumeData.academic.degree : 'Computer Science';
+      const degree = document.getElementById('resumeDegree').value.trim() || 'Computer Science';
+      const dept = document.getElementById('resumeDepartment').value.trim();
+      const academicText = dept ? `${degree} in ${dept}` : degree;
 
-      const draft = `Goal-oriented ${career} aspirant with a solid academic foundation in ${academic}. Experienced in developing responsive full-stack applications, problem-solving, and database integration. Passionate about software craftsmanship, clean code architectures, and continuous professional growth.`;
+      const draft = `Goal-oriented ${career} aspirant with a solid academic foundation in ${academicText}. Experienced in building responsive full-stack applications, problem-solving, and modern database integration. Passionate about software craftsmanship, clean code architectures, and continuous professional growth.`;
       
       document.getElementById('resumeSummary').value = draft;
       updateLivePreview();
@@ -420,43 +533,61 @@
       document.getElementById('previewTitle').textContent = document.getElementById('resumeTitle').value.trim() || 'Full Stack Developer';
 
       const email = document.getElementById('resumeEmail').value.trim();
-      document.getElementById('previewEmail').innerHTML = email ? `<i class="bi bi-envelope me-1"></i>${email}` : '';
+      const previewEmail = document.getElementById('previewEmail');
+      if (previewEmail) {
+        previewEmail.innerHTML = email ? `<i class="bi bi-envelope me-1"></i>${email}` : '';
+        previewEmail.style.display = email ? 'inline-block' : 'none';
+      }
       
       const phone = document.getElementById('resumePhone').value.trim();
-      document.getElementById('previewPhone').innerHTML = phone ? `<i class="bi bi-telephone me-1"></i>${phone}` : '';
+      const previewPhone = document.getElementById('previewPhone');
+      if (previewPhone) {
+        previewPhone.innerHTML = phone ? `<i class="bi bi-telephone me-1"></i>${phone}` : '';
+        previewPhone.style.display = phone ? 'inline-block' : 'none';
+      }
       
       const loc = document.getElementById('resumeLocation').value.trim();
-      document.getElementById('previewLocation').innerHTML = loc ? `<i class="bi bi-geo-alt me-1"></i>${loc}` : '';
+      const previewLoc = document.getElementById('previewLocation');
+      if (previewLoc) {
+        previewLoc.innerHTML = loc ? `<i class="bi bi-geo-alt me-1"></i>${loc}` : '';
+        previewLoc.style.display = loc ? 'inline-block' : 'none';
+      }
 
       // LinkedIn & GitHub
       const linkedin = document.getElementById('resumeLinkedin').value.trim();
       const linkedinEl = document.getElementById('previewLinkedin');
-      if (linkedin) {
-        linkedinEl.classList.remove('d-none');
-        linkedinEl.querySelector('.url-text').textContent = linkedin.replace(/^https?:\/\/(www\.)?/, '');
-      } else {
-        linkedinEl.classList.add('d-none');
+      if (linkedinEl) {
+        if (linkedin) {
+          linkedinEl.classList.remove('d-none');
+          linkedinEl.querySelector('.url-text').textContent = linkedin.replace(/^https?:\/\/(www\.)?/, '');
+        } else {
+          linkedinEl.classList.add('d-none');
+        }
       }
 
       const github = document.getElementById('resumeGithub').value.trim();
       const githubEl = document.getElementById('previewGithub');
-      if (github) {
-        githubEl.classList.remove('d-none');
-        githubEl.querySelector('.url-text').textContent = github.replace(/^https?:\/\/(www\.)?/, '');
-      } else {
-        githubEl.classList.add('d-none');
+      if (githubEl) {
+        if (github) {
+          githubEl.classList.remove('d-none');
+          githubEl.querySelector('.url-text').textContent = github.replace(/^https?:\/\/(www\.)?/, '');
+        } else {
+          githubEl.classList.add('d-none');
+        }
       }
 
       // Summary
-      document.getElementById('previewSummary').textContent = document.getElementById('resumeSummary').value.trim();
+      const summaryText = document.getElementById('resumeSummary').value.trim();
+      document.getElementById('previewSummary').textContent = summaryText || 'Motivated student passionate about modern software development and continuous learning.';
 
       // Education
-      if (resumeData && resumeData.academic) {
-        const ac = resumeData.academic;
-        document.getElementById('previewDegree').textContent = ac.degree ? `${ac.degree} ${ac.department ? 'in ' + ac.department : ''}` : 'Degree in Computer Science';
-        document.getElementById('previewCollege').textContent = ac.college || 'Institution of Technology';
-      }
+      const degree = document.getElementById('resumeDegree').value.trim() || 'Degree in Computer Science';
+      const dept = document.getElementById('resumeDepartment').value.trim();
+      const college = document.getElementById('resumeCollege').value.trim() || 'College / University';
       const gradYear = document.getElementById('resumeGradYear').value.trim();
+
+      document.getElementById('previewDegree').textContent = dept ? `${degree} in ${dept}` : degree;
+      document.getElementById('previewCollege').textContent = college;
       document.getElementById('previewGraduation').textContent = gradYear ? `Year: ${gradYear}` : '';
 
       // Section visibility toggles
@@ -480,8 +611,11 @@
       const skillsContainer = document.getElementById('previewSkillsList');
       if (resumeData.skills && resumeData.skills.length > 0) {
         skillsContainer.innerHTML = resumeData.skills.map(s => {
-          const ratingLabel = s.rating ? `(${s.rating}/5)` : '';
-          return `<span class="badge bg-light text-navy border fw-bold small me-1 mb-1">${s.name} ${ratingLabel}</span>`;
+          const lvl = s.proficiency || s.identifiedLevel || '';
+          const lvlLabel = lvl ? ` • ${lvl}` : '';
+          const isVerified = Boolean(s.isVerified);
+          const icon = isVerified ? '<i class="bi bi-patch-check-fill text-success ms-1" title="Verified Skill"></i>' : '';
+          return `<span class="badge bg-light text-navy border fw-semibold small me-1 mb-1">${s.name}${lvlLabel}${icon}</span>`;
         }).join('');
       } else {
         skillsContainer.innerHTML = `<span class="text-muted small">No skills added yet.</span>`;
@@ -491,58 +625,74 @@
       const projectsContainer = document.getElementById('previewProjectsList');
       if (resumeData.projects && resumeData.projects.length > 0) {
         projectsContainer.innerHTML = resumeData.projects.map(p => {
-          const tech = Array.isArray(p.techStack) ? p.techStack.join(', ') : (p.techStack || '');
+          const techList = (Array.isArray(p.techStack) && p.techStack.length > 0) 
+            ? p.techStack 
+            : ((Array.isArray(p.technologies) && p.technologies.length > 0) ? p.technologies : [p.techStack || '']);
+          const techStr = techList.filter(Boolean).join(', ');
           const link = p.liveUrl || p.projectUrl || p.githubUrl;
           return `
             <div class="mb-2 pb-2 border-bottom border-light">
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="fw-bold text-navy small">${p.title} ${link ? `<span class="text-muted fw-normal" style="font-size:0.75rem;">(${link.replace(/^https?:\/\//, '')})</span>` : ''}</span>
-                <span class="badge bg-light text-muted small">${tech}</span>
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-1">
+                <span class="fw-bold text-navy small">
+                  ${p.title} 
+                  ${link ? `<a href="${link}" target="_blank" class="text-primary text-decoration-none fw-normal ms-1" style="font-size:0.75rem;"><i class="bi bi-box-arrow-up-right me-1"></i>Link</a>` : ''}
+                </span>
+                ${techStr ? `<span class="badge bg-light text-muted small border">${techStr}</span>` : ''}
               </div>
-              <div class="text-secondary small mt-1">${p.description || ''}</div>
+              ${p.description ? `<div class="text-secondary small mt-1" style="line-height: 1.5;">${p.description}</div>` : ''}
             </div>
           `;
         }).join('');
       } else {
-        projectsContainer.innerHTML = `<div class="text-muted small">No projects recorded in portfolio.</div>`;
+        projectsContainer.innerHTML = `<div class="text-muted small">No projects recorded in portfolio yet.</div>`;
       }
 
       // 3. Certifications
       const certsContainer = document.getElementById('previewCertsList');
       if (resumeData.certifications && resumeData.certifications.length > 0) {
         certsContainer.innerHTML = resumeData.certifications.map(c => `
-          <div class="d-flex justify-content-between align-items-center small py-1">
-            <span class="fw-semibold text-navy">• ${c.title || c.name}</span>
-            <span class="text-muted">${c.issuer} ${c.issueDate ? `(${c.issueDate})` : ''}</span>
+          <div class="d-flex justify-content-between align-items-center small py-1 border-bottom border-light flex-wrap gap-1">
+            <span class="fw-semibold text-navy"><i class="bi bi-award-fill text-primary me-1"></i>${c.title || c.name}</span>
+            <span class="text-muted">${c.issuer || 'Issuing Body'} ${c.issueDate ? `(${c.issueDate})` : ''}</span>
           </div>
         `).join('');
       } else {
-        certsContainer.innerHTML = `<div class="text-muted small">No certifications recorded.</div>`;
+        certsContainer.innerHTML = `<div class="text-muted small">No certifications recorded yet.</div>`;
       }
 
       // 4. Achievements
       const achContainer = document.getElementById('previewAchievementsList');
       if (resumeData.achievements && resumeData.achievements.length > 0) {
         achContainer.innerHTML = resumeData.achievements.map(a => `
-          <div class="mb-2 pb-1">
-            <div class="d-flex justify-content-between align-items-center small">
-              <span class="fw-semibold text-navy"><i class="bi bi-trophy text-warning me-1"></i>${a.title}</span>
+          <div class="mb-2 pb-1 border-bottom border-light">
+            <div class="d-flex justify-content-between align-items-center small flex-wrap gap-1">
+              <span class="fw-semibold text-navy"><i class="bi bi-trophy-fill text-warning me-1"></i>${a.title}</span>
               <span class="text-muted">${a.issuer || ''} ${a.date ? `(${a.date})` : ''}</span>
             </div>
-            ${a.description ? `<div class="text-secondary small ps-3">${a.description}</div>` : ''}
+            ${a.description ? `<div class="text-secondary small ps-3 mt-1">${a.description}</div>` : ''}
           </div>
         `).join('');
       } else {
-        achContainer.innerHTML = `<div class="text-muted small">No achievements recorded.</div>`;
+        achContainer.innerHTML = `<div class="text-muted small">No achievements recorded yet.</div>`;
       }
     }
 
     // Persist customized settings to MongoDB
     async function saveResumeSettings() {
+      const btn = document.getElementById('btnSaveResume');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+      }
+
       const payload = {
         name: document.getElementById('resumeName').value.trim(),
+        targetCareer: document.getElementById('resumeTitle').value.trim(),
         phone: document.getElementById('resumePhone').value.trim(),
         location: document.getElementById('resumeLocation').value.trim(),
+        college: document.getElementById('resumeCollege').value.trim(),
+        degree: document.getElementById('resumeDegree').value.trim(),
+        department: document.getElementById('resumeDepartment').value.trim(),
         graduationYear: document.getElementById('resumeGradYear').value.trim(),
         linkedinUrl: document.getElementById('resumeLinkedin').value.trim(),
         githubUrl: document.getElementById('resumeGithub').value.trim(),
@@ -555,13 +705,113 @@
           method: 'PUT',
           body: JSON.stringify(payload)
         });
-        showToast(res.message || 'Resume settings saved successfully!', 'success');
+        showToast(res.message || 'Resume profile settings saved successfully!', 'success');
       } catch (err) {
         showToast('Failed to save resume settings.', 'danger');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-check2 me-1"></i> Save Changes';
+        }
       }
     }
 
-    document.addEventListener('DOMContentLoaded', loadResume);
+    // Open Fullscreen Modal for High-Fidelity A4 Review
+    function openFullscreenPreview() {
+      updateLivePreview();
+      const sourcePaper = document.getElementById('printableResumeArea');
+      const container = document.getElementById('modalResumeContainer');
+      
+      if (sourcePaper && container) {
+        container.innerHTML = sourcePaper.outerHTML;
+      }
+
+      if (!bsPreviewModal) {
+        bsPreviewModal = new bootstrap.Modal(document.getElementById('resumeViewModal'));
+      }
+      bsPreviewModal.show();
+    }
+
+    // 1-Click High-Quality PDF Download
+    async function downloadPDF() {
+      const btn = document.getElementById('btnDownloadPDF');
+      const origText = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Generating PDF...';
+      }
+
+      const studentName = (document.getElementById('resumeName').value.trim() || 'Student').replace(/[^a-zA-Z0-9_-]/g, '_');
+      const filename = `${studentName}_Resume.pdf`;
+      const element = document.getElementById('printableResumeArea');
+
+      // Check if html2pdf is available
+      if (typeof html2pdf !== 'undefined' && element) {
+        const opt = {
+          margin: [8, 10, 8, 10],
+          filename: filename,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, logging: false },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        try {
+          showToast('Compiling high-resolution PDF...', 'info');
+          await html2pdf().set(opt).from(element).save();
+          showToast('Resume downloaded successfully!', 'success');
+        } catch (err) {
+          console.warn('html2pdf error, using native print:', err);
+          window.print();
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = origText || '<i class="bi bi-download me-1"></i> Download PDF';
+          }
+        }
+      } else {
+        // Fallback to native print dialog
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origText || '<i class="bi bi-download me-1"></i> Download PDF';
+        }
+        window.print();
+      }
+    }
+
+    // Mobile/Tablet View Switcher
+    function switchMobileView(view) {
+      const editorCol = document.getElementById('resumeEditorCol');
+      const previewCol = document.getElementById('resumePreviewCol');
+      const btnEdit = document.getElementById('tabBtnEditor');
+      const btnPrev = document.getElementById('tabBtnPreview');
+
+      if (view === 'editor') {
+        if (editorCol) editorCol.classList.remove('d-none');
+        if (previewCol) previewCol.classList.add('d-none');
+        if (btnEdit) btnEdit.classList.add('active');
+        if (btnPrev) btnPrev.classList.remove('active');
+      } else {
+        if (editorCol) editorCol.classList.add('d-none');
+        if (previewCol) previewCol.classList.remove('d-none');
+        if (btnEdit) btnEdit.classList.remove('active');
+        if (btnPrev) btnPrev.classList.add('active');
+        updateLivePreview();
+        if (previewCol) {
+          previewCol.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
+
+    // Initialize cleanly when document is ready
+    function initResumePage() {
+      loadResume();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initResumePage);
+    } else {
+      initResumePage();
+    }
   </script>
 </body>
 </html>

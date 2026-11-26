@@ -93,8 +93,12 @@ exports.saveResumeSettings = async (req, res) => {
   try {
     const {
       name,
+      targetCareer,
       phone,
       location,
+      college,
+      degree,
+      department,
       professionalSummary,
       linkedinUrl,
       githubUrl,
@@ -109,8 +113,21 @@ exports.saveResumeSettings = async (req, res) => {
     }
 
     if (name) user.name = name.trim();
+    if (targetCareer !== undefined) {
+      user.targetCareer = targetCareer.trim();
+      user.careerInterest = targetCareer.trim();
+    }
     if (phone !== undefined) user.phone = phone.trim();
     if (location !== undefined) user.location = location.trim();
+    if (college !== undefined) user.college = college.trim();
+    if (degree !== undefined) user.degree = degree.trim();
+    if (department !== undefined) user.department = department.trim();
+
+    const eduParts = [];
+    if (user.degree) eduParts.push(user.degree);
+    if (user.department) eduParts.push('in ' + user.department);
+    if (user.college) eduParts.push('- ' + user.college);
+    if (eduParts.length > 0) user.education = eduParts.join(' ');
     if (professionalSummary !== undefined) {
       user.professionalSummary = professionalSummary.trim();
       user.bio = professionalSummary.trim();
