@@ -9,7 +9,8 @@ const {
   getAssessments,
   getAssessmentById,
   submitAssessment,
-  getMyResults
+  getMyResults,
+  getAssessmentResultById
 } = require('../controllers/assessmentController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -17,6 +18,7 @@ router.use(protect); // Require authentication for tests
 
 router.get('/', getAssessments);
 router.get('/my-results', getMyResults);
+router.get('/results/:id', getAssessmentResultById);
 router.get('/:id', getAssessmentById);
 router.post('/:id/submit', submitAssessment);
 

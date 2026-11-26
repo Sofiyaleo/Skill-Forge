@@ -55,6 +55,12 @@ const skillSchema = new mongoose.Schema({
   isVerified: {
     type: Boolean,
     default: false
+  },
+  verificationScore: {
+    type: Number
+  },
+  verificationDate: {
+    type: Date
   }
 });
 

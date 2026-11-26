@@ -587,7 +587,7 @@ exports.getAdminAssessments = async (req, res) => {
           await Assessment.create({
             topic: t.id,
             title: t.displayName || t.name,
-            skillCategory: t.id === 'html' || t.id === 'css' || t.id === 'javascript' ? 'Frontend' : (t.id === 'sql' ? 'Database' : 'Core CS'),
+            skillCategory: t.skillCategory || (t.id === 'html' || t.id === 'css' || t.id === 'javascript' ? 'Frontend' : (t.id === 'sql' ? 'Database' : 'Core CS')),
             relatedSkill: t.displayName || t.name,
             difficulty: 'Beginner',
             description: `Official technical assessment to evaluate proficiency in ${t.displayName || t.name}.`,

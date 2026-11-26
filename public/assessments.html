@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skill Assessments – SkillForge</title>
+  <title>Skill Improvement Assessments – SkillForge</title>
 
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,6 +11,188 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <!-- Custom Design System -->
   <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    /* Practice Assessment Option Card Styling */
+    .practice-option-card {
+      border: 1.5px solid #E5E7EB;
+      border-radius: 0.85rem;
+      padding: 0.95rem 1.15rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      background-color: #FFFFFF;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.95rem;
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 52px;
+      user-select: none;
+    }
+    .practice-option-card:hover {
+      border-color: #10B981;
+      background-color: #F0FDF4;
+      transform: translateY(-1px);
+    }
+    .practice-option-card.selected {
+      border-color: #059669;
+      background-color: #ECFDF5;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.12);
+    }
+    .option-letter-badge {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 50%;
+      background-color: #F3F4F6;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.2s ease;
+    }
+    .practice-option-card.selected .option-letter-badge {
+      background-color: #059669;
+      color: #FFFFFF;
+    }
+    .option-text-wrapper {
+      flex: 1 1 auto;
+      min-width: 0;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
+      color: #1F2937 !important;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      font-weight: 500;
+      display: block;
+      padding-right: 0.5rem;
+    }
+    .practice-option-card.selected .option-text-wrapper {
+      color: #065F46 !important;
+      font-weight: 600;
+    }
+    .option-radio-icon {
+      flex-shrink: 0;
+      margin-left: auto;
+      margin-top: 5px;
+      font-size: 1.15rem;
+    }
+    .practice-step-pill {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background-color: #F3F4F6;
+      color: #6B7280;
+      border: 1.5px solid #E5E7EB;
+      transition: all 0.2s ease;
+    }
+    .practice-step-pill.active {
+      background-color: #059669;
+      border-color: #059669;
+      color: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2);
+    }
+    .practice-step-pill.answered {
+      background-color: #ECFDF5;
+      border-color: #10B981;
+      color: #059669;
+    }
+    .code-pill {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background-color: #F1F5F9;
+      color: #0F172A;
+      padding: 0.15rem 0.35rem;
+      border-radius: 0.35rem;
+      font-size: 0.9em;
+      border: 1px solid #E2E8F0;
+      word-break: break-word;
+    }
+    .practice-option-card.selected .code-pill {
+      background-color: #D1FAE5;
+      color: #065F46;
+      border-color: #A7F3D0;
+    }
+    .review-question-card {
+      border: 1.5px solid #E5E7EB;
+      border-radius: 0.85rem;
+      padding: 1.15rem;
+      background-color: #FFFFFF;
+      margin-bottom: 1rem;
+    }
+    .review-question-card.correct {
+      border-left: 5px solid #10B981 !important;
+    }
+    .review-question-card.incorrect {
+      border-left: 5px solid #F59E0B !important;
+    }
+    .review-option-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      margin-bottom: 0.35rem;
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.85rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .review-option-row .review-opt-badge {
+      flex-shrink: 0;
+      margin-left: auto;
+      margin-top: 1px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+    .explanation-callout {
+      background-color: #F8FAFC;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-left: 3px solid #6366F1;
+      font-size: 0.85rem;
+      color: #334155;
+    }
+    .scorecard-banner {
+      background: linear-gradient(135deg, #064E3B 0%, #059669 100%);
+      color: #FFFFFF;
+      border-radius: 1rem;
+      padding: 1.75rem 1.5rem;
+    }
+    @media (max-width: 576px) {
+      .practice-option-card {
+        padding: 0.75rem 0.85rem;
+        gap: 0.65rem;
+      }
+      .option-letter-badge {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        font-size: 0.8rem;
+      }
+      .option-text-wrapper {
+        font-size: 0.88rem;
+        line-height: 1.45;
+      }
+      .review-option-row {
+        flex-wrap: wrap;
+        padding: 0.55rem 0.7rem;
+      }
+      .review-option-row .review-opt-badge {
+        margin-left: 24px;
+        margin-top: 4px;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -124,36 +306,69 @@
         </div>
       </header>
 
-      <!-- Main Assessments Canvas (Matches Panel 9 in reference) -->
+      <!-- Main Assessments Canvas -->
       <main class="portal-container">
         
-        <div class="portal-title-block">
-          <h2 class="portal-title">Skill Assessments</h2>
-          <p class="portal-subtitle">Test your knowledge, verify your competencies, and earn verified skill badges.</p>
+        <div class="portal-title-block d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+          <div>
+            <h2 class="portal-title">Skill Improvement Assessments</h2>
+            <p class="portal-subtitle mb-0">Evaluate your skill competencies with targeted 5-question practice assessments, receive instant concept explanations, and strengthen your career readiness.</p>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill small fw-semibold">
+              <i class="bi bi-lightning-charge me-1"></i>Practice Mode
+            </span>
+          </div>
         </div>
 
         <!-- Navigation Tabs (Available Tests vs My Results) -->
         <ul class="nav nav-pills mb-4" id="assessmentTabs" role="tablist">
           <li class="nav-item">
             <button class="nav-link active rounded-pill px-4" id="available-tests-tab" data-bs-toggle="pill" data-bs-target="#available-tests">
-              Available Tests
+              <i class="bi bi-grid me-1"></i> Available Tests
             </button>
           </li>
           <li class="nav-item ms-2">
             <button class="nav-link rounded-pill px-4" id="my-results-tab" data-bs-toggle="pill" data-bs-target="#my-results" onclick="loadMyResults()">
-              My Results
+              <i class="bi bi-clock-history me-1"></i> Assessment History & Results
             </button>
           </li>
         </ul>
 
         <div class="tab-content" id="assessmentTabsContent">
           
-          <!-- TAB 1: AVAILABLE TESTS GRID (Panel 9 in reference) -->
+          <!-- TAB 1: AVAILABLE TESTS GRID -->
           <div class="tab-pane fade show active" id="available-tests">
+            <!-- Search & Filter Controls -->
+            <div class="card border-0 shadow-sm rounded-4 p-3 mb-4">
+              <div class="row g-2 align-items-center">
+                <div class="col-md-6 col-lg-7">
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0" id="testSearchInput" placeholder="Search practice assessments by skill or topic..." oninput="filterAssessments()">
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-5">
+                  <select class="form-select form-select-sm" id="categoryFilter" onchange="filterAssessments()">
+                    <option value="All">All Categories</option>
+                    <option value="Frontend">Frontend</option>
+                    <option value="Backend">Backend</option>
+                    <option value="Database">Database</option>
+                    <option value="Programming">Programming</option>
+                    <option value="Core CS">Core CS</option>
+                    <option value="Tools and Platforms">Tools and Platforms</option>
+                    <option value="Data & Analytics">Data & Analytics</option>
+                    <option value="Design">Design</option>
+                    <option value="Security">Security</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
             <div class="row g-4" id="testsGrid">
               <div class="col-12 text-center py-5">
                 <div class="spinner-border text-primary"></div>
-                <div class="text-muted small mt-2">Loading assessments...</div>
+                <div class="text-muted small mt-2">Loading practice assessments...</div>
               </div>
             </div>
           </div>
@@ -161,20 +376,28 @@
           <!-- TAB 2: MY RESULTS -->
           <div class="tab-pane fade" id="my-results">
             <div class="portal-card">
-              <h5 class="portal-card-title mb-3">Assessment History & Verification Badges</h5>
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <h5 class="portal-card-title mb-0"><i class="bi bi-award text-primary me-2"></i>Practice Assessment History & Skill Verifications</h5>
+                <span class="badge bg-light text-navy border" id="resultsCountBadge">0 Recorded Attempts</span>
+              </div>
+              <p class="text-muted small mb-3">
+                Review your past scores and click <strong>View Review</strong> on any attempt to see full question explanations, concept breakdowns, and recommended practice topics.
+              </p>
               <div class="table-responsive">
-                <table class="table table-forge">
-                  <thead>
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light small">
                     <tr>
-                      <th>Assessment Title</th>
-                      <th>Score</th>
+                      <th style="min-width: 170px;">Skill Assessment</th>
+                      <th>Score (out of 5)</th>
                       <th>Percentage</th>
+                      <th>Classification</th>
                       <th>Status</th>
                       <th>Date</th>
+                      <th class="text-end">Review</th>
                     </tr>
                   </thead>
-                  <tbody id="resultsTableBody">
-                    <tr><td colspan="5" class="text-center py-4 text-muted">No test results yet. Take an assessment!</td></tr>
+                  <tbody id="resultsTableBody" class="small">
+                    <tr><td colspan="7" class="text-center py-4 text-muted">Loading your past attempts...</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -188,72 +411,185 @@
     </div>
   </div>
 
-  <!-- Interactive Quiz Runner Modal -->
+  <!-- Interactive 5-Question Quiz Runner Modal -->
   <div class="modal fade" id="quizModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content border-0 shadow-lg rounded-4">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
         
-        <!-- Quiz Header with Timer -->
-        <div class="modal-header border-bottom border-light bg-light py-3">
-          <div>
-            <h5 class="modal-title fw-bold text-navy" id="quizModalTitle">Assessment</h5>
-            <span class="text-muted small" id="quizModalCategory">Frontend</span>
+        <!-- Quiz Header with Progress & Timer -->
+        <div class="modal-header border-bottom border-light bg-light py-3 px-4">
+          <div class="flex-grow-1 me-3">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill small" id="quizModalCategory">Technical</span>
+              <span class="badge bg-light text-secondary border small">5 Questions</span>
+            </div>
+            <h5 class="modal-title fw-bold text-navy text-truncate" id="quizModalTitle">Skill Assessment</h5>
           </div>
           <div class="d-flex align-items-center gap-2">
-            <div class="badge bg-danger-subtle text-danger px-3 py-2 fs-6 fw-bold" id="quizTimer">
-              <i class="bi bi-clock me-1"></i> <span id="timerCountdown">15:00</span>
+            <div class="badge bg-danger-subtle text-danger px-3 py-2 fs-6 fw-bold border border-danger-subtle" id="quizTimer">
+              <i class="bi bi-clock me-1"></i> <span id="timerCountdown">06:00</span>
             </div>
           </div>
         </div>
 
-        <!-- Quiz Questions Area -->
-        <div class="modal-body p-4" id="quizBody">
+        <!-- Progress Bar across 5 questions -->
+        <div class="progress" style="height: 5px; border-radius: 0;">
+          <div class="progress-bar bg-success" id="quizProgressBar" role="progressbar" style="width: 20%; background-color: #059669;"></div>
+        </div>
+
+        <!-- Quiz Body -->
+        <div class="modal-body p-4 p-md-5" id="quizBody">
+          
+          <!-- Step Dots / Question Pills -->
+          <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom flex-wrap gap-2">
+            <div class="d-flex gap-2 align-items-center" id="stepPillsContainer">
+              <div class="practice-step-pill active" id="pill_0">1</div>
+              <div class="practice-step-pill" id="pill_1">2</div>
+              <div class="practice-step-pill" id="pill_2">3</div>
+              <div class="practice-step-pill" id="pill_3">4</div>
+              <div class="practice-step-pill" id="pill_4">5</div>
+            </div>
+            <span class="text-primary fw-bold small" id="questionCounterText">Question 1 of 5</span>
+          </div>
+
+          <!-- Alert for Answer Selection Validation -->
+          <div class="alert alert-warning alert-dismissible fade show d-none small py-2 px-3 mb-3 rounded-3" id="quizValidationAlert" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i> Please select one of the four answer options before proceeding.
+          </div>
+
+          <!-- Active Question Container -->
           <div id="quizQuestionContainer">
             <!-- Active question injected via JS -->
           </div>
         </div>
 
         <!-- Quiz Controls Footer -->
-        <div class="modal-footer border-top border-light justify-content-between">
-          <button type="button" class="btn btn-outline-secondary btn-sm" id="prevQuestionBtn" onclick="prevQuestion()" disabled>
+        <div class="modal-footer border-top border-light py-3 px-4 d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-secondary px-3 py-2 rounded-3" id="prevQuestionBtn" onclick="prevQuestion()" disabled>
             <i class="bi bi-arrow-left me-1"></i> Previous
           </button>
-          <span class="text-muted small fw-semibold" id="questionCounterText">Question 1 of 5</span>
-          <button type="button" class="btn btn-forge-primary btn-sm px-4" id="nextQuestionBtn" onclick="nextQuestion()">
-            <span>Next</span> <i class="bi bi-arrow-right ms-1"></i>
-          </button>
+          
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-forge-primary px-4 py-2 rounded-3" id="nextQuestionBtn" onclick="nextQuestion()">
+              <span>Next</span> <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
         </div>
 
       </div>
     </div>
   </div>
 
-  <!-- Quiz Result Modal -->
-  <div class="modal fade" id="quizResultModal" tabindex="-1">
+  <!-- Quiz Submission Confirmation Modal -->
+  <div class="modal fade" id="submitConfirmModal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg rounded-4 text-center p-4">
-        <div id="quizResultIconWrapper" class="my-3">
-          <!-- Success or Fail Icon -->
+      <div class="modal-content border-0 shadow-lg rounded-4 p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold text-navy"><i class="bi bi-question-circle text-primary me-2"></i>Submit Practice Assessment?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <h4 class="fw-bold text-navy" id="quizResultTitle">Assessment Completed</h4>
-        <p class="text-muted small" id="quizResultSubtitle"></p>
-
-        <div class="p-3 rounded-3 bg-light my-3">
-          <div class="row">
-            <div class="col-6 border-end">
-              <div class="text-muted small">Score</div>
-              <h3 class="fw-bold text-navy mb-0" id="resultScoreText">4 / 5</h3>
-            </div>
-            <div class="col-6">
-              <div class="text-muted small">Percentage</div>
-              <h3 class="fw-bold text-primary mb-0" id="resultPercentageText">80%</h3>
-            </div>
+        <div class="modal-body py-3">
+          <p class="text-muted small mb-3">
+            You are about to submit your answers for evaluation. Your score will be calculated out of 5, and you will receive instant answer explanations and targeted practice recommendations.
+          </p>
+          <div class="p-3 bg-light rounded-3 mb-2" id="submitConfirmSummaryBox">
+            <!-- Populated by JS -->
+          </div>
+          <div class="text-danger small d-none" id="unansweredWarningBox">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i> <strong>Note:</strong> You have unanswered questions. Unanswered questions will receive zero marks.
           </div>
         </div>
+        <div class="modal-footer border-0 pt-0 d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Go Back & Review</button>
+          <button type="button" class="btn btn-success px-4" id="btnConfirmExecuteSubmit" onclick="executeSubmitQuiz()">
+            <span>Yes, Submit Answers</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <button type="button" class="btn btn-forge-primary w-100 py-2 mt-2" data-bs-dismiss="modal" onclick="finishQuizReview()">
-          Return to Assessments
-        </button>
+  <!-- Comprehensive Quiz Result & Review Modal -->
+  <div class="modal fade" id="quizResultModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        
+        <div class="modal-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="modal-title fw-bold text-navy" id="reviewModalTitle">Assessment Evaluation & Review</h5>
+            <span class="text-muted small" id="reviewModalTopic">Skill Review</span>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="finishQuizReview()" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body p-4">
+          
+          <!-- Top Hero Scorecard Banner -->
+          <div class="scorecard-banner mb-4">
+            <div class="row align-items-center g-3">
+              <div class="col-sm-7">
+                <span class="badge bg-white text-emerald fw-bold px-3 py-1 mb-2 rounded-pill" style="color: #065F46;" id="resultClassificationBadge">
+                  Strong Foundation
+                </span>
+                <h3 class="fw-bold text-white mb-1" id="resultGreetingTitle">Excellent Work!</h3>
+                <p class="mb-0 text-white-50 small" id="resultFeedbackText">
+                  You have demonstrated good understanding of core concepts.
+                </p>
+              </div>
+              <div class="col-sm-5 text-sm-end">
+                <div class="bg-white bg-opacity-10 p-3 rounded-3 border border-white border-opacity-25 d-inline-block text-center" style="min-width: 140px;">
+                  <div class="text-white-50 text-uppercase fw-semibold" style="font-size: 0.72rem;">Final Score</div>
+                  <div class="display-6 fw-bold text-white mb-0" id="resultScoreText">4 / 5</div>
+                  <div class="text-white fw-semibold small" id="resultPercentageText">80%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Identified Topics to Practice More -->
+          <div class="card border-0 bg-warning-subtle rounded-3 p-3 mb-3 d-none" id="topicsToImproveCard">
+            <div class="d-flex align-items-start gap-2">
+              <i class="bi bi-lightbulb-fill text-warning-emphasis fs-5 mt-n1"></i>
+              <div>
+                <h6 class="fw-bold text-warning-emphasis mb-1">Concepts to Practice More:</h6>
+                <div class="d-flex flex-wrap gap-1 mt-1" id="topicsToImproveList">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommendation Box -->
+          <div class="card border-0 bg-light rounded-3 p-3 mb-4">
+            <h6 class="fw-bold text-navy mb-1"><i class="bi bi-compass text-primary me-2"></i>Personalized Recommendation:</h6>
+            <p class="text-muted small mb-0" id="resultRecommendationText">
+              Keep practicing key topics and apply them in short coding exercises.
+            </p>
+          </div>
+
+          <!-- Question-by-Question Detailed Review -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold text-navy mb-0">
+              <i class="bi bi-list-check text-primary me-2"></i>Question-by-Question Review with Explanations
+            </h6>
+            <span class="text-muted small">5 Questions</span>
+          </div>
+
+          <div id="detailedReviewContainer">
+            <!-- Rendered by JS -->
+          </div>
+
+        </div>
+
+        <div class="modal-footer border-top bg-light py-3 px-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <button type="button" class="btn btn-outline-secondary px-3" data-bs-dismiss="modal" onclick="finishQuizReview()">
+            Back to Available Tests
+          </button>
+          <button type="button" class="btn btn-forge-primary px-4" id="btnRetakeCurrentQuiz">
+            <i class="bi bi-arrow-clockwise me-1"></i> Retake This Test
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
@@ -264,70 +600,208 @@
   <script>
     const user = requireAuth();
 
-    let assessmentsList = [];
+    /**
+     * Safely extract display string from option (handles strings, objects, numbers)
+     */
+    function getOptionText(opt) {
+      if (opt === null || opt === undefined) return '';
+      if (typeof opt === 'object') {
+        return String(opt.text || opt.option || opt.optionText || opt.choice || opt.value || opt.label || opt.name || opt.title || opt.ans || opt.answer || JSON.stringify(opt)).trim();
+      }
+      return String(opt).trim();
+    }
+
+    /**
+     * Escape special HTML characters to prevent code tags (like <!DOCTYPE html>, <article>, <center>)
+     * from vanishing or parsing as DOM elements in innerHTML.
+     */
+    function escapeHtml(value) {
+      if (value === null || value === undefined) return '';
+      const str = typeof value === 'object' ? getOptionText(value) : String(value);
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /**
+     * Safely formats text and highlights inline backtick code snippets
+     */
+    function formatCodeSnippets(value) {
+      if (value === null || value === undefined) return '';
+      const safe = escapeHtml(value);
+      return safe.replace(/`([^`]+)`/g, '<code class="code-pill">$1</code>');
+    }
+
+    let allAssessmentsCache = [];
     let activeQuiz = null;
     let currentQuestionIndex = 0;
-    let userAnswers = [];
+    // Exactly 5 answers (stored by question index 0..4)
+    let userAnswers = [null, null, null, null, null];
     let timerInterval = null;
     let timeRemaining = 0;
 
+    /**
+     * Dynamically populate category dropdown to guarantee all active assessment domains are present
+     */
+    function populateCategoryDropdown(tests) {
+      const select = document.getElementById('categoryFilter');
+      if (!select) return;
+      const currentVal = select.value || 'All';
+      const standardCats = ['Frontend', 'Backend', 'Database', 'Programming', 'Core CS', 'Tools and Platforms', 'Data & Analytics', 'Design', 'Security'];
+      const testCats = Array.from(new Set(tests.map(t => t.skillCategory).filter(Boolean)));
+      const mergedCats = Array.from(new Set([...standardCats, ...testCats]));
+
+      let html = '<option value="All">All Categories</option>';
+      mergedCats.forEach(cat => {
+        const isSel = (cat === currentVal);
+        html += `<option value="${escapeHtml(cat)}" ${isSel ? 'selected' : ''}>${escapeHtml(cat)}</option>`;
+      });
+      select.innerHTML = html;
+      if (mergedCats.includes(currentVal)) {
+        select.value = currentVal;
+      }
+    }
+
+    /**
+     * Check URL query parameters (e.g. ?category=Frontend, ?topic=html, ?skill=React, ?career=Data+Analyst)
+     */
+    function handleUrlParameters() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetCategory = urlParams.get('category');
+      const targetTopic = urlParams.get('topic') || urlParams.get('test') || urlParams.get('id');
+      const targetSkill = urlParams.get('skill');
+      const targetCareer = urlParams.get('career') || urlParams.get('role');
+
+      if (targetCategory) {
+        const catSelect = document.getElementById('categoryFilter');
+        if (catSelect) catSelect.value = targetCategory;
+      }
+
+      if (targetSkill) {
+        const searchInput = document.getElementById('testSearchInput');
+        if (searchInput) searchInput.value = targetSkill;
+      }
+
+      filterAssessments();
+
+      if (targetTopic && allAssessmentsCache.length > 0) {
+        const needle = targetTopic.toLowerCase().trim();
+        const matchingTest = allAssessmentsCache.find(t =>
+          (t._id && t._id.toString() === needle) ||
+          (t.topic && t.topic.toLowerCase() === needle) ||
+          (t.title && t.title.toLowerCase().includes(needle))
+        );
+        if (matchingTest) {
+          startQuiz(matchingTest._id);
+        }
+      }
+    }
+
+    /**
+     * Load Available Assessments from Backend
+     */
     async function loadAssessments() {
       try {
         const data = await apiFetch('/assessments');
-        assessmentsList = data.assessments || [];
-        renderAssessments(assessmentsList);
+        allAssessmentsCache = data.assessments || [];
+        populateCategoryDropdown(allAssessmentsCache);
+        handleUrlParameters();
+        filterAssessments();
       } catch (err) {
         showToast('Failed to load assessments.', 'danger');
       }
     }
 
+    /**
+     * Filter Assessments by Search and Category
+     */
+    function filterAssessments() {
+      const q = (document.getElementById('testSearchInput').value || '').toLowerCase().trim();
+      const cat = document.getElementById('categoryFilter').value;
+
+      let filtered = allAssessmentsCache;
+      if (cat && cat !== 'All') {
+        filtered = filtered.filter(t => t.skillCategory === cat);
+      }
+      if (q) {
+        filtered = filtered.filter(t =>
+          (t.title && t.title.toLowerCase().includes(q)) ||
+          (t.topic && t.topic.toLowerCase().includes(q)) ||
+          (t.description && t.description.toLowerCase().includes(q)) ||
+          (t.skillCategory && t.skillCategory.toLowerCase().includes(q))
+        );
+      }
+      renderAssessments(filtered);
+    }
+
+    /**
+     * Render Assessment Cards Grid
+     */
     function renderAssessments(tests) {
       const grid = document.getElementById('testsGrid');
       if (!tests || tests.length === 0) {
-        grid.innerHTML = `<div class="col-12 text-center py-5 text-muted">No assessments available currently.</div>`;
+        grid.innerHTML = `<div class="col-12 text-center py-5 text-muted"><i class="bi bi-search fs-3 d-block mb-2 text-secondary"></i>No practice assessments match your filter.</div>`;
         return;
       }
 
-      grid.innerHTML = tests.map(test => `
-        <div class="col-md-6 col-lg-4">
-          <div class="portal-card h-100 d-flex flex-column">
-            <div class="d-flex align-items-center gap-3 mb-3">
-              <div class="feature-icon-bubble mb-0" style="background: ${test.badgeColor}18; color: ${test.badgeColor}; width: 50px; height: 50px; font-size: 1.4rem;">
-                <i class="bi ${test.icon}"></i>
+      grid.innerHTML = tests.map(test => {
+        const badgeColor = test.badgeColor || '#059669';
+        return `
+          <div class="col-md-6 col-lg-4">
+            <div class="portal-card h-100 d-flex flex-column border-0 shadow-sm rounded-4 p-4">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="feature-icon-bubble mb-0" style="background: ${badgeColor}18; color: ${badgeColor}; width: 50px; height: 50px; font-size: 1.4rem;">
+                  <i class="bi ${test.icon || 'bi-code-slash'}"></i>
+                </div>
+                <div class="min-w-0">
+                  <h5 class="fw-bold text-navy mb-0 text-truncate" style="font-size: 1.05rem;" title="${escapeHtml(test.title)}">${escapeHtml(test.title)}</h5>
+                  <span class="badge bg-light text-muted border small mt-1">${escapeHtml(test.skillCategory || 'Technical')}</span>
+                </div>
               </div>
-              <div>
-                <h5 class="fw-bold text-navy mb-0" style="font-size: 1.05rem;">${test.title}</h5>
-                <span class="badge bg-light text-muted small">${test.skillCategory}</span>
+
+              <p class="text-muted small mb-3 flex-grow-1" style="font-size: 0.83rem; line-height: 1.45;">
+                ${escapeHtml(test.description || 'Improve your skill readiness with 5 multiple-choice questions.')}
+              </p>
+
+              <div class="d-flex justify-content-between align-items-center text-muted small mb-3 pt-2 border-top" style="font-size: 0.78rem;">
+                <span><i class="bi bi-patch-question me-1 text-primary"></i>5 Questions</span>
+                <span><i class="bi bi-clock me-1 text-secondary"></i>${test.durationMinutes || 6} min</span>
+                <span class="badge bg-success-subtle text-success">60% to Verify</span>
               </div>
-            </div>
 
-            <div class="d-flex justify-content-between align-items-center text-muted small mb-4 mt-auto">
-              <span><i class="bi bi-question-circle me-1"></i>${test.questionCount} Questions</span>
-              <span><i class="bi bi-clock me-1"></i>${test.durationMinutes} min</span>
+              <button class="btn btn-forge-primary btn-sm w-100 py-2 rounded-3 fw-semibold" onclick="startQuiz('${test._id}')">
+                <span>Start Practice Test</span>
+                <i class="bi bi-play-circle ms-1"></i>
+              </button>
             </div>
-
-            <button class="btn btn-forge-primary btn-sm w-100 py-2" onclick="startQuiz('${test._id}')">
-              <span>Start Test</span>
-              <i class="bi bi-play-circle ms-1"></i>
-            </button>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
-    // Start Interactive Quiz
+    /**
+     * Start Interactive 5-Question Quiz
+     */
     async function startQuiz(testId) {
       try {
         const data = await apiFetch(`/assessments/${testId}`);
         activeQuiz = data.assessment;
         currentQuestionIndex = 0;
-        userAnswers = new Array(activeQuiz.questions.length).fill(null);
+        // Exactly 5 questions strictly enforced
+        if (activeQuiz && activeQuiz.questions) {
+          activeQuiz.questions = activeQuiz.questions.slice(0, 5);
+        }
+        const total = activeQuiz.questions ? Math.min(activeQuiz.questions.length, 5) : 5;
+        userAnswers = new Array(total).fill(null);
 
         document.getElementById('quizModalTitle').textContent = activeQuiz.title;
-        document.getElementById('quizModalCategory').textContent = activeQuiz.skillCategory;
+        document.getElementById('quizModalCategory').textContent = activeQuiz.skillCategory || 'Technical';
 
         // Timer setup
-        timeRemaining = activeQuiz.durationMinutes * 60;
+        timeRemaining = (activeQuiz.durationMinutes || 6) * 60;
         updateTimerDisplay();
         clearInterval(timerInterval);
         timerInterval = setInterval(() => {
@@ -335,12 +809,13 @@
           updateTimerDisplay();
           if (timeRemaining <= 0) {
             clearInterval(timerInterval);
-            submitQuiz();
+            executeSubmitQuiz();
           }
         }, 1000);
 
         renderCurrentQuestion();
-        new bootstrap.Modal(document.getElementById('quizModal')).show();
+        const modal = new bootstrap.Modal(document.getElementById('quizModal'));
+        modal.show();
       } catch (err) {
         showToast('Failed to load test questions.', 'danger');
       }
@@ -353,60 +828,199 @@
         `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 
+    /**
+     * Render Active Question (One at a time) with High-Visibility Options
+     */
     function renderCurrentQuestion() {
+      hideValidationAlert();
+      const total = activeQuiz.questions.length;
       const q = activeQuiz.questions[currentQuestionIndex];
       const container = document.getElementById('quizQuestionContainer');
 
-      document.getElementById('questionCounterText').textContent =
-        `Question ${currentQuestionIndex + 1} of ${activeQuiz.questions.length}`;
-
-      document.getElementById('prevQuestionBtn').disabled = currentQuestionIndex === 0;
-      const nextBtn = document.getElementById('nextQuestionBtn');
-      if (currentQuestionIndex === activeQuiz.questions.length - 1) {
-        nextBtn.innerHTML = `<span>Submit Test</span> <i class="bi bi-check-lg ms-1"></i>`;
-      } else {
-        nextBtn.innerHTML = `<span>Next</span> <i class="bi bi-arrow-right ms-1"></i>`;
+      // 1. Update Stepper Pills & Progress Bar
+      for (let i = 0; i < 5; i++) {
+        const pill = document.getElementById(`pill_${i}`);
+        if (pill) {
+          pill.className = 'practice-step-pill';
+          if (i === currentQuestionIndex) {
+            pill.classList.add('active');
+          } else if (userAnswers[i] !== null) {
+            pill.classList.add('answered');
+          }
+        }
       }
 
+      const progressPct = Math.round(((currentQuestionIndex + 1) / total) * 100);
+      document.getElementById('quizProgressBar').style.width = `${progressPct}%`;
+      document.getElementById('questionCounterText').textContent =
+        `Question ${currentQuestionIndex + 1} of ${total}`;
+
+      // 2. Navigation buttons state
+      document.getElementById('prevQuestionBtn').disabled = currentQuestionIndex === 0;
+      const nextBtn = document.getElementById('nextQuestionBtn');
+      if (currentQuestionIndex === total - 1) {
+        nextBtn.innerHTML = `<span>Review & Submit</span> <i class="bi bi-check2-circle ms-1"></i>`;
+        nextBtn.className = 'btn btn-success px-4 py-2 rounded-3';
+      } else {
+        nextBtn.innerHTML = `<span>Next</span> <i class="bi bi-arrow-right ms-1"></i>`;
+        nextBtn.className = 'btn btn-forge-primary px-4 py-2 rounded-3';
+      }
+
+      // 3. Render Question text & 4 Option Cards
+      const letters = ['A', 'B', 'C', 'D'];
+      const selectedIndex = userAnswers[currentQuestionIndex];
+      const rawOptions = (q.options && q.options.length > 0) 
+        ? q.options 
+        : ((q.choices && q.choices.length > 0) ? q.choices : (q.answers || []));
+
+      const rawQText = q.questionText || q.question || '';
+      const formattedQText = formatCodeSnippets(rawQText);
+
       container.innerHTML = `
-        <h6 class="fw-bold text-navy mb-3">${currentQuestionIndex + 1}. ${q.questionText}</h6>
-        <div class="d-flex flex-column gap-2">
-          ${q.options.map((opt, idx) => `
-            <label class="p-3 border rounded-3 d-flex align-items-center gap-3 cursor-pointer ${userAnswers[currentQuestionIndex] === idx ? 'border-primary bg-primary-subtle' : 'bg-light'}">
-              <input type="radio" name="quizOption" value="${idx}" class="form-check-input"
-                     ${userAnswers[currentQuestionIndex] === idx ? 'checked' : ''}
-                     onchange="selectOption(${idx})">
-              <span class="small fw-semibold text-navy">${opt}</span>
-            </label>
-          `).join('')}
+        <div class="mb-3">
+          <span class="badge bg-light text-secondary border small mb-2 text-uppercase fw-semibold">
+            <i class="bi bi-tag me-1"></i>${escapeHtml(q.concept || activeQuiz.title || 'Technical Skill')}
+          </span>
+          <h5 class="fw-bold text-navy lh-base mb-0" style="font-size: 1.15rem; word-break: break-word; color: #0F172A;">
+            ${currentQuestionIndex + 1}. ${formattedQText}
+          </h5>
+        </div>
+
+        <div class="d-flex flex-column gap-2 mt-4" role="radiogroup" aria-label="Question options">
+          ${rawOptions.map((opt, idx) => {
+            const isSelected = selectedIndex === idx;
+            const optText = getOptionText(opt);
+            const formattedOptHtml = formatCodeSnippets(optText);
+            return `
+              <div class="practice-option-card ${isSelected ? 'selected' : ''}" 
+                   onclick="selectOption(${idx})"
+                   role="radio"
+                   aria-checked="${isSelected}"
+                   tabindex="0"
+                   onkeydown="if(event.key==='Enter'||event.key===' '){selectOption(${idx});event.preventDefault();}">
+                <div class="option-letter-badge">${letters[idx]}</div>
+                <div class="option-text-wrapper">
+                  ${formattedOptHtml}
+                </div>
+                <i class="bi ${isSelected ? 'bi-check-circle-fill text-success' : 'bi-circle text-muted'} option-radio-icon"></i>
+              </div>
+            `;
+          }).join('')}
         </div>
       `;
     }
 
+    /**
+     * Option Selection Handler (Retains state)
+     */
     function selectOption(idx) {
+      hideValidationAlert();
       userAnswers[currentQuestionIndex] = idx;
+      renderCurrentQuestion();
     }
 
+    function showValidationAlert() {
+      const alert = document.getElementById('quizValidationAlert');
+      if (alert) alert.classList.remove('d-none');
+    }
+
+    function hideValidationAlert() {
+      const alert = document.getElementById('quizValidationAlert');
+      if (alert) alert.classList.add('d-none');
+    }
+
+    /**
+     * Next Question / Open Submit Confirmation
+     */
     function nextQuestion() {
+      // Validate selection
+      if (userAnswers[currentQuestionIndex] === null) {
+        showValidationAlert();
+        return;
+      }
+
       if (currentQuestionIndex === activeQuiz.questions.length - 1) {
-        submitQuiz();
+        openSubmitConfirmation();
       } else {
         currentQuestionIndex++;
         renderCurrentQuestion();
       }
     }
 
+    /**
+     * Previous Question Handler (Retains selected answer)
+     */
     function prevQuestion() {
+      hideValidationAlert();
       if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
         renderCurrentQuestion();
       }
     }
 
-    // Submit Quiz to Express Backend
-    async function submitQuiz() {
+    /**
+     * Confirmation Modal before Final Submission
+     */
+    function openSubmitConfirmation() {
+      const total = activeQuiz.questions.length;
+      let answeredCount = 0;
+      let summaryRows = '';
+      const letters = ['A', 'B', 'C', 'D'];
+
+      for (let i = 0; i < total; i++) {
+        const ans = userAnswers[i];
+        if (ans !== null) answeredCount++;
+
+        let ansDisplay = '<span class="small text-danger fw-semibold">Not Answered</span>';
+        if (ans !== null && ans >= 0) {
+          const qObj = activeQuiz.questions[i];
+          const qOpts = (qObj.options || qObj.choices || qObj.answers || []);
+          const rawOpt = qOpts[ans];
+          const optStr = getOptionText(rawOpt);
+          const preview = optStr ? (optStr.length > 28 ? optStr.substring(0, 25) + '...' : optStr) : '';
+          ansDisplay = `<span class="small text-success fw-bold">Option ${letters[ans]}${preview ? ` <span class="text-muted fw-normal">• ${escapeHtml(preview)}</span>` : ''}</span>`;
+        }
+
+        summaryRows += `
+          <div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light">
+            <span class="small fw-semibold text-navy">Question ${i + 1}:</span>
+            ${ansDisplay}
+          </div>
+        `;
+      }
+
+      document.getElementById('submitConfirmSummaryBox').innerHTML = summaryRows + `
+        <div class="d-flex justify-content-between pt-2 fw-bold text-navy small">
+          <span>Total Answered:</span>
+          <span>${answeredCount} / ${total}</span>
+        </div>
+      `;
+
+      const warning = document.getElementById('unansweredWarningBox');
+      if (answeredCount < total) {
+        warning.classList.remove('d-none');
+      } else {
+        warning.classList.add('d-none');
+      }
+
+      const confirmModal = new bootstrap.Modal(document.getElementById('submitConfirmModal'));
+      confirmModal.show();
+    }
+
+    /**
+     * Submit Answers to Backend & Render Rich Review
+     */
+    async function executeSubmitQuiz() {
       clearInterval(timerInterval);
-      bootstrap.Modal.getInstance(document.getElementById('quizModal')).hide();
+
+      // Hide confirmation & quiz runner modals
+      const confirmModalEl = document.getElementById('submitConfirmModal');
+      const confirmModal = bootstrap.Modal.getInstance(confirmModalEl);
+      if (confirmModal) confirmModal.hide();
+
+      const quizModalEl = document.getElementById('quizModal');
+      const quizModal = bootstrap.Modal.getInstance(quizModalEl);
+      if (quizModal) quizModal.hide();
 
       try {
         const response = await apiFetch(`/assessments/${activeQuiz._id}/submit`, {
@@ -414,57 +1028,204 @@
           body: JSON.stringify({ answers: userAnswers })
         });
 
-        const r = response.result;
-        document.getElementById('resultScoreText').textContent = `${r.score} / ${r.totalQuestions}`;
-        document.getElementById('resultPercentageText').textContent = `${r.percentage}%`;
-
-        const iconWrapper = document.getElementById('quizResultIconWrapper');
-        if (r.passed) {
-          iconWrapper.innerHTML = `<i class="bi bi-patch-check-fill text-success" style="font-size: 4rem;"></i>`;
-          document.getElementById('quizResultTitle').textContent = 'Congratulations! You Passed!';
-          document.getElementById('quizResultSubtitle').textContent = 'Your verified skill badge has been added to your profile.';
-        } else {
-          iconWrapper.innerHTML = `<i class="bi bi-exclamation-circle text-warning" style="font-size: 4rem;"></i>`;
-          document.getElementById('quizResultTitle').textContent = 'Keep Practicing!';
-          document.getElementById('quizResultSubtitle').textContent = `Passing threshold is ${r.passingPercentage}%. Review your roadmap and try again!`;
-        }
-
-        new bootstrap.Modal(document.getElementById('quizResultModal')).show();
+        renderDetailedResultModal(response.result);
       } catch (err) {
-        showToast('Error submitting assessment.', 'danger');
+        showToast('Error submitting assessment: ' + err.message, 'danger');
       }
+    }
+
+    /**
+     * Render the Detailed Result & Review Modal
+     */
+    function renderDetailedResultModal(result) {
+      document.getElementById('reviewModalTitle').textContent = `${result.assessmentTitle} Review`;
+      document.getElementById('reviewModalTopic').textContent = result.topic || 'Skill Assessment';
+
+      // Score and percentage
+      document.getElementById('resultScoreText').textContent = `${result.score} / ${result.totalQuestions}`;
+      document.getElementById('resultPercentageText').textContent = `${result.percentage}%`;
+
+      // Classification badge
+      const classBadge = document.getElementById('resultClassificationBadge');
+      classBadge.textContent = result.classification || (result.passed ? 'Strong Foundation' : 'Developing');
+
+      const isStrong = result.score >= 4;
+      const isDev = result.score >= 2 && result.score < 4;
+
+      if (isStrong) {
+        document.getElementById('resultGreetingTitle').textContent = 'Outstanding Mastery!';
+      } else if (isDev) {
+        document.getElementById('resultGreetingTitle').textContent = 'Good Effort - Keep Growing!';
+      } else {
+        document.getElementById('resultGreetingTitle').textContent = 'Foundational Review Opportunity';
+      }
+
+      document.getElementById('resultFeedbackText').textContent =
+        result.encouragingFeedback || 'Great work completing this practice test.';
+
+      // Concepts to practice more
+      const topicsCard = document.getElementById('topicsToImproveCard');
+      const topicsList = document.getElementById('topicsToImproveList');
+      if (result.topicsToImprove && result.topicsToImprove.length > 0) {
+        topicsList.innerHTML = result.topicsToImprove.map(t =>
+          `<span class="badge bg-warning text-dark border border-warning px-2 py-1">${escapeHtml(t)}</span>`
+        ).join(' ');
+        topicsCard.classList.remove('d-none');
+      } else {
+        topicsCard.classList.add('d-none');
+      }
+
+      // Recommendation text
+      document.getElementById('resultRecommendationText').textContent =
+        result.recommendation || 'Continue practicing with short code challenges and project exercises.';
+
+      // Retake button target
+      document.getElementById('btnRetakeCurrentQuiz').onclick = () => {
+        bootstrap.Modal.getInstance(document.getElementById('quizResultModal')).hide();
+        startQuiz(result.topic || activeQuiz._id);
+      };
+
+      // Question-by-question review
+      const reviewContainer = document.getElementById('detailedReviewContainer');
+      const letters = ['A', 'B', 'C', 'D'];
+
+      reviewContainer.innerHTML = (result.review || []).map((r, idx) => {
+        const isCorrect = r.isCorrect;
+        const cardClass = isCorrect ? 'correct' : 'incorrect';
+        const rawOpts = r.options || r.choices || r.answers || [];
+
+        return `
+          <div class="review-question-card ${cardClass}">
+            <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-2">
+              <span class="badge bg-light text-secondary border small">
+                Question ${idx + 1} • ${escapeHtml(r.concept || 'Concept')}
+              </span>
+              <span class="badge ${isCorrect ? 'bg-success' : 'bg-warning text-dark'} px-2 py-1">
+                ${isCorrect ? '<i class="bi bi-check-circle me-1"></i>Correct' : '<i class="bi bi-x-circle me-1"></i>Needs Practice'}
+              </span>
+            </div>
+
+            <h6 class="fw-bold text-navy mb-3 lh-base" style="font-size: 0.95rem; color: #0F172A;">
+              ${formatCodeSnippets(r.questionText)}
+            </h6>
+
+            <!-- Options Breakdown -->
+            <div class="d-flex flex-column gap-1 mb-3">
+              ${rawOpts.map((opt, optIdx) => {
+                const wasSelected = r.userSelected === optIdx;
+                const wasCorrect = (r.correctIndex === optIdx) || (r.correctOptionIndex === optIdx);
+                const optText = getOptionText(opt);
+                const formattedOptHtml = formatCodeSnippets(optText);
+
+                let optStyle = 'border: 1px solid #E5E7EB; background: #FFFFFF; color: #1F2937;';
+                let iconHtml = '';
+
+                if (wasCorrect) {
+                  optStyle = 'border: 1.5px solid #10B981; background: #ECFDF5; color: #065F46; font-weight: 600;';
+                  iconHtml = '<span class="badge bg-success review-opt-badge"><i class="bi bi-check-lg me-1"></i>Correct Answer</span>';
+                } else if (wasSelected && !wasCorrect) {
+                  optStyle = 'border: 1.5px solid #EF4444; background: #FEF2F2; color: #991B1B; font-weight: 600;';
+                  iconHtml = '<span class="badge bg-danger review-opt-badge"><i class="bi bi-x-lg me-1"></i>Your Choice</span>';
+                }
+
+                return `
+                  <div class="review-option-row" style="${optStyle}">
+                    <span class="fw-bold flex-shrink-0" style="min-width: 22px; margin-top: 1px;">${letters[optIdx]}.</span>
+                    <span class="flex-grow-1" style="word-break: break-word; overflow-wrap: anywhere; line-height: 1.5;">${formattedOptHtml}</span>
+                    ${iconHtml}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <!-- Explanation Callout -->
+            <div class="explanation-callout">
+              <strong><i class="bi bi-info-circle me-1 text-primary"></i>Why this is correct:</strong>
+              <div class="mt-1" style="word-break: break-word; line-height: 1.5;">
+                ${formatCodeSnippets(r.explanation || 'Review core syntax and official documentation.')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const resultModal = new bootstrap.Modal(document.getElementById('quizResultModal'));
+      resultModal.show();
     }
 
     function finishQuizReview() {
       loadAssessments();
     }
 
-    // Load Past Test Results
+    /**
+     * Load Past Assessment History
+     */
     async function loadMyResults() {
       try {
         const data = await apiFetch('/assessments/my-results');
         const tbody = document.getElementById('resultsTableBody');
+        const countBadge = document.getElementById('resultsCountBadge');
 
-        if (!data.results || data.results.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">No test results recorded yet.</td></tr>`;
+        const results = data.results || [];
+        countBadge.textContent = `${results.length} Recorded Attempt${results.length === 1 ? '' : 's'}`;
+
+        if (results.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted"><i class="bi bi-clipboard2-x fs-3 d-block mb-1 text-secondary"></i>No practice assessment results recorded yet. Take an assessment above!</td></tr>`;
           return;
         }
 
-        tbody.innerHTML = data.results.map(r => `
-          <tr>
-            <td class="fw-bold text-navy">${r.assessmentTitle}</td>
-            <td>${r.score} / ${r.totalQuestions}</td>
-            <td class="fw-semibold text-primary">${r.percentage}%</td>
-            <td>
-              <span class="badge ${r.passed ? 'badge-status-meets' : 'badge-status-missing'}">
-                ${r.passed ? 'Passed ✓' : 'Failed'}
-              </span>
-            </td>
-            <td class="text-muted small">${new Date(r.completedAt).toLocaleDateString()}</td>
-          </tr>
-        `).join('');
+        tbody.innerHTML = results.map(r => {
+          const isStrong = r.classification === 'Strong Foundation' || r.score >= 4;
+          const isDev = r.classification === 'Developing' || (r.score >= 2 && r.score < 4);
+          const badgeClass = isStrong ? 'bg-success text-white' : (isDev ? 'bg-primary text-white' : 'bg-warning text-dark');
+          const statusText = r.passed ? 'Verified' : 'Practice Completed';
+
+          return `
+            <tr>
+              <td>
+                <div class="fw-bold text-navy">${r.assessmentTitle}</div>
+                <div class="text-muted" style="font-size: 0.72rem;">Topic: ${r.topic || 'Skill'}</div>
+              </td>
+              <td><span class="fw-bold text-navy">${r.score}</span> / ${r.totalQuestions || 5}</td>
+              <td class="fw-semibold text-primary">${r.percentage}%</td>
+              <td>
+                <span class="badge ${badgeClass} rounded-pill px-2 py-1">
+                  ${r.classification || (isStrong ? 'Strong Foundation' : 'Developing')}
+                </span>
+              </td>
+              <td>
+                <span class="badge ${r.passed ? 'bg-success-subtle text-success' : 'bg-light text-secondary border'}">
+                  ${statusText}
+                </span>
+              </td>
+              <td class="text-muted small">${new Date(r.completedAt || r.createdAt).toLocaleDateString()}</td>
+              <td class="text-end">
+                <button class="btn btn-sm btn-outline-primary py-0 px-2 rounded-2" onclick="openPastReview('${r._id}')">
+                  <i class="bi bi-eye me-1"></i>Review
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
       } catch (err) {
         showToast('Failed to load past test results.', 'danger');
+      }
+    }
+
+    /**
+     * Open Past Review Modal from History Table
+     */
+    async function openPastReview(resultId) {
+      try {
+        const data = await apiFetch(`/assessments/results/${resultId}`);
+        if (data.result) {
+          renderDetailedResultModal({
+            ...data.result,
+            review: data.result.answers || []
+          });
+        }
+      } catch (err) {
+        showToast('Failed to load attempt review.', 'danger');
       }
     }
 

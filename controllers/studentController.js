@@ -460,44 +460,51 @@ exports.getAvailableSkills = async (req, res) => {
  */
 exports.addSkill = async (req, res) => {
   try {
-    const { name, category, proficiency, rating } = req.body;
+    const { name, category } = req.body;
     if (!name || !name.trim()) {
       return res.status(400).json({ success: false, message: 'Skill name is required.' });
     }
 
     const cleanName = name.trim();
     const normKey = cleanName.toLowerCase();
-
-    const PROFICIENCY_RANKS = {
-      'Unassessed': 1,
-      'Beginner': 1,
-      'Basic': 2,
-      'Intermediate': 3,
-      'Advanced': 4,
-      'Expert': 5
-    };
-    const RATING_TO_PROF = {
-      1: 'Beginner',
-      2: 'Basic',
-      3: 'Intermediate',
-      4: 'Advanced',
-      5: 'Expert'
-    };
-
-    const finalProf = proficiency || (rating ? RATING_TO_PROF[rating] : 'Unassessed') || 'Unassessed';
-    const finalRating = PROFICIENCY_RANKS[finalProf] || Number(rating) || 1;
     const finalCategory = category || 'Programming';
 
+    // When adding a new skill, it MUST be Unassessed & isVerified: false until verified
+    const finalProf = 'Unassessed';
+    const finalRating = 1;
+
     // Check duplicate in Skill collection
-    let skill = await Skill.findOne({ user: req.user.id, normalizedName: normKey });
+    let skill = await Skill.findOne({
+      user: req.user.id,
+      $or: [
+        { normalizedName: normKey },
+        { name: new RegExp(`^${cleanName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') }
+      ]
+    });
     if (skill) {
       return res.status(400).json({
         success: false,
-        message: `Skill '${cleanName}' already exists in your inventory. You can edit its proficiency level.`
+        message: `Skill '${cleanName}' already exists in your profile. You can take a verification assessment for it.`
       });
     }
 
-    // Save to Skill collection
+    // Check duplicate in User embedded skills
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User account not found.' });
+    }
+
+    const existingIndex = (user.skills || []).findIndex(
+      s => s.name && (s.name.toLowerCase() === normKey || (s.normalizedName && s.normalizedName.toLowerCase() === normKey))
+    );
+    if (existingIndex > -1) {
+      return res.status(400).json({
+        success: false,
+        message: `Skill '${cleanName}' already exists in your profile.`
+      });
+    }
+
+    // Save to Skill collection as Unassessed
     skill = await Skill.create({
       user: req.user.id,
       name: cleanName,
@@ -505,32 +512,28 @@ exports.addSkill = async (req, res) => {
       category: finalCategory,
       proficiency: finalProf,
       rating: finalRating,
-      isVerified: false
+      isVerified: false,
+      verificationScore: null,
+      verificationDate: null
     });
 
-    // Also sync to User.skills array
-    const user = await User.findById(req.user.id);
-    const existingIndex = user.skills.findIndex(s => s.name.toLowerCase() === normKey);
-    if (existingIndex > -1) {
-      user.skills[existingIndex].proficiency = finalProf;
-      user.skills[existingIndex].rating = finalRating;
-      user.skills[existingIndex].category = finalCategory;
-    } else {
-      user.skills.push({
-        name: cleanName,
-        normalizedName: normKey,
-        category: finalCategory,
-        proficiency: finalProf,
-        rating: finalRating,
-        isVerified: false
-      });
-    }
+    // Also sync to User.skills array as Unassessed
+    user.skills.push({
+      name: cleanName,
+      normalizedName: normKey,
+      category: finalCategory,
+      proficiency: finalProf,
+      rating: finalRating,
+      isVerified: false,
+      verificationScore: null,
+      verificationDate: null
+    });
     await user.save();
 
     // Log activity
     await Activity.create({
       user: req.user.id,
-      text: `Added skill '${cleanName}' (${finalProf})`,
+      text: `Added skill '${cleanName}' (Verification assessment required)`,
       icon: 'bi-award',
       color: '#059669'
     });
@@ -539,7 +542,10 @@ exports.addSkill = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: `Skill '${cleanName}' added successfully.`,
+      message: `Skill '${cleanName}' added. Entrance skill verification assessment is required to identify your proficiency level.`,
+      requireVerification: true,
+      skillName: cleanName,
+      verificationUrl: `entrance-assessment.html?skill=${encodeURIComponent(cleanName)}`,
       skill,
       skills: allSkills
     });

@@ -1112,24 +1112,7 @@ a {
   margin: 1.5rem 0 0.85rem;
 }
 
-/* Print styling for PDF generation */
-@media print {
-  body {
-    background: #FFFFFF !important;
-  }
-  .sidebar, .app-header, .btn-no-print, .public-navbar, .site-footer {
-    display: none !important;
-  }
-  .main-content {
-    margin-left: 0 !important;
-    padding: 0 !important;
-  }
-  .resume-paper {
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-  }
-}
+/* (Print styling unified in dedicated section below) */
 
 /* Mobile & Tablet Responsiveness */
 @media (max-width: 991.98px) {
@@ -1584,31 +1567,88 @@ a {
 }
 
 /* ==========================================================================
-   Print Styles for Resume Builder (A4 format)
+   Resume Builder Display & A4 Print Styles
    ========================================================================== */
+
+/* Enhanced Resume Paper on Screen */
+.resume-paper {
+  background: #FFFFFF;
+  border-radius: 8px;
+  border: 1px solid var(--sf-border);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 2.5rem;
+  min-height: 840px;
+  max-width: 800px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+  position: relative;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  color: #0F172A;
+}
+
+/* Fullscreen Modal Preview */
+.modal-resume-preview .modal-dialog {
+  max-width: 860px;
+  margin: 1.5rem auto;
+}
+.modal-resume-preview .modal-body {
+  background: #E2E8F0;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+  max-height: 82vh;
+}
+.modal-resume-preview .resume-paper {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile view switcher tab styling */
+#viewModeTabs .nav-link {
+  color: #475569;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+#viewModeTabs .nav-link.active {
+  background: var(--sf-primary);
+  color: #FFFFFF;
+}
+
+/* Print Styles for Resume Builder (A4 format) */
 @media print {
-  /* Hide all navigation, sidebars, headers, action buttons, and form customizers */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Hide all app navigation, sidebars, headers, action buttons, form customizers, and modals */
   .sidebar,
   .app-sidebar,
   .app-header,
   .btn-no-print,
   .sidebar-footer,
   .modal,
+  .modal-backdrop,
   .toast-container,
   button,
   .btn,
   #sidebar-toggle,
   .portal-title-block,
-  .col-lg-5 {
+  .col-lg-5,
+  .public-navbar,
+  .site-footer,
+  #viewModeTabsContainer {
     display: none !important;
   }
 
-  body {
+  html, body {
     background: #FFFFFF !important;
-    color: #111827 !important;
-    font-size: 10.5pt !important;
+    color: #0F172A !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
     margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
   }
 
   .app-wrapper,
@@ -1620,6 +1660,12 @@ a {
     width: 100% !important;
     max-width: 100% !important;
     display: block !important;
+    border: none !important;
+  }
+
+  .row {
+    margin: 0 !important;
+    display: block !important;
   }
 
   .col-lg-7 {
@@ -1627,47 +1673,119 @@ a {
     max-width: 100% !important;
     flex: 0 0 100% !important;
     padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
   }
 
   .resume-paper {
     box-shadow: none !important;
     border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    padding: 10mm 12mm !important;
+    margin: 0 auto !important;
     width: 100% !important;
     max-width: 100% !important;
-    background: transparent !important;
+    background: #FFFFFF !important;
     min-height: auto !important;
+    box-sizing: border-box !important;
   }
 
+  /* Retain Modern Executive Template Aesthetics in Print */
   .resume-paper.resume-template-modern {
-    border-top: none !important;
+    border-top: 5px solid #059669 !important;
   }
 
+  .resume-paper.resume-template-modern .resume-name {
+    color: #0F172A !important;
+  }
+
+  .resume-paper.resume-template-modern .resume-role-title {
+    color: #059669 !important;
+  }
+
+  .resume-paper.resume-template-modern .resume-section-title {
+    color: #0F172A !important;
+    border-bottom: 2px solid #059669 !important;
+  }
+
+  /* Retain Clean Minimalist Template Aesthetics in Print */
+  .resume-paper.resume-template-minimal {
+    border: 1px solid #E2E8F0 !important;
+  }
+
+  .resume-paper.resume-template-minimal .resume-section-title {
+    color: #334155 !important;
+    border-bottom: 1px solid #CBD5E1 !important;
+  }
+
+  /* Retain Tech Classic Template Aesthetics in Print */
   .resume-paper.resume-template-classic {
-    border-left: none !important;
+    border-left: 6px solid #7C3AED !important;
+    background: #FCFDFF !important;
+  }
+
+  .resume-paper.resume-template-classic .resume-role-title {
+    color: #7C3AED !important;
+  }
+
+  .resume-paper.resume-template-classic .resume-section-title {
+    color: #0F172A !important;
+    border-left: 3px solid #7C3AED !important;
+    border-bottom: 1px solid #E2E8F0 !important;
+    padding-left: 6px !important;
   }
 
   .resume-header {
-    border-bottom: 2px solid #CBD5E1 !important;
+    border-bottom: 2px solid #E2E8F0 !important;
     padding-bottom: 10px !important;
     margin-bottom: 12px !important;
   }
 
+  .resume-name {
+    font-size: 1.75rem !important;
+    font-weight: 800 !important;
+  }
+
+  .resume-role-title {
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+  }
+
   .resume-section-title {
-    color: #111827 !important;
-    border-bottom: 1.5px solid #CBD5E1 !important;
-    padding-bottom: 3px !important;
-    margin-bottom: 8px !important;
-    font-size: 11pt !important;
+    font-size: 10pt !important;
+    font-weight: 700 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.05em !important;
-    page-break-after: avoid;
+    padding-bottom: 3px !important;
+    margin-bottom: 8px !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  /* Avoid awkward page break splits */
+  .resume-header,
+  #sectionSummaryArea,
+  #sectionEducationArea,
+  #sectionSkillsArea,
+  #sectionProjectsArea,
+  #sectionCertsArea,
+  #sectionAchievementsArea,
+  .resume-section-item {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .badge {
+    border: 1px solid #CBD5E1 !important;
+    background-color: #F8FAFC !important;
+    color: #0F172A !important;
+    font-weight: 600 !important;
+    font-size: 8pt !important;
+    padding: 3px 7px !important;
   }
 
   @page {
     size: A4 portrait;
-    margin: 12mm 15mm 12mm 15mm;
+    margin: 8mm 10mm 8mm 10mm;
   }
 }
 
